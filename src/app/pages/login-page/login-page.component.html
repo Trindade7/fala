@@ -1,0 +1,42 @@
+<div class="page-container">
+    <!-- <section class="form-banner">
+        <h3>
+            Do incididunt ullamco adipisicing in minim
+            voluptate aute culpa ullamco sit eiusmod.
+        </h3>
+        <mat-icon class="banner-image">dashboard</mat-icon>
+    </section> -->
+    <!-- mat-drawer-container to inherit background  -->
+    <section class="form-container mat-drawer-container">
+        <div class></div>
+        <div>
+            <h2>Sign in/up</h2>
+
+            <form [formGroup]="loginForm" (ngSubmit)="logIn()">
+                <p>
+                    <mat-form-field appearance="standard">
+                        <mat-label>Email</mat-label>
+                        <input formControlName="email" matInput type="email" placeholder="your email...">
+                        <mat-icon matSuffix>mail</mat-icon>
+                    </mat-form-field>
+                </p>
+                <p>
+                    <mat-form-field appearance="standard">
+                        <mat-label>Password</mat-label>
+                        <input formControlName="password" matInput type="password" placeholder="password...">
+                        <mat-icon matSuffix>lock</mat-icon>
+                    </mat-form-field>
+                </p>
+                <p>
+                    <mat-checkbox formControlName="saveSession">
+                        Save Log in session
+                    </mat-checkbox>
+                </p>
+                <div class="sized-box-2"></div>
+                <p>
+                    <button mat-flat-button color="primary">Log In</button>
+                </p>
+            </form>
+        </div>
+    </section>
+</div>

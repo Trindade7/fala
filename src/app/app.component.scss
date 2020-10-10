@@ -1,0 +1,37 @@
+.fala-container {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 64px 1fr 64px;
+  grid-template-rows: 1fr 64px;
+  gap: 0px 0px;
+  grid-template-areas:
+    "left-top center-top right-top"
+    "left-bot center-bot right-bot";
+  &.rtl {
+    .nav-toolbar {
+      grid-area: left-top/left-top/left-bot/left-bot;
+    }
+
+    .fala-content {
+      grid-area: center-top/center-top/right-bot/right-bot;
+    }
+  }
+  &.ltr {
+    .nav-toolbar {
+      grid-area: right-top/right-top/right-bot/right-bot;
+    }
+
+    .fala-content {
+      grid-area: left-top/left-top/center-bot/center-bot;
+    }
+  }
+  &.btt {
+    .nav-toolbar {
+      grid-area: left-bot/left-bot/right-bot/right-bot;
+    }
+
+    .fala-content {
+      grid-area: left-top/left-top/right-top/right-top;
+    }
+  }
+}

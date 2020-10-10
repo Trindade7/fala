@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "chat-fala": {
+      "hosting": {
+        "fala": [
+          "chat-fala"
+        ]
+      }
+    }
+  }
+}

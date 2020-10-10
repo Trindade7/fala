@@ -1,0 +1,14 @@
+$darkColor: rgb(33, 2, 41);
+
+nav {
+  height: 100%;
+  background: $darkColor;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  box-shadow: 10px 10px 10px 10px $darkColor;
+  color: whitesmoke;
+}
