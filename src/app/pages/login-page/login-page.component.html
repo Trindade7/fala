@@ -34,9 +34,12 @@
                 </p>
                 <div class="sized-box-2"></div>
                 <p>
-                    <button mat-flat-button color="primary">Log In</button>
+                    <button type="submit" mat-flat-button color="primary">Log In</button>
+                    <button (click)="signUp()" mat-flat-button color="primary">Sign up</button>
+                    <button (click)="googleSignIn()" mat-flat-button color="primary">G</button>
                 </p>
             </form>
+            <button (click)="logOut()" mat-flat-button color="primary">logOut</button>
         </div>
     </section>
 </div>

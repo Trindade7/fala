@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DbFacade } from './db.facade';
+import { UserService } from './user.service';
 
-describe('DbFacade', () => {
-  let service: DbFacade;
+describe('UserService', () => {
+  let service: UserService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(DbFacade);
+    service = TestBed.inject(UserService);
   });
 
   it('should be created', () => {

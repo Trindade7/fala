@@ -4,21 +4,25 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-import { environment } from '../../../environments/environment';
-import { FileUploadTask } from '../models/upload-task.model';
+import { environment } from '../../../../environments/environment';
+import { FileUploadTask } from '../../models/upload-task.model';
 
 @Injectable({
   providedIn: 'root'
 })
 
 
-export abstract class FirestoreService<T> {
-  protected abstract basePath: string;
+export class FirestoreService<T> {
+  protected basePath: string;
 
   constructor (
     @Inject(AngularFirestore) protected firestore: AngularFirestore,
     @Inject(AngularFireStorage) protected storage: AngularFireStorage,
   ) {
+  }
+
+  setBasePath(path: string) {
+    this.basePath = path;
   }
 
   private collection(path: string = this.basePath): AngularFirestoreCollection<T> {
@@ -69,14 +73,22 @@ export abstract class FirestoreService<T> {
   }
 
   create(document: T, docId: string): Promise<void> {
+    if (environment.production === false) {
+      console.groupCollapsed('FIRESTORE CREATE');
+      console.log(...[document, docId]);
+      console.groupEnd();
+    }
+
+
     return this.collection().doc(docId).set(
-      Object.assign({}, document)).then(() => {
-        if (environment.production === false) {
-          console.groupCollapsed(`Firestore streaming [${this.basePath}] [create]`);
-          console.log(...[this.firestore, docId]);
-          console.groupEnd();
-        }
-      });
+      Object.assign({}, document), { merge: true }
+    ).then(() => {
+      if (environment.production === false) {
+        console.groupCollapsed(`Firestore streaming [${this.basePath}] [create]`);
+        console.log(...[this.firestore, docId]);
+        console.groupEnd();
+      }
+    });
   }
 
   update(document: T, docId: string): Promise<void> {

@@ -1,0 +1,20 @@
+<div class="conversation-container" [ngClass]="{'active': conversation.id}">
+    <section class="images">
+        <div *ngFor="let user of conversation.users">
+            <mat-icon *ngIf="!user.photoUrl" class="user-avatar">account_box</mat-icon>
+            <img *ngIf="user.photoUrl" [src]="user.photoUrl" alt="User avatar">
+        </div>
+    </section>
+    <article class="content">
+        <span class="mat-body-2">
+            {{conversation.name | slice:0:50}}
+            <span *ngIf="conversation.name.length>100">...</span>
+        </span>
+        <p *ngIf="conversation.lastMessage.messageBody as message">
+            {{message | slice:0:100}} <span *ngIf="message.length>100">...</span>
+        </p>
+    </article>
+    <section class="notification">
+        <mat-icon>message</mat-icon>
+    </section>
+</div>

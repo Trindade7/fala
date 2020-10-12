@@ -1,0 +1,16 @@
+.conversation-container {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  cursor: pointer;
+  &.active {
+    background-color: rgb(54, 4, 43);
+    color: white;
+  }
+
+  .user-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 48px;
+  }
+}

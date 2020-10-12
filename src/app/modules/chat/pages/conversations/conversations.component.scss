@@ -1,0 +1,12 @@
+.conversations-container {
+  max-width: 400px;
+
+  .have-notification {
+    background-color: aqua;
+  }
+
+  .conversation-list {
+    max-height: calc(100vh - 130px);
+    overflow-y: scroll;
+  }
+}

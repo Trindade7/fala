@@ -1,12 +1,26 @@
+import { Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { FileUploadTask } from '../models/upload-task.model';
-import { FirestoreService } from './firestore.service';
+import { FirestoreService } from './firebase/firestore.service';
 
 export abstract class DbFacade<T> {
     protected abstract basePath: string;
+    private dbService: FirestoreService<T>;
 
-    constructor (private dbService: FirestoreService<T>) { }
+    private injector = Injector.create({
+        providers: [
+            { provide: FirestoreService, deps: [] },
+        ]
+    });
+
+    constructor () {
+        this.dbService = <FirestoreService<T>> this.injector.get(FirestoreService);
+    }
+
+    setBasePath(path: string) {
+        this.basePath = path;
+    }
 
     collection$(queryFn?): Observable<T[]> {
         return this.dbService.collection$(queryFn);

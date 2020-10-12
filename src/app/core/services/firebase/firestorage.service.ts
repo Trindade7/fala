@@ -1,13 +1,14 @@
-import { Injectable, Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
+
+import { environment } from '../../../../environments/environment';
 
 @Injectable()
 export abstract class FirestorageService<T> {
   protected basePath: string;
 
-  constructor(
+  constructor (
     @Inject(AngularFireStorage) protected storage: AngularFireStorage,
   ) { }
 

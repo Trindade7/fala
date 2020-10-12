@@ -1,5 +1,6 @@
 .fala-container {
   height: 100vh;
+  max-height: 100vh;
   display: grid;
   grid-template-columns: 64px 1fr 64px;
   grid-template-rows: 1fr 64px;

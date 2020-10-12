@@ -1,4 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-nav-toolbar',
@@ -8,7 +10,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 })
 export class NavToolbarComponent implements OnInit {
 
-  constructor() { }
+  constructor (public authService: AuthService) { }
 
   ngOnInit(): void {
   }

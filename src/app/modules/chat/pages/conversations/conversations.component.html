@@ -1,0 +1,21 @@
+<div class="conversations-container">
+    <mat-toolbar>
+        <small>Conversations</small>
+        <span class="spacer"></span>
+        <button mat-icon-button>
+            <mat-icon>inbox</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon>search</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon>rate_review</mat-icon>
+        </button>
+    </mat-toolbar>
+
+    <div class="conversation-list">
+        <app-conversation-preview *ngFor="let item of conversations"></app-conversation-preview>
+        <app-conversation-preview [conversation]="conversationActive"></app-conversation-preview>
+        <app-conversation-preview *ngFor="let item of conversations"></app-conversation-preview>
+    </div>
+</div>

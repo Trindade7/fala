@@ -3,7 +3,7 @@
        aria-label="Example icon-button with menu icon">
         <mat-icon>message</mat-icon>
     </a>
-    <button mat-icon-button aria-label="Example icon-button with heart icon">
+    <button routerLink="/login" mat-icon-button aria-label="Example icon-button with heart icon">
         <mat-icon>contacts</mat-icon>
     </button>
     <button mat-icon-button aria-label="Example icon-button with heart icon">
@@ -12,5 +12,8 @@
     <button routerLink="/" mat-icon-button aria-label="Example icon-button with share icon">
         <mat-icon>settings</mat-icon>
     </button>
-
+    <div class="sized-box-2"></div>
+    <button (click)="authService.logout()" mat-icon-button aria-label="Example icon-button with share icon">
+        <mat-icon>power_settings_new</mat-icon>
+    </button>
 </nav>
