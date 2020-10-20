@@ -16,7 +16,7 @@ export class UserStore extends StoreGeneric<IUserStore> {
             {
                 loading: true,
                 status: '',
-                user: UserModel.empty(),
+                user: UserModel.empty,
             }
         );
     }

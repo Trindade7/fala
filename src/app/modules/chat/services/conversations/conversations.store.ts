@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ConversationModel } from 'src/app/core/models/conversation.model';
-import { StoreGeneric } from 'src/app/core/services/store.generic';
+import { ConversationModel } from '@app-core/models/conversation.model';
+import { StoreGeneric } from '@app-core/services/store.generic';
 
 interface IConversationsPage {
     conversations: ConversationModel[],

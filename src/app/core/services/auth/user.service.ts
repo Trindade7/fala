@@ -54,7 +54,7 @@ export class UserService {
   get user$(): Observable<UserModel> {
     return this.store.state$.pipe(
       map(
-        state => state.loading ? UserModel.empty() : state.user
+        state => state.loading ? UserModel.empty : state.user
       )
     );
   }

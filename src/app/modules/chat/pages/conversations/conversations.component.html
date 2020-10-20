@@ -14,8 +14,13 @@
     </mat-toolbar>
 
     <div class="conversation-list">
-        <app-conversation-preview *ngFor="let item of conversations"></app-conversation-preview>
-        <app-conversation-preview [conversation]="conversationActive"></app-conversation-preview>
-        <app-conversation-preview *ngFor="let item of conversations"></app-conversation-preview>
+        <div *ngIf="(conversationService.collection$ | async) as conversations">
+            <app-conversation-preview *ngFor="let conversation of conversations"
+                                      [conversation]="conversation">
+            </app-conversation-preview>
+
+        </div>
+        <!-- <app-conversation-preview [conversation]="conversationActive"></app-conversation-preview>
+        <app-conversation-preview *ngFor="let item of conversations"></app-conversation-preview> -->
     </div>
 </div>

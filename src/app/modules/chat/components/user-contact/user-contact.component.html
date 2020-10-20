@@ -1,0 +1,18 @@
+<div class="contact-ccontainer" *ngIf="(contactsService.collection$|async) as contacts">
+    <mat-selection-list [multiple]="false">
+        <div *ngFor="let contact of contacts">
+            <mat-list-option [value]="contact">
+                <mat-divider></mat-divider>
+                <img matListAvatar
+                     [src]="contact.photoUrl ? contact.photoUrl:'https://placehold.it/100x100?text=user%20avatar'"
+                     alt="...">
+                <h3 matLine> {{contact.name}} </h3>
+                <p matLine>
+                    <span> status </span>
+                    <span class="demo-2"> -- </span>
+                </p>
+            </mat-list-option>
+        </div>
+
+    </mat-selection-list>
+</div>

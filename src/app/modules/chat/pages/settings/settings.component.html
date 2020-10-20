@@ -1,0 +1,11 @@
+<mat-card-content>
+    <mat-slide-toggle (click)="chatService.appSettings.toggleReadMode()">
+        Reading mode:
+        <span class="mat-body-2">{{
+            (chatService.appSettings.readMode === 'ltr')
+            ? 'Left to Right': 'Right to Left'
+        }}</span>
+    </mat-slide-toggle>
+
+    <button (click)="logOut()" mat-flat-button color="primary">logOut</button>
+</mat-card-content>

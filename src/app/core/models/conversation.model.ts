@@ -15,12 +15,12 @@ export class ConversationModel {
         this.createdAt = args.createdAt;
     }
 
-    static empty(): ConversationModel {
+    static get empty(): ConversationModel {
         return {
             id: '',
             name: '',
             users: [],
-            lastMessage: null,
+            lastMessage: MessageModel.empty,
             createdAt: null,
         };
     }
@@ -28,27 +28,24 @@ export class ConversationModel {
 
 export class MessageModel {
     id: string;
-    conversationId: string;
-    sender: UserModel;
-    messageBody: String;
+    senderId: string;
+    messageBody: string;
     delivered: boolean;
     createdAt: Date;
 
     constructor (args: MessageModel) {
         this.id = args.id ?? null;
-        this.conversationId = args.conversationId ?? null;
-        this.sender = args.sender ?? null;
+        this.senderId = args.senderId ?? null;
         this.messageBody = args.messageBody ?? null;
         this.delivered = args.delivered ?? false;
         this.createdAt = args.createdAt ?? null;
     }
 
-    static empty(): MessageModel {
+    static get empty(): MessageModel {
         return {
             id: '',
-            conversationId: '',
-            sender: null,
-            messageBody: '',
+            senderId: null,
+            messageBody: 'Loading...',
             delivered: false,
             createdAt: null,
         };

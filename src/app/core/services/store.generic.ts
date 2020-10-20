@@ -20,16 +20,16 @@ export abstract class StoreGeneric<T> {
         this.state$.subscribe(s => this.state = s);
     }
 
-    patch(newValue: Partial<T>, event: string = 'not specified') {
+    patch(newValue: Partial<T>, event: string = 'not specified'): void {
         this.previous = this.state;
         const newState = Object.assign({}, this.state, newValue);
 
         if (environment.production === false) {
-            console.groupCollapsed(`[${this.store} store] [patch] [event: ${event}]`);
+            console.groupCollapsed(`[${this.store}] [patch] [event: ${event}]`);
             console.log(
-                ...["change", newValue],
-                ...["previous", this.previous],
-                ...["next", newState]
+                ...['change', newValue],
+                ...['previous', this.previous],
+                ...['next', newState]
             );
             console.groupEnd();
         }
@@ -37,16 +37,16 @@ export abstract class StoreGeneric<T> {
         this.bs.next(newState);
     }
 
-    set(newValue: Partial<T>, event: string = 'not specified') {
+    setValue(newValue: Partial<T>, event: string = 'not specified'): void {
         this.previous = this.state;
         const newState = Object.assign({}, newValue) as T;
 
         if (environment.production === false) {
-            console.groupCollapsed(`[${this.store} store] [set] [event: ${event}]`);
+            console.groupCollapsed(`[${this.store} store] [setValue] [event: ${event}]`);
             console.log(
-                ...["change", newValue],
-                ...["previous", this.previous],
-                ...["next", newState]
+                ...['change', newValue],
+                ...['previous', this.previous],
+                ...['next', newState]
             );
             console.groupEnd();
         }

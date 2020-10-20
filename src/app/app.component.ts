@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'fala';
-  readMode: 'rtl' | 'ltr' | 'btt' = 'btt'; // {btt = bottom to top}
+  readMode: 'rtl' | 'ltr' | 'btt' = 'rtl'; // {btt = bottom to top}
 
   constructor () {
 

@@ -1,4 +1,9 @@
-<div class="conversation-container" [ngClass]="{'active': conversation.id}">
+<mat-card
+          class="conversation-container mat-elevation-z"
+          [ngClass]="{'shadowed-8 active': conversation.id}"
+          matBadge="10"
+          [matBadgeHidden]="conversation.id"
+          (click)="openConversation(conversation)">
     <section class="images">
         <div *ngFor="let user of conversation.users">
             <mat-icon *ngIf="!user.photoUrl" class="user-avatar">account_box</mat-icon>
@@ -6,15 +11,19 @@
         </div>
     </section>
     <article class="content">
-        <span class="mat-body-2">
-            {{conversation.name | slice:0:50}}
-            <span *ngIf="conversation.name.length>100">...</span>
-        </span>
-        <p *ngIf="conversation.lastMessage.messageBody as message">
-            {{message | slice:0:100}} <span *ngIf="message.length>100">...</span>
+        <header>
+            <div class="name mat-body-2">
+                {{conversation.name | slice:0:50}}
+                <span *ngIf="conversation.name.length>100">...</span>
+            </div>
+            <p class="mat-caption">status</p>
+        </header>
+        <p *ngIf="conversation.lastMessage as message">
+            {{message.messageBody | slice:0:100}}
+            <span *ngIf="message.messageBody?.length > 100">...</span>
         </p>
     </article>
-    <section class="notification">
+    <!-- <section class="notification">
         <mat-icon>message</mat-icon>
-    </section>
-</div>
+    </section> -->
+</mat-card>

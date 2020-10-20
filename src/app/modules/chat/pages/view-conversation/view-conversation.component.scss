@@ -1,0 +1,30 @@
+.conversation-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  .conversation-toolbar {
+    z-index: 1;
+  }
+  .messages {
+    flex: 1 1 auto;
+    height: 100%;
+    overflow-y: auto;
+    padding: 1rem;
+  }
+  .message {
+    .mat-card {
+      width: max-content;
+      max-width: 100%;
+    }
+
+    &.sent {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    &.sent .mat-card {
+      background-color: rgba(102, 51, 153, 0.479);
+      color: invert(#ccc);
+    }
+  }
+}

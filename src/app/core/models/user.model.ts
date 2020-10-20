@@ -24,7 +24,7 @@ export class UserModel {
         };
     }
 
-    static empty(): UserModel {
+    static get empty(): UserModel {
         return {
             uid: '',
             name: '',

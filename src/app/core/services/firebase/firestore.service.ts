@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, QueryFn } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
+import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
@@ -21,31 +22,159 @@ export class FirestoreService<T> {
   ) {
   }
 
-  setBasePath(path: string) {
+  setBasePath(path: string): void {
     this.basePath = path;
   }
 
-  private collection(path: string = this.basePath): AngularFirestoreCollection<T> {
-    return this.firestore.collection(`${path}`);
+  get getServerTimeStamp(): any {
+    // return firebase.firestore.FieldValue.serverTimestamp();
+    return firebase.firestore.FieldValue.serverTimestamp();
   }
 
-  collection$(queryFn?: QueryFn): Observable<T[]> {
-    return this.firestore.collection<T>(`${this.basePath}`)
-      .valueChanges().pipe(
+  private collection(
+    path: string = this.basePath,
+    orderBy?: string,
+    orderDirection?: 'asc' | 'desc'
+  ): AngularFirestoreCollection<T> {
+    return this.firestore.collection(path);
+    // return this.firestore.collection(path, ref => ref.orderBy(orderBy, orderDirection));
+  }
+
+  createId(): string {
+    return this.firestore.createId();
+  }
+
+  collection$(
+    options: {
+      limitToLast?: number, orderBy?: 'createdAt' | 'updatedAt',
+      orderDirection?: 'asc' | 'desc',
+      limitTo?: number;
+      path?: string,
+      arrayContains?: { arrayName: string, value: string; };
+    } = {}
+  ): Observable<T[]> {
+    return this.firestore.collection<T>(
+      options.path ?? this.basePath,
+      ref => {
+        // if (options.arrayContains) {
+        //   console.log('filering', options.arrayContains.arrayName, options.arrayContains.value);
+
+        //   return ref.where('participantIds', 'array-contains', '154NsEOViCQxtZWJVOhGlnttfrE3');
+        //   // return ref.where(options.arrayContains.arrayName, 'array-contains', options.arrayContains.value);
+        // }
+        return ref;
+        return options.orderBy ? ref.orderBy('createdAt', 'asc').limitToLast(1) : ref;
+        // if (options === {}) {
+        //   return ref;
+        //
+        ref.where(options.arrayContains.arrayName, 'array-contains', options.arrayContains.value);
+        // const order = options.orderBy ? ref.orderBy(options.orderBy, options.orderDirection ?? 'asc') : ref;
+        // const limitToLast = options.limitToLast ? order.limitToLast(options.limitToLast) : ref;
+        // return limitToLast;
+      }
+    ).valueChanges().pipe(
+      tap( // LOGGING DATA
+        val => {
+          console.groupCollapsed(
+            `>firestore.servicce streaming [${this.basePath}] [collection$]`);
+          console.log(val, 'Options', options);
+          console.groupEnd();
+        }
+      )
+    );
+
+    // if (orderBy) {
+    //   return this.firestore.collection<T>(
+    //     this.basePath,
+    //     ref => ref.orderBy(orderBy, orderDirection ?? 'asc')
+    //   ).valueChanges().pipe(
+    //     tap( // LOGGING DATA
+    //       val => {
+    //         console.groupCollapsed(
+    //           `Firestore streaming [${this.basePath}]
+    //           [collection$] with [query] ${orderBy}`);
+    //         console.log(val);
+    //         console.groupEnd();
+    //       }
+    //     )
+    //   );
+    // } else {
+    //   return this.firestore.collection<T>(this.basePath)
+    //     .valueChanges().pipe(
+    //       tap( // LOGGING DATA
+    //         val => {
+    //           console.groupCollapsed(
+    //             `Firestore streaming [${this.basePath}]
+    //           [collection$] with [query]`);
+    //           console.log(val);
+    //           console.groupEnd();
+    //         }
+    //       )
+    //     );
+    // }
+  }
+
+  collectionFromPath$(
+    path,
+    orderBy?: 'createdAt' | 'updatedAt',
+    orderDirection?: 'asc' | 'desc',
+    limit?: number,
+  ): Observable<any[]> {
+    if (orderBy) {
+      return this.firestore.collection<any>(
+        path,
+        ref => ref.orderBy(orderBy, 'asc').limit(limit)
+      ).valueChanges().pipe(
         tap( // LOGGING DATA
           val => {
             console.groupCollapsed(
-              `Firestore streaming [${this.basePath}]
-              [collection$] with [query] ${queryFn}`);
+              `Firestore streaming [${path}]
+              [collection$] with [query] ${orderBy}`);
             console.log(val);
             console.groupEnd();
           }
         )
       );
+    } else {
+      return this.firestore.collection<any>(path)
+        .valueChanges().pipe(
+          tap( // LOGGING DATA
+            val => {
+              console.groupCollapsed(
+                `Firestore streaming [${path}]
+              [collection$] with [query]`);
+              console.log(val);
+              console.groupEnd();
+            }
+          )
+        );
+    }
   }
 
   doc$(id: string): Observable<T> {
     return this.firestore.doc<T>(`${this.basePath}/${id}`)
+      .valueChanges().pipe(
+        tap( // LOGGING DATA
+          val => {
+            if (environment.production === false) {
+              console.groupCollapsed(`Firestore streaming fom [${this.basePath}] documentId [${id}]`);
+              console.log(...[`${id} value ==>`, val]);
+              console.groupEnd();
+            }
+          },
+          err => {
+            if (environment.production === false) {
+              console.groupCollapsed(`ERROR Firestore streaming [${this.basePath}] [doc$] ${id}`);
+              console.log(err);
+              console.groupEnd();
+            }
+          }
+        )
+      );
+  }
+
+  docFromPath$(id: string, path: string): Observable<any> {
+    return this.firestore.doc<any>(`${path}/${id}`)
       .valueChanges().pipe(
         tap( // LOGGING DATA
           val => {
@@ -79,9 +208,12 @@ export class FirestoreService<T> {
       console.groupEnd();
     }
 
-
     return this.collection().doc(docId).set(
-      Object.assign({}, document), { merge: true }
+      {
+        ...document,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      },
+      { merge: true }
     ).then(() => {
       if (environment.production === false) {
         console.groupCollapsed(`Firestore streaming [${this.basePath}] [create]`);
@@ -112,7 +244,8 @@ export class FirestoreService<T> {
     });
   }
 
-  // #################### FIRE STORAGE
+
+  // *#################### FIRE STORAGE
 
   addFile(inputFile: File, filePath: string): FileUploadTask {
     if (environment.production === false) {

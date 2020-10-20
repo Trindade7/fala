@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { environment } from '@app-envs/environment';
 import { auth, User } from 'firebase/app';
 import { Observable, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 
 import { UserModel } from '../../models/user.model';
 import { FirestoreService } from './firestore.service';
@@ -11,9 +11,10 @@ import { FirestoreService } from './firestore.service';
 @Injectable({
   providedIn: 'root'
 })
-export class FireauthService {
+export abstract class FireauthService {
   basePath = 'users';
-  private _uid: string;
+  // tslint:disable-next-line: variable-name
+  private _uid: string = null;
 
   constructor (
     private afAuth: AngularFireAuth,
@@ -22,8 +23,7 @@ export class FireauthService {
     this.db.setBasePath(this.basePath);
     this.user$.pipe(
       tap(user => {
-        console.log(user);
-        this._uid = user.uid;
+        user ? this._uid = user?.uid ?? null : this._uid = null;
       })
     ).subscribe();
 
@@ -43,65 +43,92 @@ export class FireauthService {
         }
       })
     );
+    // try {
+    //   return this.afAuth.authState.pipe(
+    //     switchMap(user => {
+    //       if (user) {
+    //         return this.db.doc$(user.uid);
+    //       } else {
+    //         return of(null);
+    //       }
+    //     })
+    //   );
+    // } catch (err) {
+    //   if (environment.production === false) {
+    //     console.groupCollapsed('!ERROR in >fireauth.service [user$()]');
+    //     console.log(err);
+    //     console.groupEnd();
+    //   }
+    //   return err;
+    // }
   }
 
   async googleSignIn(): Promise<void> {
-    // console.log('fireauth LOGGING IN WITH GOOGLE');
+    const provider = new auth.GoogleAuthProvider();
+    const credential = await this.afAuth.signInWithPopup(provider);
+    if (credential.additionalUserInfo.isNewUser) {
+      return this.updateUserData(credential.user);
+    }
+    return;
     // try {
     //   const provider = new auth.GoogleAuthProvider();
     //   const credential = await this.afAuth.signInWithPopup(provider);
     //   return this.updateUserData(credential.user);
     // } catch (err) {
+    //   if (environment.production === false) {
+    //     console.groupCollapsed('!ERROR in >fireauth.service [googleSignIn()]');
+    //     console.log(err);
+    //     console.groupEnd();
+    //   }
     //   return err;
     // }
-    const provider = new auth.GoogleAuthProvider();
-    const credential = await this.afAuth.signInWithPopup(provider);
-    console.log('googleSignIn() >>>>>>>>');
-
-    return this.updateUserData(credential.user);
   }
 
   async facebookSignIn(): Promise<void> {
     const provider = new auth.FacebookAuthProvider();
     const credential = await this.afAuth.signInWithPopup(provider);
 
-    return this.updateUserData(credential.user);
-  }
-
-  emailAndPasswordSignIn(email: string, password: string): Promise<void> {
-    return this.afAuth.signInWithEmailAndPassword(email, password).then(
-      credential => {
-        console.log('emailAndPasswordSignIn() >>>>>>>>');
-        this.updateUserData(credential.user);
-      }
-    ).catch(err => {
-      if (environment.production === false) {
-        console.groupCollapsed('>fireauth.service [emailAndPasswordSignIn]');
-        console.log(err);
-        console.groupEnd();
-      }
-      return err;
-    });
-
-    // return this.updateUserData(credential.user);
-    // console.log('fireauth LOGGING IN WITH GOOGLE');
+    if (credential.additionalUserInfo.isNewUser) {
+      return this.updateUserData(credential.user);
+    }
     // try {
-    //   const credential = await this.afAuth.signInWithEmailAndPassword(email, password);
+    //   const provider = new auth.FacebookAuthProvider();
+    //   const credential = await this.afAuth.signInWithPopup(provider);
+
     //   return this.updateUserData(credential.user);
     // } catch (err) {
+    //   if (environment.production === false) {
+    //     console.groupCollapsed('!ERROR in >fireauth.service [facebookSignIn()]');
+    //     console.log(err);
+    //     console.groupEnd();
+    //   }
     //   return err;
     // }
   }
 
+  async emailAndPasswordSignIn(email: string, password: string): Promise<any> {
+    return await this.afAuth.signInWithEmailAndPassword(email, password);
+  }
+
   async emailAndPasswordSignUp(email: string, password: string): Promise<void> {
     const credential = await this.afAuth.createUserWithEmailAndPassword(email, password);
-    console.log('emailAndPasswordSignUp() >>>>>>>>');
-
     return this.updateUserData(credential.user);
+
+    // try {
+    //   const credential = await this.afAuth.createUserWithEmailAndPassword(email, password);
+    //   return this.updateUserData(credential.user);
+    // } catch (err) {
+    //   if (environment.production === false) {
+    //     console.groupCollapsed('!ERROR in >fireauth.service [emailAndPasswordSignIn]');
+    //     console.log(err);
+    //     console.groupEnd();
+    //   }
+    //   return err;
+    // }
   }
 
   // TODO: KEEP THIS?
-  updateUserData(user: User) {
+  updateUserData(user: User): Promise<void> {
     const userData: UserModel = {
       uid: user.uid,
       email: user.email,

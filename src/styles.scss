@@ -19,6 +19,7 @@ $fala-warn: mat-palette($mat-red);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
+// $fala-theme: mat-dark-theme(
 $fala-theme: mat-light-theme(
   (
     color: (
@@ -47,7 +48,46 @@ body {
 * {
   box-sizing: border-box;
 }
-// ################# SIMPLE COMPONENTS
+
+// ################### THUMBS
+@media screen and (min-device-width: 1200px) and (max-device-width: 1600px) and (-webkit-min-device-pixel-ratio: 1) {
+  .desktop-only {
+    display: inherit !important;
+  }
+
+  .mobile-only {
+    display: none !important;
+  }
+
+  *::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px #12192c77;
+    border-radius: 4px;
+    background-color: #3e445977;
+  }
+
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 0px;
+    background-color: #3e445977;
+  }
+
+  .horizontal-scroll:hover::-webkit-scrollbar,
+  .horizontal-scroll:focus::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .horizontal-scroll::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #fa4bb4;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #fa4bb477;
+  }
+}
+
+// *################### SIMPLE COMPONENTS
 .sized-box {
   width: 1rem;
   height: 1rem;
@@ -78,6 +118,83 @@ body {
   }
 }
 
+.flexed {
+  display: flex;
+
+  &-col {
+    flex-direction: column;
+  }
+  &.center {
+    justify-content: center;
+    align-items: center;
+  }
+  &.center-y {
+    align-items: center;
+  }
+  &.center-x {
+    justify-content: center;
+  }
+}
+
 .spacer {
   flex: 1 1 auto;
+}
+
+.shadowed {
+  box-shadow: 0px 2px 4px -1px rgba(146, 45, 185, 0.2),
+    0px 4px 5px 0px rgba(146, 45, 185, 0.14),
+    0px 1px 10px 0px rgba(146, 45, 185, 0.12);
+
+  &-8 {
+    box-shadow: 0px 5px 5px -3px rgba(146, 45, 185, 0.2),
+      0px 8px 10px 1px rgba(146, 45, 185, 0.14),
+      0px 3px 14px 2px rgba(146, 45, 185, 0.12);
+  }
+}
+
+// *################################ MATERIAL OVERRIDE
+.mat-badge-content {
+  box-shadow: 0px 2px 4px -1px rgba(146, 45, 185, 0.2),
+    0px 4px 5px 0px rgba(146, 45, 185, 0.14),
+    0px 1px 10px 0px rgba(146, 45, 185, 0.12);
+
+  box-shadow: 0px 5px 5px -3px rgba(146, 45, 185, 0.2),
+    0px 8px 10px 1px rgba(146, 45, 185, 0.14),
+    0px 3px 14px 2px rgba(146, 45, 185, 0.12);
+}
+
+// ******** CHAT MODULE STYLES ************
+.chat-tabs {
+  .mat-tab-body-content {
+    height: calc(100vh - 50px) !important;
+    overflow-y: auto;
+  }
+
+  .mat-tab-label {
+    padding: 0 1rem;
+    min-width: 1rem;
+  }
+}
+
+// ******** view-conversation.component ************
+.message-inputs {
+  height: auto;
+
+  &.mat-toolbar {
+    font: 400 1rem/1.2rem Roboto, "Helvetica Neue", sans-serif;
+  }
+  .mat-form-field {
+    padding: 1rem;
+    flex: 1 1 auto;
+  }
+  .mat-form-field-appearance-outline .mat-form-field-infix {
+    padding: 0.5rem 0 1rem 0;
+    border-top: 0.54375em solid transparent;
+  }
+  .mat-form-field-appearance-outline .mat-form-field-wrapper {
+    margin: 0;
+  }
+  .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
 }

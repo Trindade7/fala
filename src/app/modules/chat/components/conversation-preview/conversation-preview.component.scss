@@ -1,16 +1,30 @@
 .conversation-container {
   display: flex;
   gap: 1rem;
-  padding: 1rem;
   cursor: pointer;
+  border: 1px solid #ddd;
+  margin: 1rem; // TODO: USE GAP???
+
   &.active {
-    background-color: rgb(54, 4, 43);
+    background-color: rgb(146, 45, 185);
     color: white;
+    border: 0;
   }
 
   .user-avatar {
     width: 48px;
     height: 48px;
     font-size: 48px;
+  }
+
+  article {
+    overflow: hidden;
+  }
+
+  .name {
+    width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

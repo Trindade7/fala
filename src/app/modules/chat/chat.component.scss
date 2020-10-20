@@ -1,0 +1,12 @@
+.chat-container {
+  height: 100vh;
+}
+mat-sidenav {
+  width: 70%;
+}
+
+@media only screen and (max-width: 700px) {
+  mat-sidenav {
+    width: 100vw;
+  }
+}

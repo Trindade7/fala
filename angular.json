@@ -17,6 +17,15 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "outputPath": "dist/fala",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "aot": true,
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.scss"],
+            "scripts": [],
             "allowedCommonJsDependencies": [
               "lodash",
               "firebase",
@@ -29,17 +38,9 @@
               "@firebase/functions",
               "@firebase/performance",
               "@firebase/remote-config",
-              "@firebase/auth"
-            ],
-            "outputPath": "dist/fala",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.app.json",
-            "aot": true,
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
-            "scripts": []
+              "@firebase/auth",
+              "@firebase/util"
+            ]
           },
           "configurations": {
             "production": {
