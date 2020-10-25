@@ -10,7 +10,7 @@ export abstract class StoreGeneric<T> {
 
     protected abstract store: string;
 
-    constructor (
+    constructor(
         initialValue: Partial<T>,
     ) {
         this.bs = new BehaviorSubject(initialValue as T);

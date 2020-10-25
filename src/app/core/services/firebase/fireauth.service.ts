@@ -14,13 +14,13 @@ import { FirestoreService } from './firestore.service';
 export abstract class FireauthService {
   basePath = 'users';
   // tslint:disable-next-line: variable-name
-  private _uid: string = null;
+  private _uid: string = '';
 
   constructor (
-    private afAuth: AngularFireAuth,
-    private db: FirestoreService<UserModel>
+    private _afAuth: AngularFireAuth,
+    private _db: FirestoreService<UserModel>
   ) {
-    this.db.setBasePath(this.basePath);
+    this._db.setBasePath(this.basePath);
     this.user$.pipe(
       tap(user => {
         user ? this._uid = user?.uid ?? null : this._uid = null;
@@ -29,25 +29,25 @@ export abstract class FireauthService {
 
   }
 
-  get uid(): string {
+  get uid(): string | null {
     return this._uid;
   }
 
-  get user$(): Observable<UserModel> {
-    return this.afAuth.authState.pipe(
+  get user$(): Observable<UserModel | null> {
+    return this._afAuth.authState.pipe(
       switchMap(user => {
         if (user) {
-          return this.db.doc$(user.uid);
+          return this._db.doc$(user.uid);
         } else {
           return of(null);
         }
       })
     );
     // try {
-    //   return this.afAuth.authState.pipe(
+    //   return this._afAuth.authState.pipe(
     //     switchMap(user => {
     //       if (user) {
-    //         return this.db.doc$(user.uid);
+    //         return this._db.doc$(user.uid);
     //       } else {
     //         return of(null);
     //       }
@@ -65,14 +65,14 @@ export abstract class FireauthService {
 
   async googleSignIn(): Promise<void> {
     const provider = new auth.GoogleAuthProvider();
-    const credential = await this.afAuth.signInWithPopup(provider);
+    const credential = await this._afAuth.signInWithPopup(provider);
     if (credential.additionalUserInfo.isNewUser) {
       return this.updateUserData(credential.user);
     }
     return;
     // try {
     //   const provider = new auth.GoogleAuthProvider();
-    //   const credential = await this.afAuth.signInWithPopup(provider);
+    //   const credential = await this._afAuth.signInWithPopup(provider);
     //   return this.updateUserData(credential.user);
     // } catch (err) {
     //   if (environment.production === false) {
@@ -86,14 +86,14 @@ export abstract class FireauthService {
 
   async facebookSignIn(): Promise<void> {
     const provider = new auth.FacebookAuthProvider();
-    const credential = await this.afAuth.signInWithPopup(provider);
+    const credential = await this._afAuth.signInWithPopup(provider);
 
     if (credential.additionalUserInfo.isNewUser) {
       return this.updateUserData(credential.user);
     }
     // try {
     //   const provider = new auth.FacebookAuthProvider();
-    //   const credential = await this.afAuth.signInWithPopup(provider);
+    //   const credential = await this._afAuth.signInWithPopup(provider);
 
     //   return this.updateUserData(credential.user);
     // } catch (err) {
@@ -107,15 +107,15 @@ export abstract class FireauthService {
   }
 
   async emailAndPasswordSignIn(email: string, password: string): Promise<any> {
-    return await this.afAuth.signInWithEmailAndPassword(email, password);
+    return await this._afAuth.signInWithEmailAndPassword(email, password);
   }
 
   async emailAndPasswordSignUp(email: string, password: string): Promise<void> {
-    const credential = await this.afAuth.createUserWithEmailAndPassword(email, password);
+    const credential = await this._afAuth.createUserWithEmailAndPassword(email, password);
     return this.updateUserData(credential.user);
 
     // try {
-    //   const credential = await this.afAuth.createUserWithEmailAndPassword(email, password);
+    //   const credential = await this._afAuth.createUserWithEmailAndPassword(email, password);
     //   return this.updateUserData(credential.user);
     // } catch (err) {
     //   if (environment.production === false) {
@@ -144,10 +144,10 @@ export abstract class FireauthService {
       console.groupEnd();
     }
 
-    return this.db.create(userData, user.uid);
+    return this._db.create(userData, user.uid);
   }
 
   logout(): Promise<void> {
-    return this.afAuth.signOut();
+    return this._afAuth.signOut();
   }
 }

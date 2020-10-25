@@ -1,7 +1,15 @@
 import { Observable } from 'rxjs';
 
-export type FileUploadTask = {
-    cancel(): boolean,
-    percentageChanges(): Observable<number>,
-    promiseTask(): Promise<any>,
+export type FileData = {
+    path: string,
+    type: string;
+    file: File;
+};
+
+export type FileUploader = {
+    data: FileData;
+    percentageChanges: Observable<number | undefined>;
+    cancel(): boolean;
+    pause(): boolean;
+    resume(): boolean;
 };

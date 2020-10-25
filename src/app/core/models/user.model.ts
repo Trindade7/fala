@@ -6,7 +6,7 @@ export class UserModel {
     phoneNumber: string;
     photoUrl: string;
 
-    constructor ({
+    constructor({
         uid,
         name,
         email,

@@ -1,11 +1,11 @@
 import { UserModel } from './user.model';
 
 export class ConversationModel {
-    id: string;
-    name: string;
-    users: Partial<UserModel>[];
-    lastMessage: MessageModel;
-    createdAt: Date;
+    id: string | null;
+    name: string | null;
+    users: Partial<UserModel>[] | null;
+    lastMessage: MessageModel | null;
+    createdAt: Date | null;
 
     constructor (args: ConversationModel) {
         this.id = args.id;
@@ -28,10 +28,10 @@ export class ConversationModel {
 
 export class MessageModel {
     id: string;
-    senderId: string;
-    messageBody: string;
-    delivered: boolean;
-    createdAt: Date;
+    senderId: string | null;
+    messageBody: string | null;
+    delivered: boolean | null;
+    createdAt: Date | null;
 
     constructor (args: MessageModel) {
         this.id = args.id ?? null;

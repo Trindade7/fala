@@ -11,25 +11,25 @@ import { UserStore } from './user.store';
 })
 export class UserService {
   constructor (
-    private authService: AuthFacade,
-    private store: UserStore,
+    private _authService: AuthFacade,
+    private _store: UserStore,
   ) {
   }
 
   googleSignIn(): Promise<void> {
-    return this.authService.googleSignIn();
+    return this._authService.googleSignIn();
   }
 
   facebookSignIn(): Promise<void> {
-    return this.authService.facebookSignIn();
+    return this._authService.facebookSignIn();
   }
 
   emailAndPasswordSignIn(email: string, password: string): Promise<void> {
-    return this.authService.emailAndPasswordSignIn(email, password);
+    return this._authService.emailAndPasswordSignIn(email, password);
   }
 
   emailAndPasswordSignUp(email: string, password: string): Promise<void> {
-    return this.authService.emailAndPasswordSignUp(email, password);
+    return this._authService.emailAndPasswordSignUp(email, password);
   }
 
   logout(): Promise<void> {
@@ -37,22 +37,22 @@ export class UserService {
   }
 
   get loading$(): Observable<boolean> {
-    return this.store.state$.pipe(
+    return this._store.state$.pipe(
       map(state => state.loading)
     );
   }
 
   get status$(): Observable<string> {
-    return this.store.state$.pipe(
+    return this._store.state$.pipe(
       map(state => state.status)
     );
   }
   get status(): string {
-    return this.store.state.status;
+    return this._store.state.status;
   }
 
   get user$(): Observable<UserModel> {
-    return this.store.state$.pipe(
+    return this._store.state$.pipe(
       map(
         state => state.loading ? UserModel.empty : state.user
       )

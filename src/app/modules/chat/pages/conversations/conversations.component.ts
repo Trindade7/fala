@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ConversationsService } from '../../services/conversations/conversations.service';
+import { ListConversationsService } from '../../services/list-conversations/list-conversations.service';
 
 @Component({
   templateUrl: './conversations.component.html',
@@ -9,7 +9,7 @@ import { ConversationsService } from '../../services/conversations/conversations
 export class ConversationsComponent implements OnInit {
 
   constructor (
-    public conversationService: ConversationsService
+    public conversationSvc: ListConversationsService
   ) { }
 
   ngOnInit(): void {

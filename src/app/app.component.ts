@@ -10,7 +10,7 @@ export class AppComponent {
   title = 'fala';
   readMode: 'rtl' | 'ltr' | 'btt' = 'rtl'; // {btt = bottom to top}
 
-  constructor () {
+  constructor() {
 
   }
 }

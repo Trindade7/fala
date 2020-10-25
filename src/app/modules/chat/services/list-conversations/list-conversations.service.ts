@@ -2,44 +2,43 @@ import { Injectable } from '@angular/core';
 import { ConversationModel, MessageModel } from '@app-core/models/conversation.model';
 import { environment } from '@app-envs/environment';
 import { AuthService } from '@app/core/services/auth/auth.service';
+import { DbFacade } from '@app/core/services/db.facade';
+import { StoreGeneric } from '@app/core/services/store.generic';
 import { combineLatest, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-
-import { ConversationsDb } from './conversations.db';
-import { ConversationsStore } from './conversations.store';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConversationsService {
+export class ListConversationsService {
 
   constructor (
-    private db: ConversationsDb,
+    private _db: ConversationsDb,
     private store: ConversationsStore,
     private auth: AuthService
   ) {
-    this.db.collection$().subscribe(
-      (conversations: ConversationModel[]) => store.patch({
+    this._db.collection$().subscribe(
+      (conversations) => store.patch({
         loading: false,
-        conversations
+        conversations: conversations as ConversationModel[]
       })
     );
 
     //     #################
-    this.db.collection$().pipe(
-      switchMap((conversations: ConversationModel[]) => {
+    this._db.collection$().pipe(
+      switchMap((conversations) => {
         const convs = conversations.map(conversation => {
-          return this.db.collection$(
+          return this._db.collection$(
             {
               path: `conversations/${conversation.id}/messages`,
               limitToLast: 1,
               orderBy: 'createdAt',
               orderDirection: 'asc',
-              arrayContains: { arrayName: 'participantIds', value: auth.uid }
+              arrayContains: { arrayName: 'participantIds', value: this.auth.uid }
             }
           )
             .pipe(
-              map((messages: MessageModel[]) =>
+              map((messages) =>
                 Object.assign(conversation, { lastMessage: messages[0] })
               )
             );
@@ -58,9 +57,6 @@ export class ConversationsService {
         conversations
       })
     );
-
-    // ##################
-
   }
 
   get collection$(): Observable<ConversationModel[]> {
@@ -70,4 +66,42 @@ export class ConversationsService {
       )
     );
   }
+}
+
+
+
+// *################## DB ZONE ###################
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ConversationsDb extends DbFacade<ConversationModel | MessageModel>{
+  basePath = 'conversations';
+}
+
+
+
+// *################## STORE ZONE ###################
+
+interface IConversationsPage {
+  conversations: ConversationModel[];
+  loading: boolean;
+  status: string;
+  error: Error;
+}
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ConversationsStore extends StoreGeneric<IConversationsPage>{
+  protected store = 'conversations-store';
+
+  constructor () {
+    super({
+      loading: true,
+      conversations: [],
+    });
+  }
+
 }

@@ -1,78 +1,42 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
-import { ConversationModel, MessageModel } from '@app-core/models/conversation.model';
-import { UserModel } from '@app/core/models/user.model';
+import { ConversationModel } from '@app-core/models/conversation.model';
+import { ErrorLogger } from '@app/core/helpers/error-log';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { AppSettings, ChatStore } from './chat.store';
-import { MessagesDb } from './messages.db';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-
+  errorLogger = new ErrorLogger();
 
   constructor (
-    private messagesDb: MessagesDb,
-    private store: ChatStore,
-    private auth: AuthService,
-    private snackBar: MatSnackBar,
-    private router: Router
+    private _store: ChatStore,
+    private _auth: AuthService,
   ) {
   }
 
-  get currentUser$(): Observable<UserModel> {
-    return this.auth.user$;
+  get uid(): string | null {
+    return this._auth.uid;
   }
 
   get appSettings(): AppSettings {
-    return this.store.appSettings;
+    return this._store.appSettings;
   }
 
   get activeConversation$(): Observable<ConversationModel> {
-    return this.store.state$.pipe(
+    return this._store.state$.pipe(
       map(
         state => state.loading ? ConversationModel.empty : state.conversation
       )
     );
-
   }
 
-  openSnackBar(message: string): void {
-    this.snackBar.open(message, 'close', {
-      duration: 2000,
-    });
+  openSnackBar(): void {
+    console.log('san;');
   }
-
-  setActiveConversation(conversation: ConversationModel): void {
-    this.store.patch({
-      loading: false,
-      conversation
-    });
-  }
-
-  create(message: MessageModel): Promise<void> {
-    message.id = this.messagesDb.createId();
-
-    console.log('SERVER TIMESTAMP', this.messagesDb.getServerTimeStamp);
-
-    return this.messagesDb.create(message, message.id);
-  }
-  delete(id: string): Promise<void> {
-    return this.messagesDb.delete(id);
-  }
-
-  get collection$(): Observable<MessageModel[]> {
-    return this.store.state$.pipe(
-      map(
-        state => state.loading ? this.store.temp : state.messages
-      )
-    );
-  }
-
 
 }

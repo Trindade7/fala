@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
-import { ConversationsService } from '../../services/conversations/conversations.service';
+import { ListConversationsService } from '../../services/list-conversations/list-conversations.service';
 
 @Component({
   selector: 'app-conversation-list',
@@ -11,7 +11,7 @@ export class ConversationListComponent implements OnInit {
   @Output() readConversation = new EventEmitter<string>();
 
   constructor (
-    public conversationService: ConversationsService,
+    public conversationSvc: ListConversationsService,
   ) { }
 
   ngOnInit(): void {

@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { ConversationModel } from '@app-core/models/conversation.model';
+import { AuthService } from '@app/core/services/auth/auth.service';
 
 import { ChatService } from '../../services/chat/chat.service';
+import { ViewConversationService } from '../../services/view-conversation/view-conversation.service';
 
 @Component({
   selector: 'app-conversation-preview',
@@ -10,15 +12,18 @@ import { ChatService } from '../../services/chat/chat.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConversationPreviewComponent implements OnInit {
-  @Input() conversation: ConversationModel;
+  @Input() conversation: ConversationModel | null = null;
 
-  constructor (public chatService: ChatService) { }
+  constructor (
+    public chatService: ChatService,
+    public auth: AuthService,
+    private _conversationSvc: ViewConversationService
+  ) { }
 
   ngOnInit(): void { }
 
 
   openConversation(conversation: ConversationModel): void {
-    this.chatService.setActiveConversation(conversation);
-    this.chatService.appSettings.toggleSideNav(true);
+    this._conversationSvc.setActiveConversation(conversation);
   }
 }

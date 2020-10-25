@@ -19,8 +19,7 @@ $fala-warn: mat-palette($mat-red);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-// $fala-theme: mat-dark-theme(
-$fala-theme: mat-light-theme(
+$fala-theme: mat-dark-theme(
   (
     color: (
       primary: $fala-primary,
@@ -184,7 +183,7 @@ body {
     font: 400 1rem/1.2rem Roboto, "Helvetica Neue", sans-serif;
   }
   .mat-form-field {
-    padding: 1rem;
+    padding: 0.5rem;
     flex: 1 1 auto;
   }
   .mat-form-field-appearance-outline .mat-form-field-infix {

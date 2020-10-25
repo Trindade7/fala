@@ -1,6 +1,7 @@
 <div class="contact-ccontainer" *ngIf="(contactsService.collection$|async) as contacts">
     <mat-selection-list [multiple]="false">
-        <div *ngFor="let contact of contacts">
+        <div *ngFor="let contact of contacts"
+             (click)="contactsService.openContactConversation(contact)">
             <mat-list-option [value]="contact">
                 <mat-divider></mat-divider>
                 <img matListAvatar

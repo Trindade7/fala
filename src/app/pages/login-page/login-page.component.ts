@@ -22,37 +22,37 @@ export class LoginPageComponent implements OnInit {
   saveLogIn = false;
 
   constructor (
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router,
-    private snackBar: MatSnackBar
+    private _fb: FormBuilder,
+    private _authService: AuthService,
+    private _router: Router,
+    private _snackBar: MatSnackBar
 
   ) { }
 
   ngOnInit(): void {
   }
 
-  openSnackBar(message: string) {
-    this.snackBar.open(message, 'close', {
+  openSnackBar(message: string): void {
+    this._snackBar.open(message, 'close', {
       duration: 2000,
     });
   }
 
   logIn(): void {
     if (!this.loginForm.valid) {
-      this.snackBar.open('Please fill the form correctly', 'close', {
+      this._snackBar.open('Please fill the form correctly', 'close', {
         duration: 3000,
       });
       return;
     }
 
-    const email = this.loginForm.value['email'];
-    const password = this.loginForm.value['password'];
+    const email = this.loginForm.value.email;
+    const password = this.loginForm.value.password;
 
-    this.authService.emailAndPasswordSignIn(email, password).then(
+    this._authService.emailAndPasswordSignIn(email, password).then(
       () => {
-        if (!!this.authService.user$) {
-          this.router.navigate(['chat']);
+        if (!!this._authService.user$) {
+          this._router.navigate(['chat']);
         }
       }
     ).catch(
@@ -60,26 +60,26 @@ export class LoginPageComponent implements OnInit {
         console.groupCollapsed('!ERROR in >login-page.component [emailAndPasswordSignIn]');
         console.log(err);
         console.groupEnd();
-        this.openSnackBar(err['message']);
+        this.openSnackBar(err.message);
       }
     );
   }
 
   signUp(): void {
     if (!this.loginForm.valid) {
-      this.snackBar.open('Please fill the form correctly', 'close', {
+      this._snackBar.open('Please fill the form correctly', 'close', {
         duration: 2000,
       });
       return;
     }
 
-    const email = this.loginForm.value['email'];
-    const password = this.loginForm.value['password'];
-    this.authService.emailAndPasswordSignUp(email, password).then(
+    const email = this.loginForm.value.email;
+    const password = this.loginForm.value.password;
+    this._authService.emailAndPasswordSignUp(email, password).then(
       res => {
         console.log(res);
 
-        this.router.navigate(['chat/conversations']);
+        this._router.navigate(['chat/conversations']);
       }
     ).catch(
       err => console.log(err)
@@ -87,10 +87,10 @@ export class LoginPageComponent implements OnInit {
   }
 
   googleSignIn(): void {
-    this.authService.googleSignIn().then(
+    this._authService.googleSignIn().then(
       () => {
-        if (!!this.authService.user$) {
-          this.router.navigate(['chat']);
+        if (!!this._authService.user$) {
+          this._router.navigate(['chat']);
         }
       }
     ).catch(
@@ -98,7 +98,7 @@ export class LoginPageComponent implements OnInit {
         console.groupCollapsed('!ERROR in >login-page.component [emailAndPasswordSignIn]');
         console.log(err);
         console.groupEnd();
-        this.openSnackBar(err['message']);
+        this.openSnackBar(err.message);
       }
     );
   }

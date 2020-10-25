@@ -10,7 +10,7 @@ import { ContactsService } from '../../services/contacts/contacts.service';
 })
 export class UserContactComponent implements OnInit {
 
-  constructor (public contactsService: ContactsService) { }
+  constructor(public contactsService: ContactsService) { }
 
   ngOnInit(): void {
   }

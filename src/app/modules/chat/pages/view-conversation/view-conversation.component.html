@@ -1,14 +1,13 @@
-<div *ngIf="(chatService.activeConversation$ |async) as conversation" class="conversation-container">
+<div *ngIf="(conversationSvc.conversation$ |async) as conversation" class="conversation-container">
 
-    <mat-toolbar class="conversation-toolbar mat-elevation-z2">
+    <mat-toolbar class="conversation-toolbar mat-elevation-z2"
+                 color="primary">
         <button (click)="closeConversation()" mat-icon-button>
             <mat-icon>arrow_back</mat-icon>
         </button>
-        <mat-list>
-            <mat-list-item>
-                <img matListAvatar src="https://placehold.it/100x100?text=user%20avatar" alt="...">
-            </mat-list-item>
-        </mat-list>
+
+        <app-avatars [users]="conversation.users" [currentUserId]="auth.uid"></app-avatars>
+
         <span>{{conversation.name}}</span>
         <span class="spacer"></span>
         <button
@@ -33,79 +32,35 @@
         </mat-menu>
     </mat-toolbar>
 
-    <section *ngIf="(conversationService.conversationMessages$ | async) as messages" class="messages">
+    <section *ngIf="(conversationSvc.messages$ | async) as messages" class="messages">
         <div *ngFor="let message of messages; let i = index"
-             [ngClass]="{'sent': i%2===0}"
+             [ngClass]="{'sent': message.senderId === auth.uid}"
              class="message">
-            <mat-list>
-                <mat-list-item>
-                    <img matListAvatar src="https://placehold.it/100x100?text=user%20avatar" alt="...">
-                </mat-list-item>
-            </mat-list>
+
+            <app-avatars [users]="conversation.users"
+                         [currentUserId]="auth.uid">
+            </app-avatars>
             <!-- <mat-card class="mat-elevation-z"> -->
             <mat-card class="">
                 <mat-card-content>
-                    <H1>I'AM HERE</H1>
                     <p>
                         {{message.messageBody}}
                     </p>
                 </mat-card-content>
             </mat-card>
-            <mat-list>
-                <mat-list-item>
-                    <img matListAvatar src="https://placehold.it/100x100?text=user%20avatar" alt="...">
-                </mat-list-item>
-            </mat-list>
-            <!-- <mat-card class="mat-elevation-z"> -->
-            <mat-card class="">
-                <mat-card-content>
-                    <p>
-                        a pariatur esse occaecat quis. In veniam irure minim
-                        fugiat nulla exercitation commodo laborum adipisicing Lorem consectetur.
-                    </p>
-                </mat-card-content>
-            </mat-card>
-            <mat-list>
-                <mat-list-item>
-                    <img matListAvatar src="https://placehold.it/100x100?text=user%20avatar" alt="...">
-                </mat-list-item>
-            </mat-list>
-            <!-- <mat-card class="mat-elevation-z"> -->
-            <mat-card class="">
-                <mat-card-content>
-                    <p>
-                        a pariatur esse occaecat quis
-                    </p>
-                </mat-card-content>
-            </mat-card>
         </div>
     </section>
-    <section *ngIf="!(conversationService.conversationMessages$ | async).length as messages" class="messages">
+    <section *ngIf="!(conversationSvc.messages$ | async).length as messages" class="messages">
         <div class="flexed center">
             <h1>NO Messages yet, start by sending one</h1>
         </div>
     </section>
 
-    <form [formGroup]="messageForm" (ngSubmit)="sendMessage()">
-        <mat-toolbar class="message-inputs mat-elevation-z8">
-            <button mat-icon-button>
-                <mat-icon>attachment</mat-icon>
-            </button>
-            <button mat-icon-button>
-                <mat-icon>insert_emoticon</mat-icon>
-            </button>
-            <mat-form-field appearance="outline">
-                <!-- <input matInput value="value"> -->
-                <textarea formControlName="messageBody"
-                          matInput
-                          cdkTextareaAutosize
-                          #autosize="cdkTextareaAutosize"
-                          cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5"></textarea>
-            </mat-form-field>
-            <button type="submit" mat-mini-fab color="primary" aria-label="Send message">
-                <mat-icon>send</mat-icon>
-            </button>
-        </mat-toolbar>
-    </form>
+    <app-new-meesage-bar></app-new-meesage-bar>
+</div>
+
+
+<!-- ######## NO CONVERSATION SELECTED ######### -->
+<div *ngIf="!(conversationSvc.conversation$ |async)" class="conversation-container">
+    <h1>Please select or start a conversation</h1>
 </div>

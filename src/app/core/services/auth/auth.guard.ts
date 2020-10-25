@@ -11,13 +11,13 @@ import { AuthService } from './auth.service';
 })
 export class UserLoggedInGuard implements CanActivate {
   constructor (
-    private authService: AuthService,
-    private router: Router,
+    private _authService: AuthService,
+    private _router: Router,
     private _snackBar: MatSnackBar
   ) { }
 
   canActivate(): Observable<boolean> {
-    return this.authService.user$.pipe(
+    return this._authService.user$.pipe(
       take(1),
       map(user => !!user),
       tap(loggedIn => {
@@ -26,7 +26,7 @@ export class UserLoggedInGuard implements CanActivate {
           this._snackBar.open('You have to sign In', 'close', {
             duration: 2000,
           });
-          this.router.navigate(['/login']);
+          this._router.navigate(['/login']);
         }
       })
     );

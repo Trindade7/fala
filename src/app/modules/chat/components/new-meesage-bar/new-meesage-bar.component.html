@@ -1,0 +1,27 @@
+<mat-toolbar class="message-inputs mat-elevation-z8">
+    <button mat-icon-button>
+        <mat-icon>attachment</mat-icon>
+    </button>
+    <button mat-icon-button>
+        <mat-icon>insert_emoticon</mat-icon>
+    </button>
+
+    <form [formGroup]="messageForm" (ngSubmit)="sendMessage()" class="message-form flexed center">
+        <mat-form-field appearance="outline">
+            <!-- <input matInput value="value"> -->
+            <textarea formControlName="messageBody"
+                      matInput
+                      cdkTextareaAutosize
+                      #autosize="cdkTextareaAutosize"
+                      cdkAutosizeMinRows="1"
+                      cdkAutosizeMaxRows="5"></textarea>
+        </mat-form-field>
+        <button type="submit"
+                mat-mini-fab
+                class="mat-elevation-z0"
+                color="primary"
+                aria-label="Send message">
+            <mat-icon>send</mat-icon>
+        </button>
+    </form>
+</mat-toolbar>

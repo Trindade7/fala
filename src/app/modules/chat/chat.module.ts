@@ -8,9 +8,12 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { SharedModule } from '../../shared/shared.module';
 import { ChatRoutingModule } from './chat-routing.module';
 import { ChatComponent } from './chat.component';
+import { AvatarsComponent } from './components/avatars/avatars.component';
 import { ContactListComponent } from './components/contact-list/contact-list.component';
 import { ConversationListComponent } from './components/conversation-list/conversation-list.component';
 import { ConversationPreviewComponent } from './components/conversation-preview/conversation-preview.component';
+import { NewMeesageBarComponent } from './components/new-meesage-bar/new-meesage-bar.component';
+import { UploadFilesComponent } from './components/upload-files/upload-files.component';
 import { UserContactComponent } from './components/user-contact/user-contact.component';
 import { ConversationsComponent } from './pages/conversations/conversations.component';
 import { SettingsComponent } from './pages/settings/settings.component';
@@ -25,7 +28,10 @@ import { ViewConversationComponent } from './pages/view-conversation/view-conver
     ContactListComponent,
     ConversationListComponent,
     SettingsComponent,
-    ViewConversationComponent
+    ViewConversationComponent,
+    AvatarsComponent,
+    NewMeesageBarComponent,
+    UploadFilesComponent
   ],
   imports: [
     SharedModule,
@@ -35,6 +41,7 @@ import { ViewConversationComponent } from './pages/view-conversation/view-conver
     MatSidenavModule,
     MatSlideToggleModule,
     MatDividerModule
-  ]
+  ],
+  entryComponents: [UploadFilesComponent]
 })
 export class ChatModule { }

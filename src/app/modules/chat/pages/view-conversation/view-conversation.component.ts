@@ -1,9 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { environment } from '@app-envs/environment';
-import { MessageModel } from '@app/core/models/conversation.model';
-import { take } from 'rxjs/operators';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { ErrorLogger } from '@app/core/helpers/error-log';
+import { AuthService } from '@app/core/services/auth/auth.service';
 
+import { UploadFilesComponent } from '../../components/upload-files/upload-files.component';
 import { ChatService } from '../../services/chat/chat.service';
 import { ViewConversationService } from '../../services/view-conversation/view-conversation.service';
 
@@ -13,9 +14,11 @@ import { ViewConversationService } from '../../services/view-conversation/view-c
   styleUrls: ['./view-conversation.component.scss']
 })
 export class ViewConversationComponent implements OnInit {
+  errorLogger = new ErrorLogger();
+
   @Output() closeConversationEmitter = new EventEmitter<boolean>();
 
-  messageForm = this.fb.group({
+  messageForm = this._fb.group({
     messageBody: [
       '',
       [
@@ -27,43 +30,31 @@ export class ViewConversationComponent implements OnInit {
   });
 
   constructor (
-    public chatService: ChatService,
-    public conversationService: ViewConversationService,
-    private fb: FormBuilder
+    public _auth: AuthService,
+    private _chatService: ChatService,
+    public conversationSvc: ViewConversationService,
+    private _fb: FormBuilder,
+    private _bottomSheet: MatBottomSheet
   ) { }
   ngOnInit(): void { }
 
-  closeConversation(): void {
-    this.chatService.appSettings.toggleSideNav(false);
+  openBottomSheet(): void {
+    this._bottomSheet.open(UploadFilesComponent);
   }
 
-  sendMessage(): void {
-    console.log(this.messageForm);
-    if (this.messageForm.valid) {
-      const message = MessageModel.empty;
-      message.messageBody = this.messageForm.value['messageBody'];
-      this.chatService.currentUser$.pipe(
-        take(1)
-      ).toPromise().then(
-        user => message.senderId = user.uid
-      ).then(
-        () => this.conversationService.sendMessage(message).then(
-          () => {
-            this.messageForm.reset();
-          }
-        ).catch(
-          err => {
-            this.chatService.openSnackBar(`Error the message: ${err.code}`);
-            if (environment.production === false) {
-              console.groupCollapsed(err.code);
-              console.log(err.message);
-              console.groupEnd();
-            }
-          }
-        )
-      );
-    } else {
-      this.chatService.openSnackBar(`Message can NOT be empty`);
-    }
+  closeConversation(): void {
+    this._chatService.appSettings.toggleSideNav(false);
+  }
+
+  @HostListener('dragover', ['$event'])
+  onDragOver($event: any): void {
+    $event.preventDefault();
+    this.openBottomSheet();
+    console.log('HOVERED');
+  }
+  @HostListener('dragleave', ['$event'])
+  onDragLeave($event: any): void {
+    $event.preventDefault();
+    console.log('HOVER LEFT');
   }
 }

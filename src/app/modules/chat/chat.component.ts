@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { MessageModel } from '@app-core/models/conversation.model';
 import { AuthService } from '@app-core/services/auth/auth.service';
 
 import { ChatService } from './services/chat/chat.service';
-import { ConversationsService } from './services/conversations/conversations.service';
+import { AppSettings } from './services/chat/chat.store';
+import { ListConversationsService } from './services/list-conversations/list-conversations.service';
+
+// import { ListConversationsService } from './services/list-_conversations/list-conversations.service';
 
 @Component({
   selector: 'app-chat',
@@ -21,19 +22,20 @@ export class ChatComponent implements OnInit {
       Validators.maxLength(1000)
     ]
   );
-  appSettings;
-  readDirection: 'end' | 'start';
+
+  appSettings: AppSettings;
+  readDirection: 'end' | 'start' = 'start';
 
   constructor (
-    private conversations: ConversationsService,
+    private _conversations: ListConversationsService,
     public chatService: ChatService,
-    private router: Router,
-    private authService: AuthService
+    private _authService: AuthService
   ) {
+    this.appSettings = chatService.appSettings;
   }
 
   ngOnInit(): void {
-    console.log(this.conversations.collection$);
+    console.log(this._conversations.collection$);
     this.appSettings = this.chatService.appSettings;
     this.readDirection = this.chatService.appSettings.readMode === 'ltr' ? 'end' : 'start';
     console.log(this.appSettings);
@@ -50,32 +52,12 @@ export class ChatComponent implements OnInit {
   }
 
 
-  get uid(): string {
-    return this.authService.uid;
+  get uid(): string | null {
+    return this._authService.uid;
   }
 
-  readConversation(event): void {
-    console.log(event);
-  }
-
-  getDate(dateStr: Date): number {
+  getDate(dateStr: { seconds: number, milliseconds: number; }): number {
     // tslint:disable-next-line: no-string-literal
-    return new Date(0).setUTCSeconds(dateStr['seconds']);
-  }
-  sendMessage(): void {
-    console.log(this.messageForm);
-    if (this.messageForm.valid) {
-      const message = MessageModel.empty;
-      message.messageBody = this.messageForm.value;
-      message.senderId = this.uid;
-
-      this.chatService.create(message).then(
-        () => console.log('sent')
-      );
-      this.messageForm.reset();
-    } else {
-      console.log('error submittion');
-
-    }
+    return new Date(0).setUTCSeconds(dateStr.seconds);
   }
 }

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { environment } from '../../../../environments/environment';
-import { FileUploadTask } from '../../models/upload-task.model';
+import { FileUploader } from '../../models/upload-task.model';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,7 @@ export class FirestoreService<T> {
     return firebase.firestore.FieldValue.serverTimestamp();
   }
 
-  private collection(
+  private _collection(
     path: string = this.basePath,
     orderBy?: string,
     orderDirection?: 'asc' | 'desc'
@@ -50,7 +50,7 @@ export class FirestoreService<T> {
       orderDirection?: 'asc' | 'desc',
       limitTo?: number;
       path?: string,
-      arrayContains?: { arrayName: string, value: string; };
+      arrayContains?: { arrayName: string, value: string | null; };
     } = {}
   ): Observable<T[]> {
     return this.firestore.collection<T>(
@@ -151,7 +151,7 @@ export class FirestoreService<T> {
     }
   }
 
-  doc$(id: string): Observable<T> {
+  doc$(id: string): Observable<T | undefined> {
     return this.firestore.doc<T>(`${this.basePath}/${id}`)
       .valueChanges().pipe(
         tap( // LOGGING DATA
@@ -208,7 +208,7 @@ export class FirestoreService<T> {
       console.groupEnd();
     }
 
-    return this.collection().doc(docId).set(
+    return this._collection().doc(docId).set(
       {
         ...document,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -247,7 +247,7 @@ export class FirestoreService<T> {
 
   // *#################### FIRE STORAGE
 
-  addFile(inputFile: File, filePath: string): FileUploadTask {
+  addFile(inputFile: File, filePath: string): FileUploader {
     if (environment.production === false) {
       console.groupCollapsed('[firestore.service] ADDING FILE');
       console.log(...[inputFile.name, 'path:', filePath]);
@@ -255,9 +255,15 @@ export class FirestoreService<T> {
     }
     const task = this.storage.upload(`${this.basePath}/${filePath}`, inputFile);
     return {
+      data: {
+        file: inputFile,
+        path: filePath,
+        type: 'any'
+      },
       cancel: task.cancel,
-      percentageChanges: task.percentageChanges,
-      promiseTask: task.then
+      pause: task.pause,
+      resume: task.resume,
+      percentageChanges: task.percentageChanges(),
     };
   }
 

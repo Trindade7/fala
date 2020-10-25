@@ -12,8 +12,8 @@ import { ChatService } from '../../services/chat/chat.service';
 export class SettingsComponent implements OnInit {
 
   constructor (
-    private authService: AuthService,
-    private router: Router,
+    private _authService: AuthService,
+    private _router: Router,
     public chatService: ChatService,
   ) { }
 
@@ -21,8 +21,8 @@ export class SettingsComponent implements OnInit {
   }
 
   logOut(): void {
-    this.authService.logout().then(
-      () => this.router.navigate(['login'])
+    this._authService.logout().then(
+      () => this._router.navigate(['login'])
     ).catch(
       err => {
         console.groupCollapsed('!ERROR in >login-page.component [emailAndPasswordSignIn]');
