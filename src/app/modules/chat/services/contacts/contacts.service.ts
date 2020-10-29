@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { UserModel } from '@app/core/models/user.model';
+import { User } from '@app/core/models/user.model';
 import { DbFacade } from '@app/core/services/db.facade';
 import { StoreGeneric } from '@app/core/services/store.generic';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ViewConversationService } from '../view-conversation/view-conversation.service';
+import { ViewConversationService } from '../../pages/view-conversation/view-conversation.service';
 
 @Injectable({ providedIn: 'root' })
 export class ContactsService {
@@ -23,7 +23,7 @@ export class ContactsService {
     );
   }
 
-  get collection$(): Observable<UserModel[]> {
+  get collection$(): Observable<User[]> {
     return this._store.state$.pipe(
       map(
         state => state.loading ? [] : state.contacts
@@ -31,7 +31,7 @@ export class ContactsService {
     );
   }
 
-  openContactConversation(contact: UserModel): void {
+  openContactConversation(contact: User): void {
     this.conversationSvc.openContactConversation(contact);
   }
 }
@@ -40,7 +40,7 @@ export class ContactsService {
 
 // *################## DB SERVICE ###################
 @Injectable({ providedIn: 'root' })
-class ContactsServiceDb extends DbFacade<UserModel>{
+class ContactsServiceDb extends DbFacade<User>{
   basePath = 'users';
 }
 
@@ -48,7 +48,7 @@ class ContactsServiceDb extends DbFacade<UserModel>{
 
 // *################## STORE ###################
 interface IContactsPage {
-  contacts: UserModel[];
+  contacts: User[];
   loading: boolean;
   status: string;
   error: Error;
@@ -56,7 +56,7 @@ interface IContactsPage {
 
 @Injectable({ providedIn: 'root' })
 class ContactsServiceStore extends StoreGeneric<IContactsPage>{
-  _store = 'contats-_store';
+  store = 'contats-store';
 
   constructor () {
     super({

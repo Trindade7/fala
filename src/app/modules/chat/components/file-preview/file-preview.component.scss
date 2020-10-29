@@ -1,0 +1,23 @@
+.preview-container {
+  width: 100%;
+  height: 100%;
+  img {
+    width: 100%;
+  }
+
+  .type-icon {
+    height: 100px;
+    width: 100px;
+    background-color: rgb(80, 43, 9);
+    color: white;
+    &.book {
+      background-color: rgb(252, 59, 59);
+    }
+    &.doc {
+      background-color: rgb(59, 159, 252);
+    }
+    &.calc {
+      background-color: rgb(38, 173, 90);
+    }
+  }
+}

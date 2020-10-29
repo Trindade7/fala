@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { environment } from '@app-envs/environment';
-import { auth, User } from 'firebase/app';
+import { auth, User as FireUser } from 'firebase/app';
 import { Observable, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
-import { UserModel } from '../../models/user.model';
+import { createUser, emptyUser, User } from '../../models/user.model';
 import { FirestoreService } from './firestore.service';
 
 @Injectable({
@@ -13,138 +13,81 @@ import { FirestoreService } from './firestore.service';
 })
 export abstract class FireauthService {
   basePath = 'users';
-  // tslint:disable-next-line: variable-name
-  private _uid: string = '';
+  private _uid = '';
 
   constructor (
     private _afAuth: AngularFireAuth,
-    private _db: FirestoreService<UserModel>
+    private _db: FirestoreService<User>
   ) {
     this._db.setBasePath(this.basePath);
     this.user$.pipe(
-      tap(user => {
-        user ? this._uid = user?.uid ?? null : this._uid = null;
-      })
+      tap(user => this._uid = user.uid)
     ).subscribe();
-
   }
 
   get uid(): string | null {
     return this._uid;
   }
 
-  get user$(): Observable<UserModel | null> {
+  get user$(): Observable<User> {
     return this._afAuth.authState.pipe(
       switchMap(user => {
         if (user) {
-          return this._db.doc$(user.uid);
+          return this._db.doc$(user.uid) as Observable<User>;
         } else {
-          return of(null);
+          return of(emptyUser());
         }
       })
     );
-    // try {
-    //   return this._afAuth.authState.pipe(
-    //     switchMap(user => {
-    //       if (user) {
-    //         return this._db.doc$(user.uid);
-    //       } else {
-    //         return of(null);
-    //       }
-    //     })
-    //   );
-    // } catch (err) {
-    //   if (environment.production === false) {
-    //     console.groupCollapsed('!ERROR in >fireauth.service [user$()]');
-    //     console.log(err);
-    //     console.groupEnd();
-    //   }
-    //   return err;
-    // }
   }
 
   async googleSignIn(): Promise<void> {
     const provider = new auth.GoogleAuthProvider();
     const credential = await this._afAuth.signInWithPopup(provider);
-    if (credential.additionalUserInfo.isNewUser) {
-      return this.updateUserData(credential.user);
-    }
-    return;
-    // try {
-    //   const provider = new auth.GoogleAuthProvider();
-    //   const credential = await this._afAuth.signInWithPopup(provider);
-    //   return this.updateUserData(credential.user);
-    // } catch (err) {
-    //   if (environment.production === false) {
-    //     console.groupCollapsed('!ERROR in >fireauth.service [googleSignIn()]');
-    //     console.log(err);
-    //     console.groupEnd();
-    //   }
-    //   return err;
-    // }
+    return this.processUserData(credential);
   }
 
   async facebookSignIn(): Promise<void> {
     const provider = new auth.FacebookAuthProvider();
     const credential = await this._afAuth.signInWithPopup(provider);
+    return this.processUserData(credential);
+  }
 
-    if (credential.additionalUserInfo.isNewUser) {
-      return this.updateUserData(credential.user);
-    }
-    // try {
-    //   const provider = new auth.FacebookAuthProvider();
-    //   const credential = await this._afAuth.signInWithPopup(provider);
-
-    //   return this.updateUserData(credential.user);
-    // } catch (err) {
-    //   if (environment.production === false) {
-    //     console.groupCollapsed('!ERROR in >fireauth.service [facebookSignIn()]');
-    //     console.log(err);
-    //     console.groupEnd();
-    //   }
-    //   return err;
-    // }
+  async emailAndPasswordSignUp(email: string, password: string): Promise<void> {
+    const credential = await this._afAuth.createUserWithEmailAndPassword(email, password);
+    return this.processUserData(credential);
   }
 
   async emailAndPasswordSignIn(email: string, password: string): Promise<any> {
     return await this._afAuth.signInWithEmailAndPassword(email, password);
   }
 
-  async emailAndPasswordSignUp(email: string, password: string): Promise<void> {
-    const credential = await this._afAuth.createUserWithEmailAndPassword(email, password);
-    return this.updateUserData(credential.user);
-
-    // try {
-    //   const credential = await this._afAuth.createUserWithEmailAndPassword(email, password);
-    //   return this.updateUserData(credential.user);
-    // } catch (err) {
-    //   if (environment.production === false) {
-    //     console.groupCollapsed('!ERROR in >fireauth.service [emailAndPasswordSignIn]');
-    //     console.log(err);
-    //     console.groupEnd();
-    //   }
-    //   return err;
-    // }
+  fireUserToUser(fireUser: FireUser | null): User {
+    if (!fireUser) {
+      throw new Error('Error getting User.');
+    }
+    return createUser({
+      name: fireUser.displayName ?? '',
+      email: fireUser.email ?? '',
+      uid: fireUser.uid,
+      isVerified: fireUser.emailVerified,
+      phoneNumber: fireUser.phoneNumber ?? '',
+      photoUrl: fireUser.photoURL ?? ''
+    });
   }
 
   // TODO: KEEP THIS?
-  updateUserData(user: User): Promise<void> {
-    const userData: UserModel = {
-      uid: user.uid,
-      email: user.email,
-      isVerified: user.emailVerified,
-      name: user.displayName,
-      phoneNumber: user.phoneNumber,
-      photoUrl: user.photoURL
-    };
-
+  processUserData(credential: auth.UserCredential): Promise<void> {
     if (environment.production === false) {
-      console.groupCollapsed('>fireauth.service: updateUserData()');
-      console.log(...[userData, user]);
+      console.groupCollapsed('>fireauth.service: processUserData()');
+      console.log(...[credential.user]);
       console.groupEnd();
     }
-
-    return this._db.create(userData, user.uid);
+    if (credential?.additionalUserInfo?.isNewUser) {
+      const user = this.fireUserToUser(credential.user);
+      return this._db.create(user, user.uid);
+    }
+    return Promise.resolve();
   }
 
   logout(): Promise<void> {

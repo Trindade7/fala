@@ -36,12 +36,11 @@ export class ListConversationsService {
               orderDirection: 'asc',
               arrayContains: { arrayName: 'participantIds', value: this.auth.uid }
             }
-          )
-            .pipe(
-              map((messages) =>
-                Object.assign(conversation, { lastMessage: messages[0] })
-              )
-            );
+          ).pipe(
+            map((messages) =>
+              Object.assign(conversation as ConversationModel, { lastMessage: messages[0] ?? null })
+            )
+          );
         });
         if (environment.production === false) {
           console.groupCollapsed('CONVERSATIONS LIST W M');

@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ErrorLogger } from '@app/core/helpers/error-log';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { Logger as logger } from '@app-core/helpers/logger';
 import { MessageModel } from '@app/core/models/conversation.model';
 import { AuthService } from '@app/core/services/auth/auth.service';
-import { take } from 'rxjs/operators';
 
-import { ViewConversationService } from '../../services/view-conversation/view-conversation.service';
+import { UploadFilesComponent } from '../../../components/upload-files/upload-files.component';
+import { ViewConversationService } from '../view-conversation.service';
 
 @Component({
   selector: 'app-new-meesage-bar',
@@ -25,25 +26,17 @@ export class NewMeesageBarComponent implements OnInit {
     ],
   });
 
-  errorLogger = new ErrorLogger();
-
   constructor (
     public auth: AuthService,
     public conversationSvc: ViewConversationService,
-    private _fb: FormBuilder
+    private _fb: FormBuilder,
+    private _bottomSheet: MatBottomSheet,
   ) { }
 
   ngOnInit(): void { }
 
-  @HostListener('dragover', ['$event'])
-  onDragOver($event: any): void {
-    $event.preventDefault();
-    console.log('HOVERED');
-  }
-  @HostListener('dragleave', ['$event'])
-  onDragLeave($event: any): void {
-    $event.preventDefault();
-    console.log('HOVER LEFT');
+  openBottomSheet(): void {
+    this._bottomSheet.open(UploadFilesComponent);
   }
 
   sendMessage(): void {
@@ -56,24 +49,19 @@ export class NewMeesageBarComponent implements OnInit {
     ) {
       const message = MessageModel.empty;
       message.messageBody = messageBody;
+      message.senderId = this.auth.uid;
 
-      this.auth.user$.pipe(
-        take(1)
-      ).toPromise().then(
-        user => message.senderId = user.uid
-      ).then(
-        () => this.conversationSvc.sendMessage(message).then(
-          () => {
-            this.messageForm.reset();
-          }
-        ).catch(
-          err => {
-            this.errorLogger.collapsed(err.code, [err.message]);
-          }
-        )
+      this.messageForm.reset('');
+
+      this.conversationSvc.sendMessage(message).then(
+        () => {
+          logger.collapsed('sent');
+        }
+      ).catch(
+        err => logger.collapsed(err.code, [err.message])
       );
     } else {
-      this.errorLogger.collapsed('Message can NOT be empty', []);
+      logger.collapsed('Message can NOT be empty', []);
     }
   }
 }

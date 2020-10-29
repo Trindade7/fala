@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ViewConversationService } from './view-conversation.service';
+import { ViewConversationService } from '../../pages/view-conversation/view-conversation.service';
 
 describe('ViewConversationService', () => {
   let service: ViewConversationService;

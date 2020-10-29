@@ -1,16 +1,15 @@
+import { Logger as logger } from '@app-core/helpers/logger';
 import { BehaviorSubject, Observable } from 'rxjs';
-
-import { environment } from '../../../environments/environment';
 
 export abstract class StoreGeneric<T> {
     protected bs: BehaviorSubject<T>;
     state$: Observable<T>;
     state: T;
-    previous: T;
+    previous: T | undefined;
 
     protected abstract store: string;
 
-    constructor(
+    constructor (
         initialValue: Partial<T>,
     ) {
         this.bs = new BehaviorSubject(initialValue as T);
@@ -23,16 +22,13 @@ export abstract class StoreGeneric<T> {
     patch(newValue: Partial<T>, event: string = 'not specified'): void {
         this.previous = this.state;
         const newState = Object.assign({}, this.state, newValue);
-
-        if (environment.production === false) {
-            console.groupCollapsed(`[${this.store}] [patch] [event: ${event}]`);
-            console.log(
+        logger.collapsed(`[${this.store}] [patch] [event: ${event}]`,
+            [
                 ...['change', newValue],
                 ...['previous', this.previous],
                 ...['next', newState]
-            );
-            console.groupEnd();
-        }
+            ],
+        );
 
         this.bs.next(newState);
     }
@@ -41,15 +37,13 @@ export abstract class StoreGeneric<T> {
         this.previous = this.state;
         const newState = Object.assign({}, newValue) as T;
 
-        if (environment.production === false) {
-            console.groupCollapsed(`[${this.store} store] [setValue] [event: ${event}]`);
-            console.log(
+        logger.collapsed(`[${this.store}] [setValue] [event: ${event}]`,
+            [
                 ...['change', newValue],
                 ...['previous', this.previous],
                 ...['next', newState]
-            );
-            console.groupEnd();
-        }
+            ],
+        );
 
         this.bs.next(newState);
     }

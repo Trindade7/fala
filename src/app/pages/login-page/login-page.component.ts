@@ -4,17 +4,19 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '@app-core/services/auth/auth.service';
 
+import { AuthPageService } from './auth-page.service';
+
 @Component({
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss']
 })
 export class LoginPageComponent implements OnInit {
-  loginForm = this.fb.group({
+  loginForm = this._fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
     saveSession: [false]
   });
-  signUpForm = this.fb.group({
+  signUpForm = this._fb.group({
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
@@ -25,8 +27,8 @@ export class LoginPageComponent implements OnInit {
     private _fb: FormBuilder,
     private _authService: AuthService,
     private _router: Router,
-    private _snackBar: MatSnackBar
-
+    private _snackBar: MatSnackBar,
+    public auth: AuthPageService
   ) { }
 
   ngOnInit(): void {
@@ -37,6 +39,8 @@ export class LoginPageComponent implements OnInit {
       duration: 2000,
     });
   }
+
+  // TODO: MIGRATE METHODS TO SERVICE;
 
   logIn(): void {
     if (!this.loginForm.valid) {

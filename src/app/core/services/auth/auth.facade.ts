@@ -2,7 +2,7 @@ import { Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { UserModel } from '../../models/user.model';
+import { User } from '../../models/user.model';
 import { FireauthService } from '../firebase/fireauth.service';
 
 export abstract class AuthFacade {
@@ -12,7 +12,7 @@ export abstract class AuthFacade {
         @Inject(Router) private _router: Router
     ) { }
 
-    get user$(): Observable<UserModel | null> {
+    get user$(): Observable<User | null> {
         return this._authService.user$;
     }
     get uid(): string | null {

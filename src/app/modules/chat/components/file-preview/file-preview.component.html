@@ -1,0 +1,13 @@
+<div class="preview-container flexed center">
+    <section *ngIf="fileTypeGroup === 'image'" class="file-preview">
+        <img [src]="filePreview" alt="">
+    </section>
+
+    <section *ngIf="fileTypeGroup === 'video'" class="file-preview">
+        <video [src]="filePreview"></video>
+    </section>
+
+    <section *ngIf="fileTypeGroup !== 'image' && fileType !== 'video'" class="file-preview">
+        <div class="type-icon" [ngClass]="fileTypeGroup">{{fileType}}</div>
+    </section>
+</div>

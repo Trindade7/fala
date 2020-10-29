@@ -6,7 +6,7 @@
             <mat-icon>arrow_back</mat-icon>
         </button>
 
-        <app-avatars [users]="conversation.users" [currentUserId]="auth.uid"></app-avatars>
+        <app-avatars [imageUrl]="conversationAvatar(conversation)"></app-avatars>
 
         <span>{{conversation.name}}</span>
         <span class="spacer"></span>
@@ -34,11 +34,10 @@
 
     <section *ngIf="(conversationSvc.messages$ | async) as messages" class="messages">
         <div *ngFor="let message of messages; let i = index"
-             [ngClass]="{'sent': message.senderId === auth.uid}"
+             [ngClass]="{'sent': message.senderId === auth.uid, 'not-delivered': !message.delivered}"
              class="message">
 
-            <app-avatars [users]="conversation.users"
-                         [currentUserId]="auth.uid">
+            <app-avatars [imageUrl]="messageAvatar(message.senderId)">
             </app-avatars>
             <!-- <mat-card class="mat-elevation-z"> -->
             <mat-card class="">
@@ -48,6 +47,23 @@
                     </p>
                 </mat-card-content>
             </mat-card>
+        </div>
+        <div>
+            <div *ngFor="let message of conversationSvc.undeliveredMessages$ | async; let i = index"
+                 [ngClass]="{'sent': message.senderId === auth.uid, 'not-delivered': !message.delivered}"
+                 class="message">
+
+                <app-avatars [imageUrl]="messageAvatar(message.senderId)">
+                </app-avatars>
+                <!-- <mat-card class="mat-elevation-z"> -->
+                <mat-card class="">
+                    <mat-card-content>
+                        <p>
+                            {{message.messageBody}}
+                        </p>
+                    </mat-card-content>
+                </mat-card>
+            </div>
         </div>
     </section>
     <section *ngIf="!(conversationSvc.messages$ | async).length as messages" class="messages">

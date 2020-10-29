@@ -1,4 +1,4 @@
-<mat-card
+<mat-card *ngIf="conversation"
           class="conversation-container mat-elevation-z"
           [ngClass]="{'shadowed-8 active': !conversation.id}"
           matBadge="10"
@@ -6,8 +6,8 @@
           (click)="openConversation(conversation)">
 
     <section class="images">
-        <div *ngIf="conversation.users as users">
-            <app-avatars [users]="users" [currentUserId]="auth.uid"></app-avatars>
+        <div *ngFor="let user of conversation.users">
+            <app-avatars [imageUrl]="user?.photoUrl? user.photoUrl: avatarPlaceholder"></app-avatars>
         </div>
     </section>
 
@@ -26,7 +26,4 @@
             <span *ngIf="message.messageBody?.length > 100">...</span>
         </p>
     </article>
-    <!-- <section class="notification">
-        <mat-icon>message</mat-icon>
-    </section> -->
 </mat-card>

@@ -1,9 +1,9 @@
-import { UserModel } from './user.model';
+import { User } from './user.model';
 
 export class ConversationModel {
     id: string | null;
     name: string | null;
-    users: Partial<UserModel>[] | null;
+    users: Partial<User>[] | null;
     lastMessage: MessageModel | null;
     createdAt: Date | null;
 
@@ -40,6 +40,7 @@ export class MessageModel {
         this.delivered = args.delivered ?? false;
         this.createdAt = args.createdAt ?? null;
     }
+
 
     static get empty(): MessageModel {
         return {

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export abstract class FirestorageService<T> {
-  protected basePath: string;
+  protected basePath = '';
 
   constructor (
     @Inject(AngularFireStorage) protected storage: AngularFireStorage,

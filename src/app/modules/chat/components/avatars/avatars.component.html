@@ -1,14 +1,8 @@
-<div class="user-avatar" *ngFor="let user of users">
-    <mat-list *ngIf="!user.photoUrl">
+<div class="avatar">
+    <mat-list>
         <mat-list-item>
-            <img matListAvatar src="https://placehold.it/100x100?text=user%20avatar"
-                 alt="...">
-        </mat-list-item>
-    </mat-list>
-    <mat-list *ngIf="user.photoUrl && user.uid !== currentUserId">
-        <mat-list-item>
-            <img matListAvatar [src]="user.photoUrl"
-                 alt="User avatar">
+            <img matListAvatar [src]="imageUrl"
+                 alt="Avatar image">
         </mat-list-item>
     </mat-list>
 </div>

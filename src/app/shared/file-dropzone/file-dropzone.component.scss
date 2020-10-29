@@ -1,0 +1,51 @@
+.dropzone {
+  width: 200px;
+  height: 200px;
+  border: 4px dashed;
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+
+  .file-input {
+    display: none;
+  }
+
+  img {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+
+  .info {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0);
+    transition: opacity 0.2s, background-color 0.2s;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.25;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    .icon {
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+  &.hovering,
+  &:hover,
+  &:active {
+    .info {
+      background: rgba(0, 0, 0, 0.235);
+      opacity: 0.7;
+    }
+  }
+}

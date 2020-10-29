@@ -3,7 +3,7 @@ import { ConversationModel, MessageModel } from '@app-core/models/conversation.m
 import { StoreGeneric } from '@app-core/services/store.generic';
 
 export interface IChatPage {
-    conversation: ConversationModel;
+    conversation?: ConversationModel;
     conversationNotStored?: boolean;
     messages: MessageModel[];
     files?: string[];
@@ -25,12 +25,12 @@ export class ChatStore extends StoreGeneric<IChatPage>{
         super({
             loading: true,
             messages: [],
-            conversation: null,
+            conversation: undefined,
             conversationNotStored: true,
-            error: null,
-            files: null,
-            status: null,
-            links: null
+            error: undefined,
+            files: undefined,
+            status: undefined,
+            links: undefined
         });
     }
 }

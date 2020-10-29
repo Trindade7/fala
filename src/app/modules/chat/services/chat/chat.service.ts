@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ConversationModel } from '@app-core/models/conversation.model';
-import { ErrorLogger } from '@app/core/helpers/error-log';
+import { Logger } from '@app/core/helpers/logger';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -11,7 +11,7 @@ import { AppSettings, ChatStore } from './chat.store';
   providedIn: 'root'
 })
 export class ChatService {
-  errorLogger = new ErrorLogger();
+  Logger = new Logger();
 
   constructor (
     private _store: ChatStore,
@@ -27,7 +27,7 @@ export class ChatService {
     return this._store.appSettings;
   }
 
-  get activeConversation$(): Observable<ConversationModel> {
+  get activeConversation$(): Observable<ConversationModel | undefined> {
     return this._store.state$.pipe(
       map(
         state => state.loading ? ConversationModel.empty : state.conversation

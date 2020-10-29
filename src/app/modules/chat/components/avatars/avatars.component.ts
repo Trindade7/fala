@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { UserModel } from '@app/core/models/user.model';
 
 @Component({
   selector: 'app-avatars',
@@ -8,8 +7,7 @@ import { UserModel } from '@app/core/models/user.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AvatarsComponent implements OnInit {
-  @Input() users: UserModel[];
-  @Input() currentUserId: string;
+  @Input() imageUrl = '';
 
   constructor () { }
 

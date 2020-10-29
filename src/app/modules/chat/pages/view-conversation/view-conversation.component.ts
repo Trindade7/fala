@@ -1,12 +1,11 @@
-import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { ErrorLogger } from '@app/core/helpers/error-log';
+import { ChatService } from '@app-modules/chat/services/chat/chat.service';
+import { Logger } from '@app/core/helpers/logger';
+import { ConversationModel } from '@app/core/models/conversation.model';
 import { AuthService } from '@app/core/services/auth/auth.service';
 
-import { UploadFilesComponent } from '../../components/upload-files/upload-files.component';
-import { ChatService } from '../../services/chat/chat.service';
-import { ViewConversationService } from '../../services/view-conversation/view-conversation.service';
+import { ViewConversationService } from './view-conversation.service';
 
 @Component({
   selector: 'app-view-conversation',
@@ -14,7 +13,7 @@ import { ViewConversationService } from '../../services/view-conversation/view-c
   styleUrls: ['./view-conversation.component.scss']
 })
 export class ViewConversationComponent implements OnInit {
-  errorLogger = new ErrorLogger();
+  Logger = new Logger();
 
   @Output() closeConversationEmitter = new EventEmitter<boolean>();
 
@@ -30,31 +29,26 @@ export class ViewConversationComponent implements OnInit {
   });
 
   constructor (
-    public _auth: AuthService,
     private _chatService: ChatService,
-    public conversationSvc: ViewConversationService,
     private _fb: FormBuilder,
-    private _bottomSheet: MatBottomSheet
+    public auth: AuthService,
+    public conversationSvc: ViewConversationService,
   ) { }
   ngOnInit(): void { }
 
-  openBottomSheet(): void {
-    this._bottomSheet.open(UploadFilesComponent);
+  messageAvatar(senderId: string, conversation: ConversationModel): string {
+    let url;
+    conversation?.users?.map(user => user.uid === senderId ? url = user.photoUrl : undefined);
+    return url ?? 'https://placehold.it/100x100?text=user%20avatar';
+  }
+
+  conversationAvatar(conversation: ConversationModel): string {
+    let url;
+    conversation?.users?.map(user => user.uid !== this.auth.uid ? url = user.photoUrl : undefined);
+    return url ?? 'https://placehold.it/100x100?text=user%20avatar';
   }
 
   closeConversation(): void {
     this._chatService.appSettings.toggleSideNav(false);
-  }
-
-  @HostListener('dragover', ['$event'])
-  onDragOver($event: any): void {
-    $event.preventDefault();
-    this.openBottomSheet();
-    console.log('HOVERED');
-  }
-  @HostListener('dragleave', ['$event'])
-  onDragLeave($event: any): void {
-    $event.preventDefault();
-    console.log('HOVER LEFT');
   }
 }

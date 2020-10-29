@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ErrorLogger } from '@app/core/helpers/error-log';
+import { Logger as logger } from '@app-core/helpers/logger';
+import { Logger } from '@app/core/helpers/logger';
 import { ConversationModel, MessageModel } from '@app/core/models/conversation.model';
-import { UserModel } from '@app/core/models/user.model';
+import { User } from '@app/core/models/user.model';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { DbFacade } from '@app/core/services/db.facade';
 import { StorageFacade } from '@app/core/services/storage.facade';
@@ -10,15 +11,15 @@ import { Observable, Subscription } from 'rxjs';
 import { watch } from 'rxjs-watcher';
 import { map, take } from 'rxjs/operators';
 
-import { ChatService } from '../chat/chat.service';
-import { ConversationDb } from '../conversation.db';
+import { ChatService } from '../../services/chat/chat.service';
+import { ConversationDb } from '../../services/conversation.db';
 
 // TODO: remove from production import { watch } from 'rxjs-watcher';
 @Injectable({
   providedIn: 'root'
 })
 export class ViewConversationService {
-  private _errorLogger = new ErrorLogger();
+  private _errorLogger = new Logger();
   private _messagesSubscription: Subscription = Subscription.EMPTY;
 
   constructor (
@@ -57,16 +58,16 @@ export class ViewConversationService {
    */
   private genConversationId(contactId: string): string {
     // ? Todo: check if conversation id exists?
-    const uid = this._auth.uid;
+    const uid = this._auth.uid as string;
     const conversationId = (contactId[0] > uid[0]) ? contactId + uid : uid + contactId;
     return conversationId;
   }
 
-  private async createNewConversation(contact: UserModel, conversationId: string): Promise<void> {
-    this._errorLogger.collapsed('No conversation for this contact', [contact, 'creating one']);
-    const currentUser: UserModel = await this._auth.user$
+  private async createNewConversation(contact: User, conversationId: string): Promise<void> {
+    logger.collapsed('No conversation for this contact', [contact, 'creating one']);
+    const currentUser: User = await this._auth.user$
       .pipe(take(1))
-      .toPromise();
+      .toPromise() as User;
 
     const newConversation = new ConversationModel({
       id: conversationId,
@@ -86,9 +87,9 @@ export class ViewConversationService {
   }
 
   private storeConversation(): Promise<void> {
-    const conversation = this._store.state.conversation;
+    const conversation = this._store.state.conversation as ConversationModel;
 
-    return this._conversationDb.create(conversation, conversation.id).then(
+    return this._conversationDb.create(conversation, conversation.id as string).then(
       () => {
         this._store.patch({
           loading: false,
@@ -98,7 +99,22 @@ export class ViewConversationService {
     );
   }
 
-  get conversation$(): Observable<ConversationModel> {
+  private addUndelivered(message: MessageModel): void {
+    const undeliveredMessages = this._store.state.undeliveredMessages;
+    undeliveredMessages.set(message.id, message);
+    this._store.patch({
+      undeliveredMessages
+    });
+  }
+  private deleteUndelivered(messageId: string): void {
+    const undeliveredMessages = this._store.state.undeliveredMessages;
+    undeliveredMessages.delete(messageId);
+    this._store.patch({
+      undeliveredMessages
+    });
+  }
+
+  get conversation$(): Observable<ConversationModel | null> {
     return this._store.state$.pipe(
       map(
         state => state.loading ? null : state.conversation
@@ -110,6 +126,13 @@ export class ViewConversationService {
     return this._store.state$.pipe(
       map(
         state => state.loading ? [] : state.messages
+      )
+    );
+  }
+  get undeliveredMessages$(): Observable<MessageModel[]> {
+    return this._store.state$.pipe(
+      map(
+        state => [...state.undeliveredMessages.values()]
       )
     );
   }
@@ -126,7 +149,7 @@ export class ViewConversationService {
       loading: true
     }, 'view-conversation.service setActiveConversation()');
 
-    this.subscibeToMessages(conversation.id);
+    this.subscibeToMessages(conversation.id as string);
   }
 
   sendMessage(message: MessageModel): Promise<void> {
@@ -134,20 +157,27 @@ export class ViewConversationService {
       return Promise.reject({ code: 'No conversation selected' });
     }
 
+    message.id = this._messagesDb.createId();
+
+    this.addUndelivered(message);
+
+
+    message.delivered = true; // *Easiest way to tell if delivered
+
     if (!this._store.state.conversationStored) {
       return this.storeConversation().then(
-        () => {
-          message.id = this._messagesDb.createId();
-          return this._messagesDb.create(message, message.id);
-        }
+        () => this._messagesDb.create(message, message.id).then(
+          () => { this.deleteUndelivered(message.id); }
+        )
       );
     }
-
-    message.id = this._messagesDb.createId();
-    return this._messagesDb.create(message, message.id);
+    return this._messagesDb.create(message, message.id).then(
+      () => { this.deleteUndelivered(message.id); }
+    );
   }
 
-  openContactConversation(contact: UserModel): Promise<void> {
+
+  openContactConversation(contact: User): Promise<void> {
     const conversationId = this.genConversationId(contact.uid);
 
     return this._conversationDb.doc$(conversationId)
@@ -157,9 +187,27 @@ export class ViewConversationService {
         this.setActiveConversation(conversation)
         : this.createNewConversation(contact, conversationId)
       ).catch(err => {
-        this._errorLogger.collapsed('Error getting contact conversation document', [err]);
+        logger.collapsed('Error getting contact conversation document', [err]);
         return Promise.reject(err);
       });
+  }
+
+
+  /**
+   *
+   * * Pushes the message locally so the user dont wait long
+   */
+  createTemMessageState(message: MessageModel): void {
+    logger.startCollapsed('got here somehow', []);
+    this._store.state$.pipe(
+      map(
+        state => this._store.patch({
+          messages: [...state.messages, message]
+        }, 'so the user dont wait long')
+      )
+    );
+
+    logger.endCollapsed(['Fineshed this other how', this._store.state.messages]);
   }
 }
 
@@ -176,6 +224,7 @@ class MessagesDb extends DbFacade<MessageModel>{
 // *################ STORE #####################
 interface IViewConversationPage {
   messages: MessageModel[];
+  undeliveredMessages: Map<string, MessageModel>;
   conversation: ConversationModel | null;
   conversationStored: boolean;
   loading: boolean;
@@ -195,7 +244,8 @@ class ViewConversationStore extends StoreGeneric<IViewConversationPage>{
       messages: [],
       error: null,
       conversation: null,
-      status: 'No conversation opened!'
+      status: 'No conversation opened!',
+      undeliveredMessages: new Map()
     });
   }
 }

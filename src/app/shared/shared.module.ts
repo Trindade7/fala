@@ -6,6 +6,7 @@ import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRippleModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -15,11 +16,13 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { DropZoneDirective } from './directives/drop-zone.directive';
+import { FileDropzoneComponent } from './file-dropzone/file-dropzone.component';
 
 @NgModule({
-  declarations: [DropZoneDirective],
+  declarations: [DropZoneDirective, FileDropzoneComponent],
   imports: [
     CommonModule,
+    MatIconModule
   ],
   exports: [
     CommonModule,
@@ -37,7 +40,9 @@ import { DropZoneDirective } from './directives/drop-zone.directive';
     MatMenuModule,
     MatProgressSpinnerModule,
     DropZoneDirective,
-    MatBottomSheetModule
+    MatBottomSheetModule,
+    FileDropzoneComponent,
+    MatRippleModule
 
   ]
 })

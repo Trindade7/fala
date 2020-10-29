@@ -26,6 +26,9 @@
       background-color: rgba(102, 51, 153, 0.479);
       color: invert(#ccc);
     }
+    &.not-delivered {
+      border-right: 2px solid orangered;
+    }
   }
 
   .conversation-toolbar {

@@ -1,0 +1,21 @@
+<div app-dropzone
+     (click)="fileInput.click()"
+     (hovered)="toggleHover($event)"
+     (dropped)="onDrop($event)"
+     [class.hovering]="isHovering"
+     class="dropzone">
+    <div class="info">
+        <mat-icon>image</mat-icon>
+    </div>
+
+    <div class="file">
+        <label for="file-input">
+            <input #fileInput
+                   type="file"
+                   class="file-input"
+                   id="file-input"
+                   (click)="fileInput.value = null"
+                   (change)="onDrop($event.target.files)" />
+        </label>
+    </div>
+</div>

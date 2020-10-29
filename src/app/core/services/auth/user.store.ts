@@ -1,8 +1,8 @@
-import { UserModel } from '../../models/user.model';
+import { User } from '../../models/user.model';
 import { StoreGeneric } from '../store.generic';
 
 interface IUserStore {
-    user: UserModel;
+    user: User;
     loading: boolean;
     status: string;
     error: Error;
@@ -11,12 +11,12 @@ interface IUserStore {
 export class UserStore extends StoreGeneric<IUserStore> {
     protected store = 'user';
 
-    constructor() {
+    constructor () {
         super(
             {
                 loading: true,
                 status: '',
-                user: UserModel.empty,
+                user: newUserempty,
             }
         );
     }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { UserModel } from '../../models/user.model';
+import { User } from '../../models/user.model';
 import { AuthFacade } from './auth.facade';
 import { UserStore } from './user.store';
 
@@ -51,10 +51,10 @@ export class UserService {
     return this._store.state.status;
   }
 
-  get user$(): Observable<UserModel> {
+  get user$(): Observable<User> {
     return this._store.state$.pipe(
       map(
-        state => state.loading ? UserModel.empty : state.user
+        state => state.loading ? newUserempty : state.user
       )
     );
   }
