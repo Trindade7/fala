@@ -6,7 +6,7 @@ import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-import { FileUploader } from '../../models/upload-task.model';
+import { BatchData, FileUploadTask } from '../../models/upload-task.model';
 
 @Injectable({
   providedIn: 'root'
@@ -200,25 +200,43 @@ export class FirestoreService<T> {
     return this._collection().doc(id).delete().then(() => logger.endCollapsed());
   }
 
+  batchWriteDoc(batches: BatchData[], update: boolean = false): Promise<void> {
+    logger.startCollapsed('[firestore.service] [batchWriteDoc]', [batches]);
+
+    const batch = this.firestore.firestore.batch();
+
+    for (const batchData of batches) {
+      logger.collapsed(`writing batchData of ${batchData.docId}`, [batchData]);
+
+      const docRef = this._collection(batchData.path).doc(batchData.docId).ref;
+
+      update ? batch.update(docRef, batchData.doc)
+        : batch.set(docRef, batchData.doc);
+    }
+
+    logger.endCollapsed();
+    return batch.commit();
+  }
+
+  updateArrayFunction(value: any): any {
+    return firebase.firestore.FieldValue.arrayUnion(value);
+  }
+
 
   // *#################### FIRE STORAGE
 
-  addFile(inputFile: File, filePath: string): FileUploader {
+  addFile(inputFile: File, filePath: string): FileUploadTask {
     logger.collapsed(
       '[firestore.service] [addFile()]',
       ['file', inputFile, `filePath:${filePath}`]
     );
     const task = this.storage.upload(`${this.basePath}/${filePath}`, inputFile);
     return {
-      data: {
-        file: inputFile,
-        path: filePath,
-        type: '.doc'
-      },
       cancel: task.cancel,
       pause: task.pause,
       resume: task.resume,
       percentageChanges: task.percentageChanges(),
+      onComplete: task.then(f => f.ref.getDownloadURL()),
     };
   }
 

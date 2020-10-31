@@ -13,7 +13,6 @@ import { ContactListComponent } from './components/contact-list/contact-list.com
 import { ConversationListComponent } from './components/conversation-list/conversation-list.component';
 import { ConversationPreviewComponent } from './components/conversation-preview/conversation-preview.component';
 import { FilePreviewComponent } from './components/file-preview/file-preview.component';
-import { UploadFilesComponent } from './components/upload-files/upload-files.component';
 import { UserContactComponent } from './components/user-contact/user-contact.component';
 import { ConversationsComponent } from './pages/conversations/conversations.component';
 import { SettingsComponent } from './pages/settings/settings.component';
@@ -33,7 +32,6 @@ import { ViewConversationComponent } from './pages/view-conversation/view-conver
     ViewConversationComponent,
     AvatarsComponent,
     NewMeesageBarComponent,
-    UploadFilesComponent,
     SendFilesComponent,
     FilePreviewComponent
   ],
@@ -46,6 +44,6 @@ import { ViewConversationComponent } from './pages/view-conversation/view-conver
     MatSlideToggleModule,
     MatDividerModule
   ],
-  entryComponents: [UploadFilesComponent]
+  entryComponents: [SendFilesComponent]
 })
 export class ChatModule { }

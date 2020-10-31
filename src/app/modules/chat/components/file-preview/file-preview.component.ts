@@ -1,4 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { extractFileType, FileGroup, getFileTypeGroup, MessageFile } from '@app/core/models/conversation.model';
+import { LocalFileData } from '@app/core/models/upload-task.model';
+
 
 @Component({
   selector: 'app-file-preview',
@@ -7,58 +10,68 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilePreviewComponent implements OnInit {
-  private typeGroups = {
-    doc: ['doc', 'docx', 'txt', 'plain', 'document'],
-    calc: ['xlsx', 'xls', 'csv', 'sheet'],
-    book: ['pdf', 'epub', 'book'],
-  };
-
-  @Input() file!: File;
+  @Input() fileData!: LocalFileData;
+  @Input() fileUrl!: MessageFile;
+  @Input() isThumbnail = true;
 
   filePreview: string | ArrayBuffer | null = null;
-  fileType = '';
-  fileTypeGroup: 'image' | 'video' | 'doc' | 'book' | 'calc' = 'image';
+  fileTypeGroup: FileGroup = 'image';
+  showSection = {
+    image: false,
+    video: false,
+    other: false
+  };
 
-
-  constructor (
-  ) { }
+  constructor () { }
 
   ngOnInit(): void {
-    this.createPreview();
+    if (this.fileUrl) {
+      this.fileTypeGroup = getFileTypeGroup(this.fileUrl.type);
+    } else if (this.fileData) {
+      this.fileTypeGroup = this.createPreviewFromData(this.fileData);
+    }
+
+    this.canShow(this.fileTypeGroup);
   }
 
-  createPreview(): void {
-    const fileTypeGroup = this.file.type.split('/')[0];
-    this.fileType = this.file.type.split('/')[1];
-    console.log('FILE TYPE', this.file.type);
+  extractType(fileType: string): string {
+    return extractFileType(fileType);
+  }
 
-    if (this.fileType.includes('.')) {
-      this.fileType = this.fileType.split('.').pop() ?? '';
+  createPreviewFromData(fileData: LocalFileData): FileGroup {
+    const typeGroup = getFileTypeGroup(fileData.type);
+    if ((typeGroup === 'image') || (typeGroup === 'video')) {
+      this.renderFile(fileData.file);
     }
 
+    return typeGroup;
+  }
 
-    if ((fileTypeGroup === 'image') || (fileTypeGroup === 'video')) {
-      this.fileTypeGroup = fileTypeGroup;
-      this.renderFile();
-      return;
-    } else if (this.typeGroups.doc.includes(this.fileType)) {
-      this.fileTypeGroup = 'doc';
-    } else if (this.typeGroups.calc.includes(this.fileType)) {
-      this.fileTypeGroup = 'calc';
-    } else if (this.typeGroups.book.includes(this.fileType)) {
-      this.fileTypeGroup = 'book';
+  canShow(mode: FileGroup, showSection = this.showSection): void {
+    switch (mode) {
+      case 'image':
+        showSection.image = true;
+        break;
+      case 'video':
+        showSection.video = true;
+        break;
+
+      default:
+        showSection.other = true;
+        break;
     }
-    this.filePreview = '';
+
     return;
   }
 
-  renderFile(): void {
+  renderFile(file: File): void {
     const reader = new FileReader();
-    reader.readAsDataURL(this.file);
-    reader.onload = (_) => {
+    reader.readAsDataURL(file);
+    reader.onload = () => {
       this.filePreview = reader.result;
-      console.log('LOADED FILE');
-
+      console.log('LOADED FILE', file.type);
     };
+
+    return;
   }
 }

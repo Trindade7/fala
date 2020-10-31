@@ -3,29 +3,31 @@
         <button mat-icon-button (click)="close()">
             <mat-icon>close</mat-icon>
         </button>
-        <span>Preview</span>
+        <span>Preview Data</span>
+        <span class="spacer"></span>
+        <button mat-mini-fab class="mat-elevation-z0">
+            <mat-icon>add</mat-icon>
+        </button>
     </mat-toolbar>
     <mat-card>
-        <app-file-dropzone
-                           (filesEmitter)="filesService.addFiles($event)"></app-file-dropzone>
+        <app-file-dropzone (filesEmitter)="filesService.addFiles($event)">
+        </app-file-dropzone>
 
-        <section class="file-preview">
-            <mat-form-field appearance="outline">
-                <textarea matInput placeholder="label"></textarea>
-            </mat-form-field>
-        </section>
         <section class="file-list">
             <div class="preview"
-                 *ngFor="let file of filesService.files; let i = index"
+                 *ngFor="let fileData of filesService.filesData; let i = index"
                  [ngClass]="{'active': filesService.selectedIndex === i}">
                 <button mat-icon-button (click)="filesService.removeFile(i)">
                     <mat-icon>close</mat-icon>
                 </button>
                 <div matRipple class="image" (click)="filesService.selectedIndex = i">
-                    <app-file-preview [file]="file">
+                    <app-file-preview [fileData]="fileData">
                     </app-file-preview>
                 </div>
             </div>
         </section>
+        <button mat-icon-button (click)="filesService.sendFiles()">
+            <mat-icon>send</mat-icon>
+        </button>
     </mat-card>
 </div>

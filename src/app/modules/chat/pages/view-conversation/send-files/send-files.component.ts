@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 
-import { MessageFilesService } from './message-files.service';
+import { SendFilesService } from './send-files.service';
 
 @Component({
   selector: 'app-send-files',
@@ -12,7 +12,7 @@ import { MessageFilesService } from './message-files.service';
 export class SendFilesComponent implements OnDestroy {
   constructor (
     private _bottomSheetRef: MatBottomSheetRef<SendFilesComponent>,
-    public filesService: MessageFilesService
+    public filesService: SendFilesService
   ) { }
 
   ngOnDestroy(): void {

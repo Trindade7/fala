@@ -41,6 +41,12 @@
             </app-avatars>
             <!-- <mat-card class="mat-elevation-z"> -->
             <mat-card class="">
+                <app-file-preview *ngIf="message.file?.url" mat-card-image [fileUrl]="message.file">
+                </app-file-preview>
+                <app-file-preview *ngIf="message.uploadTask?.data" mat-card-image
+                                  [fileData]="message.uploadTask.data">
+                </app-file-preview>
+                <img *ngIf="message.file?.url" mat-card-image [src]="message.file.url" alt="">
                 <mat-card-content>
                     <p>
                         {{message.messageBody}}

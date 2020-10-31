@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Logger as logger } from '@app-core/helpers/logger';
-import { Logger } from '@app/core/helpers/logger';
-import { ConversationModel, MessageModel } from '@app/core/models/conversation.model';
+import { ConversationModel, getFileTypeGroup, MessageModel } from '@app/core/models/conversation.model';
+import { FileUploader, genBatchData, LocalFileData } from '@app/core/models/upload-task.model';
 import { User } from '@app/core/models/user.model';
 import { AuthService } from '@app/core/services/auth/auth.service';
 import { DbFacade } from '@app/core/services/db.facade';
@@ -19,7 +19,6 @@ import { ConversationDb } from '../../services/conversation.db';
   providedIn: 'root'
 })
 export class ViewConversationService {
-  private _errorLogger = new Logger();
   private _messagesSubscription: Subscription = Subscription.EMPTY;
 
   constructor (
@@ -27,10 +26,10 @@ export class ViewConversationService {
     private _chatSvc: ChatService,
     private _messagesDb: MessagesDb,
     private _conversationDb: ConversationDb,
-    private _store: ViewConversationStore
+    private _store: ViewConversationStore,
+    private _storage: ViewConversationStorage,
   ) {
   }
-
 
   /**
    * subscribes to conversation messages
@@ -106,11 +105,24 @@ export class ViewConversationService {
       undeliveredMessages
     });
   }
+
   private deleteUndelivered(messageId: string): void {
     const undeliveredMessages = this._store.state.undeliveredMessages;
     undeliveredMessages.delete(messageId);
     this._store.patch({
       undeliveredMessages
+    });
+  }
+
+  private createMessage(messageBody: string, uploadTask?: FileUploader): MessageModel {
+    return new MessageModel({
+      id: this._messagesDb.createId(),
+      createdAt: new Date(),
+      delivered: false,
+      messageBody,
+      senderId: this._auth.uid,
+      file: null,
+      uploadTask
     });
   }
 
@@ -129,6 +141,7 @@ export class ViewConversationService {
       )
     );
   }
+
   get undeliveredMessages$(): Observable<MessageModel[]> {
     return this._store.state$.pipe(
       map(
@@ -152,31 +165,6 @@ export class ViewConversationService {
     this.subscibeToMessages(conversation.id as string);
   }
 
-  sendMessage(message: MessageModel): Promise<void> {
-    if (!this._store.state.conversation) {
-      return Promise.reject({ code: 'No conversation selected' });
-    }
-
-    message.id = this._messagesDb.createId();
-
-    this.addUndelivered(message);
-
-
-    message.delivered = true; // *Easiest way to tell if delivered
-
-    if (!this._store.state.conversationStored) {
-      return this.storeConversation().then(
-        () => this._messagesDb.create(message, message.id).then(
-          () => { this.deleteUndelivered(message.id); }
-        )
-      );
-    }
-    return this._messagesDb.create(message, message.id).then(
-      () => { this.deleteUndelivered(message.id); }
-    );
-  }
-
-
   openContactConversation(contact: User): Promise<void> {
     const conversationId = this.genConversationId(contact.uid);
 
@@ -192,13 +180,80 @@ export class ViewConversationService {
       });
   }
 
+  sendMessage(messageBody: string): Promise<void> {
+    if (!this._store.state.conversation) {
+      return Promise.reject({ code: 'No conversation selected' });
+    }
+    const message = this.createMessage(messageBody);
+
+    this.addUndelivered(message);
+    return this.deliverMessage(message);
+    // message.delivered = true; // *Easiest way to tell if delivered
+
+    // if (!this._store.state.conversationStored) {
+    //   return this.storeConversation().then(
+    //     () => this._messagesDb.create(message, message.id).then(
+    //       () => { this.deleteUndelivered(message.id); }
+    //     )
+    //   );
+    // }
+    // return this._messagesDb.create(message, message.id).then(
+    //   () => { this.deleteUndelivered(message.id); }
+    // );
+  }
+  private deliverMessage(message: MessageModel): Promise<void> {
+    message.delivered = true; // *Easiest way to tell if delivered
+    delete message.uploadTask; // * only for local use
+
+    if (!this._store.state.conversationStored) {
+      return this.storeConversation().then(
+        () => this._messagesDb.create(message, message.id).then(
+          () => { this.deleteUndelivered(message.id); }
+        )
+      );
+    }
+    return this._messagesDb.create(message, message.id).then(
+      () => { this.deleteUndelivered(message.id); }
+    );
+  }
+
+  private deliverBatchMessage(message: MessageModel): Promise<void> {
+    logger.startCollapsed('[view-conversation.service] deliverBatchMessage()', [message]);
+
+    message.delivered = true; // *Easiest way to tell if delivered
+    delete message.uploadTask; // * only for local use
+
+    const convId = this._store.state.conversation?.id as string;
+    const fileGroup = message.file ? getFileTypeGroup(message.file?.type) : 'other';
+    const convFilesPath = `conversations/${convId}/files`;
+
+    const fileData = genBatchData(
+      convFilesPath,
+      `${fileGroup}s`,
+      { items: this._messagesDb.updateArrayFunction(message.file) }
+    );
+    const messageData = genBatchData(this._messagesDb.basePath, message.id, message);
+
+    logger.collapsed('batch data', [fileData, messageData]);
+
+    if (!this._store.state.conversationStored) {
+      return this.storeConversation().then(
+        () => this._messagesDb.batchWriteDoc([fileData, messageData], false)
+          .then(() => this.deleteUndelivered(message.id))
+      );
+    }
+    return this._messagesDb.batchWriteDoc([fileData, messageData], true).then(
+      () => { this.deleteUndelivered(message.id); }
+    );
+  }
 
   /**
    *
-   * * Pushes the message locally so the user dont wait long
+   * * Pushes the message locally
+   * * so the user doesn't have to wait long
    */
   createTemMessageState(message: MessageModel): void {
-    logger.startCollapsed('got here somehow', []);
+    logger.startCollapsed('Storing temporary message', [message]);
     this._store.state$.pipe(
       map(
         state => this._store.patch({
@@ -207,7 +262,36 @@ export class ViewConversationService {
       )
     );
 
-    logger.endCollapsed(['Fineshed this other how', this._store.state.messages]);
+    logger.endCollapsed(['temporary message stored', this._store.state.messages]);
+  }
+
+  sendFile(fileData: LocalFileData, messageBody: string = ''): Promise<void> {
+    logger.startCollapsed(
+      '[view-conversation.service] sendFile()',
+      ['fileData\n', fileData, 'messageBody\n', messageBody]
+    );
+
+    const fileTypeGroup = getFileTypeGroup(fileData.type);
+    const path = `conversations/${this._store.state.conversation?.id}/${fileTypeGroup}`;
+    const task = this._messagesDb.addFile(fileData.file, path);
+    const message = this.createMessage(messageBody, { data: fileData, task });
+
+    this.addUndelivered(message);
+
+    return task.onComplete.then(
+      url => {
+        message.file = {
+          type: fileData.type,
+          url
+        };
+
+        logger.endCollapsed(['File saved at', url, '\nDelivering message...\n\n']);
+        return this.deliverMessage(message);
+      },
+      err => {
+        logger.endCollapsed(['Error saving File', err]);
+      }
+    );
   }
 }
 
@@ -251,12 +335,11 @@ class ViewConversationStore extends StoreGeneric<IViewConversationPage>{
 }
 
 
-
-
 // *################## STORAGE ###################
 
 @Injectable({
   providedIn: 'root'
 })
-export class AlbumFormFileStorage extends StorageFacade<MessageModel>{
+export class ViewConversationStorage extends StorageFacade<MessageModel>{
+  basePath = 'conversations';
 }

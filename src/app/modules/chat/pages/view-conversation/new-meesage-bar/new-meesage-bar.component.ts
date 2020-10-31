@@ -2,10 +2,9 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { Logger as logger } from '@app-core/helpers/logger';
-import { MessageModel } from '@app/core/models/conversation.model';
 import { AuthService } from '@app/core/services/auth/auth.service';
 
-import { UploadFilesComponent } from '../../../components/upload-files/upload-files.component';
+import { SendFilesComponent } from '../send-files/send-files.component';
 import { ViewConversationService } from '../view-conversation.service';
 
 @Component({
@@ -36,7 +35,7 @@ export class NewMeesageBarComponent implements OnInit {
   ngOnInit(): void { }
 
   openBottomSheet(): void {
-    this._bottomSheet.open(UploadFilesComponent);
+    this._bottomSheet.open(SendFilesComponent);
   }
 
   sendMessage(): void {
@@ -47,13 +46,9 @@ export class NewMeesageBarComponent implements OnInit {
       this.messageForm.valid
       && messageBody.trim().length
     ) {
-      const message = MessageModel.empty;
-      message.messageBody = messageBody;
-      message.senderId = this.auth.uid;
-
       this.messageForm.reset('');
 
-      this.conversationSvc.sendMessage(message).then(
+      this.conversationSvc.sendMessage(messageBody).then(
         () => {
           logger.collapsed('sent');
         }
