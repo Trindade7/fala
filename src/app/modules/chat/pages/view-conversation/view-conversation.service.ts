@@ -250,7 +250,7 @@ export class ViewConversationService {
   /**
    *
    * * Pushes the message locally
-   * * so the user doesn't have to wait long
+   * * so the user doesn't have to  wait for long
    */
   createTemMessageState(message: MessageModel): void {
     logger.startCollapsed('Storing temporary message', [message]);

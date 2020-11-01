@@ -201,7 +201,7 @@ export class FirestoreService<T> {
   }
 
   batchWriteDoc(batches: BatchData[], update: boolean = false): Promise<void> {
-    logger.startCollapsed('[firestore.service] [batchWriteDoc]', [batches]);
+    logger.startCollapsed('[firestore.service] [batchWriteDoc]', [batches, 'update', update]);
 
     const batch = this.firestore.firestore.batch();
 
