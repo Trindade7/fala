@@ -1,0 +1,46 @@
+.conversation-container {
+  height: 100vh;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.2);
+
+  .header {
+    position: relative;
+
+    .avatars:content {
+      padding: 5px;
+    }
+    .overlap-left {
+      margin-left: -16px;
+    }
+
+    .close-details {
+      position: absolute;
+      right: -16px;
+      background: #282626; // ! REMOVE
+    }
+
+    .description {
+      height: 16px;
+      padding-bottom: 2rem;
+    }
+  }
+  .messages {
+    flex: auto;
+    overflow-y: hidden;
+    height: 100%;
+
+    &:hover {
+      overflow-y: auto;
+    }
+  }
+}
+
+.conversation {
+  flex: 1 1 auto;
+}
+
+.conversation-detalis {
+  min-width: 320px;
+  max-width: 500px;
+  flex: 1;
+}

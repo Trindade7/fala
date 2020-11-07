@@ -21,12 +21,14 @@ export interface BatchData {
     path: string;
     doc: any;
     docId: string;
+    update: boolean;
 }
 
-export function genBatchData(path: string, docId: string, doc: any): BatchData {
+export function genBatchData(path: string, docId: string, doc: any, update = false): BatchData {
     return {
         path,
         doc,
-        docId
+        docId,
+        update
     };
 }

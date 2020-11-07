@@ -1,14 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { UserLoggedInGuard } from './core/services/auth/auth.guard';
+import { UserLoggedInGuard, UserNotLoggedInGuard } from './core/services/auth/auth.guard';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
+import { ChatComponent } from './pages/themes/chat/chat.component';
+import { ThemesComponent } from './pages/themes/themes.component';
 
 const routes: Routes = [
 
   {
     path: 'login',
+    canActivate: [UserNotLoggedInGuard],
     component: LoginPageComponent,
+  },
+  {
+    path: 'chat-t',
+    component: ChatComponent
   },
   {
     path: 'chat',
@@ -31,7 +38,8 @@ const routes: Routes = [
 
   {
     path: '',
-    redirectTo: 'chat',
+    // redirectTo: 'chat',
+    component: ThemesComponent,
     pathMatch: 'full',
   },
 ];

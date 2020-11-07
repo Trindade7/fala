@@ -8,18 +8,21 @@ import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRippleModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
+import { AvatarComponent } from './components/avatar/avatar.component';
 import { DropZoneDirective } from './directives/drop-zone.directive';
 import { FileDropzoneComponent } from './file-dropzone/file-dropzone.component';
 
 @NgModule({
-  declarations: [DropZoneDirective, FileDropzoneComponent],
+  declarations: [DropZoneDirective, FileDropzoneComponent, AvatarComponent],
   imports: [
     CommonModule,
     MatIconModule
@@ -39,10 +42,14 @@ import { FileDropzoneComponent } from './file-dropzone/file-dropzone.component';
     MatBadgeModule,
     MatMenuModule,
     MatProgressSpinnerModule,
-    DropZoneDirective,
+    MatListModule,
     MatBottomSheetModule,
+    DropZoneDirective,
+    MatRippleModule,
+    MatGridListModule,
+
     FileDropzoneComponent,
-    MatRippleModule
+    AvatarComponent
 
   ]
 })

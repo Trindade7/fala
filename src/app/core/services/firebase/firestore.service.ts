@@ -53,15 +53,17 @@ export class FirestoreService<T> {
       arrayContains?: { arrayName: string, value: string | null; };
     } = {}
   ): Observable<T[]> {
+    logger.collapsed('[firestore.service] collection$', [options]);
+
     return this.firestore.collection<T>(
       options.path ?? this.basePath,
       ref => {
-        // if (options.arrayContains) {
-        //   console.log('filering', options.arrayContains.arrayName, options.arrayContains.value);
+        if (options.arrayContains) {
+          console.log('filering', options.arrayContains.arrayName, options.arrayContains.value);
 
-        //   return ref.where('participantIds', 'array-contains', '154NsEOViCQxtZWJVOhGlnttfrE3');
-        //   // return ref.where(options.arrayContains.arrayName, 'array-contains', options.arrayContains.value);
-        // }
+          return ref.where('participantIds', 'array-contains', '154NsEOViCQxtZWJVOhGlnttfrE3');
+          // return ref.where(options.arrayContains.arrayName, 'array-contains', options.arrayContains.value);
+        }
         return ref;
         // return options.orderBy ? ref.orderBy('createdAt', 'asc').limitToLast(1) : ref;
         // // if (options === {}) {
@@ -200,8 +202,8 @@ export class FirestoreService<T> {
     return this._collection().doc(id).delete().then(() => logger.endCollapsed());
   }
 
-  batchWriteDoc(batches: BatchData[], update: boolean = false): Promise<void> {
-    logger.startCollapsed('[firestore.service] [batchWriteDoc]', [batches, 'update', update]);
+  batchWriteDoc(batches: BatchData[]): Promise<void> {
+    logger.startCollapsed('[firestore.service] [batchWriteDoc]', [batches]);
 
     const batch = this.firestore.firestore.batch();
 
@@ -210,12 +212,16 @@ export class FirestoreService<T> {
 
       const docRef = this._collection(batchData.path).doc(batchData.docId).ref;
 
-      update ? batch.update(docRef, batchData.doc)
-        : batch.set(docRef, batchData.doc);
+      batchData.update ? batch.update(docRef, { ...batchData.doc })
+        : batch.set(docRef, { ...batchData.doc });
     }
 
-    logger.endCollapsed();
-    return batch.commit();
+    return batch.commit().catch(
+      err => {
+        logger.collapsed('[firestore.service] ERROR UPDATING FILE', [err]);
+        return err ? console.error(err) : Promise.reject(err);
+      }
+    ).finally(() => logger.endCollapsed(['No error']));
   }
 
   updateArrayFunction(value: any): any {
@@ -230,7 +236,7 @@ export class FirestoreService<T> {
       '[firestore.service] [addFile()]',
       ['file', inputFile, `filePath:${filePath}`]
     );
-    const task = this.storage.upload(`${this.basePath}/${filePath}`, inputFile);
+    const task = this.storage.upload(filePath + '/' + inputFile.name, inputFile);
     return {
       cancel: task.cancel,
       pause: task.pause,

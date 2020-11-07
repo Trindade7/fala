@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Logger as logger } from '@app-core/helpers/logger';
 import { ConversationModel, MessageModel } from '@app-core/models/conversation.model';
 import { environment } from '@app-envs/environment';
 import { AuthService } from '@app/core/services/auth/auth.service';
@@ -17,16 +18,22 @@ export class ListConversationsService {
     private store: ConversationsStore,
     private auth: AuthService
   ) {
-    this._db.collection$().subscribe(
-      (conversations) => store.patch({
-        loading: false,
-        conversations: conversations as ConversationModel[]
-      })
-    );
+    // this._db.collection$().subscribe(
+    //   (conversations) => {
+    //     logger.startCollapsed(
+    //       '[list-conversations.service] this._db.collection$().subscribe()', []);
+
+    //     return store.patch({
+    //       loading: false,
+    //       conversations: conversations as ConversationModel[]
+    //     });
+    //   }
+    // );
 
     //     #################
     this._db.collection$().pipe(
       switchMap((conversations) => {
+        logger.startCollapsed('[list-conversations.service] this._db.collection$().subscribe()');
         const convs = conversations.map(conversation => {
           return this._db.collection$(
             {
@@ -51,10 +58,13 @@ export class ListConversationsService {
         return combineLatest(convs);
       })
     ).subscribe(
-      conversations => store.patch({
-        loading: false,
-        conversations
-      })
+      conversations => {
+        store.patch({
+          loading: false,
+          conversations
+        });
+        logger.endCollapsed(['Got conversations\n']);
+      }
     );
   }
 

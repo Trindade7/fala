@@ -1,0 +1,117 @@
+<div class="pro-squared container">
+    <div class="elements">
+        <app-avatar [size]="'lg'"></app-avatar>
+        <app-avatar></app-avatar>
+        <app-avatar [size]="'sm'"></app-avatar>
+        <app-avatar [size]="'xsm'"></app-avatar>
+    </div>
+
+    <div class="elements">
+        <div class="elements squared-buttons">
+            <button mat-flat-button>text</button>
+            <button mat-flat-button>
+                <!-- <mat-icon>add</mat-icon> -->
+                <svg class="bi icon" fill="currentColor">
+                    <use xlink:href="/assets/icons/bootstrap-icons/bootstrap-icons.svg#plus" />
+                </svg>
+            </button>
+            <button mat-flat-button color="primary">
+                <!-- <mat-icon>send</mat-icon> -->
+                <svg class="bi icon" fill="currentColor">
+                    <use xlink:href="/assets/icons/bootstrap-icons/bootstrap-icons.svg#arrow-right" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="elements icon-buttons">
+            <button mat-icon-button>
+                <!-- <mat-icon>add</mat-icon> -->
+                <svg class="bi icon" fill="currentColor">
+                    <use xlink:href="/assets/icons/bootstrap-icons/bootstrap-icons.svg#plus" />
+                </svg>
+            </button>
+            <button (click)="log()" mat-icon-button>
+                <!-- <mat-icon>add</mat-icon> -->
+                <svg class="bi icon" fill="currentColor">
+                    <use xlink:href="/assets/icons/bootstrap-icons/bootstrap-icons.svg#plus-circle" />
+                </svg>
+            </button>
+            <button (click)="log()" mat-icon-button>
+                <!-- <mat-icon>add</mat-icon> -->
+                <svg class="bi icon" fill="currentColor">
+                    <use xlink:href="/assets/icons/bootstrap-icons/bootstrap-icons.svg#three-dots" />
+                </svg>
+            </button>
+            <button (click)="log()" mat-icon-button>
+                <!-- <mat-icon>add</mat-icon> -->
+                <svg class="bi icon" fill="currentColor">
+                    <use xlink:href="/assets/icons/bootstrap-icons/bootstrap-icons.svg#chevron-right" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="chat-components flexed col">
+        <app-chat-message></app-chat-message>
+        <div class="sized-box"></div>
+        <!-- <input matInput value="value"> -->
+        <textarea cdkTextareaAutosize="true" class="message-input" cols="1" rows="1"></textarea>
+        <textarea
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  initialHeight="64px"
+                  cdkAutosizeMinRows="1"
+                  cdkAutosizeMaxRows="5"></textarea>
+
+        <mat-form-field appearance="outline">
+            <textarea matInput
+                      cdkTextareaAutosize
+                      #autosize="cdkTextareaAutosize"
+                      cdkAutosizeMinRows="1"
+                      cdkAutosizeMaxRows="5"></textarea>
+            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-icon matSuffix>attachment</mat-icon>
+        </mat-form-field>
+
+        <div class="sized-box"></div>
+
+        <input type="text" class="app-input">
+    </div>
+
+
+</div>
+<!-- <div class="pro-squared container">
+    <div class="elements">
+        <app-avatar [size]="'lg'"></app-avatar>
+        <app-avatar></app-avatar>
+        <app-avatar [size]="'sm'"></app-avatar>
+        <app-avatar [size]="'xsm'"></app-avatar>
+    </div>
+
+    <div class="elements">
+        <div class="elements squared-buttons">
+            <button mat-flat-button>text</button>
+            <button mat-flat-button>
+                <mat-icon>add</mat-icon>
+            </button>
+            <button mat-flat-button color="primary">
+                <mat-icon>send</mat-icon>
+            </button>
+        </div>
+
+        <div class="elements icon-buttons">
+            <button mat-icon-button class="outlined">
+                <mat-icon>add</mat-icon>
+            </button>
+            <button (click)="log()" mat-icon-button class="outlined">
+                <mat-icon>add</mat-icon>
+            </button>
+            <button mat-icon-button class="ba">
+                <mat-icon>open</mat-icon>
+            </button>
+            <button mat-icon-button color="primary">
+                <mat-icon>send</mat-icon>
+            </button>
+        </div>
+    </div>
+</div> -->

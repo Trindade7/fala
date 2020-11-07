@@ -1,0 +1,33 @@
+<div class="conversation-container">
+    <header class="header flexed">
+        <div>
+            <span class="mat-caption text mute thin">CONTENT</span>
+            <h4>Some Username</h4>
+            <!-- <div class="mat-body-strong">Some Username</div> -->
+        </div>
+
+        <span class="spacer"></span>
+
+        <span class="mat-caption text mute thin">17:56</span>
+    </header>
+    <section class="content flexed">
+        <div class="avatar">
+            <app-avatar [size]="'sm'"></app-avatar>
+        </div>
+
+        <p class="message-preview mat-body thin">
+            {{conversation.body |slice: 0:60}} ...
+        </p>
+    </section>
+    <div class="status flexed">
+        <span class="mat-caption text mute thin">user name, </span>
+        <span class="mat-caption text mute thin">oneOther user name, </span>
+        <span class="mat-caption text mute thin">name</span>
+
+        <span class="spacer"></span>
+
+        <div class="notification">
+            3
+        </div>
+    </div>
+</div>

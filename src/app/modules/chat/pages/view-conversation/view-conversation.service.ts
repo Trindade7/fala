@@ -188,19 +188,8 @@ export class ViewConversationService {
 
     this.addUndelivered(message);
     return this.deliverMessage(message);
-    // message.delivered = true; // *Easiest way to tell if delivered
-
-    // if (!this._store.state.conversationStored) {
-    //   return this.storeConversation().then(
-    //     () => this._messagesDb.create(message, message.id).then(
-    //       () => { this.deleteUndelivered(message.id); }
-    //     )
-    //   );
-    // }
-    // return this._messagesDb.create(message, message.id).then(
-    //   () => { this.deleteUndelivered(message.id); }
-    // );
   }
+
   private deliverMessage(message: MessageModel): Promise<void> {
     message.delivered = true; // *Easiest way to tell if delivered
     delete message.uploadTask; // * only for local use
@@ -218,7 +207,7 @@ export class ViewConversationService {
   }
 
   private deliverBatchMessage(message: MessageModel): Promise<void> {
-    logger.startCollapsed('[view-conversation.service] deliverBatchMessage()', [message]);
+    logger.collapsed('[view-conversation.service] deliverBatchMessage()', [message]);
 
     message.delivered = true; // *Easiest way to tell if delivered
     delete message.uploadTask; // * only for local use
@@ -230,7 +219,8 @@ export class ViewConversationService {
     const fileData = genBatchData(
       convFilesPath,
       `${fileGroup}s`,
-      { items: this._messagesDb.updateArrayFunction(message.file) }
+      { items: this._messagesDb.updateArrayFunction(message.file) },
+      true
     );
     const messageData = genBatchData(this._messagesDb.basePath, message.id, message);
 
@@ -238,11 +228,11 @@ export class ViewConversationService {
 
     if (!this._store.state.conversationStored) {
       return this.storeConversation().then(
-        () => this._messagesDb.batchWriteDoc([fileData, messageData], false)
+        () => this._messagesDb.batchWriteDoc([fileData, messageData])
           .then(() => this.deleteUndelivered(message.id))
       );
     }
-    return this._messagesDb.batchWriteDoc([fileData, messageData], true).then(
+    return this._messagesDb.batchWriteDoc([fileData, messageData]).then(
       () => { this.deleteUndelivered(message.id); }
     );
   }
@@ -272,7 +262,7 @@ export class ViewConversationService {
     );
 
     const fileTypeGroup = getFileTypeGroup(fileData.type);
-    const path = `conversations/${this._store.state.conversation?.id}/${fileTypeGroup}`;
+    const path = `conversations/${this._store.state.conversation?.id}/${fileTypeGroup}s`;
     const task = this._messagesDb.addFile(fileData.file, path);
     const message = this.createMessage(messageBody, { data: fileData, task });
 
@@ -286,7 +276,7 @@ export class ViewConversationService {
         };
 
         logger.endCollapsed(['File saved at', url, '\nDelivering message...\n\n']);
-        return this.deliverMessage(message);
+        return this.deliverBatchMessage(message);
       },
       err => {
         logger.endCollapsed(['Error saving File', err]);

@@ -33,3 +33,26 @@ export class UserLoggedInGuard implements CanActivate {
   }
 
 }
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UserNotLoggedInGuard implements CanActivate {
+  constructor (
+    private _authService: AuthService,
+    private _router: Router,
+  ) { }
+
+  canActivate(): Observable<boolean> {
+    return this._authService.user$.pipe(
+      take(1),
+      map(user => !!user),
+      tap(loggedIn => {
+        if (loggedIn) {
+          this._router.navigate(['']);
+        }
+      })
+    );
+  }
+
+}

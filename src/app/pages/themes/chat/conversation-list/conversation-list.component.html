@@ -1,0 +1,31 @@
+<div class="conversations-container pro-squared">
+    <mat-toolbar>
+        <span>Conversations</span>
+        <span class="spacer"></span>
+        <button mat-icon-button>
+            <svg class="icon" fill="currentColor">
+                <use xlink:href="/assets/icons/bootstrap-icons/bootstrap-icons.svg#search" />
+            </svg>
+        </button>
+    </mat-toolbar>
+    <section class="new-conversation padded flexed mat-elevation-z2">
+        <input type="text" class="app-input" placeholder="New conversation">
+
+        <button mat-flat-button color="primary">
+            <!-- <mat-icon>send</mat-icon> -->
+            <svg class="bi icon" fill="currentColor">
+                <use xlink:href="/assets/icons/bootstrap-icons/bootstrap-icons.svg#plus" />
+            </svg>
+        </button>
+    </section>
+    <section class="conversations padded-y">
+        <mat-list>
+            <mat-list-item class="padded-05-y" [disabled]="false" *ngFor="let item of [1,2,3,4,5,6,7]">
+                <div class="conversation-summary">
+                    <mat-divider></mat-divider>
+                    <app-conversation></app-conversation>
+                </div>
+            </mat-list-item>
+        </mat-list>
+    </section>
+</div>

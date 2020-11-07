@@ -15,7 +15,7 @@ export class FilePreviewComponent implements OnInit {
   @Input() isThumbnail = true;
 
   filePreview: string | ArrayBuffer | null = null;
-  fileTypeGroup: FileGroup = 'image';
+  fileTypeGroup: FileGroup = 'other';
   showSection = {
     image: false,
     video: false,

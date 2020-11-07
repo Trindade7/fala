@@ -25,7 +25,7 @@ export function extractFileType(fullType: string): string {
 export function getFileTypeGroup(fileType: string, typeGroups: any = _typeGroups): FileGroup {
     typeGroups = _typeGroups; // * only passed as param functional rasons
 
-    if (_typeGroups.mediaTypes.includes(fileType)) {
+    if (_typeGroups.media.includes(fileType)) {
         return fileType as FileGroup;
     }
 
@@ -106,6 +106,7 @@ export class MessageModel {
             delivered: false,
             createdAt: null,
             file: null,
+            uploadTask: undefined
         };
     }
 }

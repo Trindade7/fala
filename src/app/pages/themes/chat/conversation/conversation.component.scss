@@ -1,0 +1,27 @@
+.conversation-container {
+  .content {
+    gap: 1rem;
+    margin-bottom: 16px;
+  }
+
+  .notification {
+    background-color: #d32e63;
+    border-radius: 0.25rem;
+    padding: 0.1rem 0.45rem;
+    color: white;
+    max-height: 24px;
+  }
+
+  .message-preview {
+    margin: 0;
+    font-weight: 300;
+
+    max-height: 4rem;
+    -webkit-box-orient: vertical;
+    display: block;
+    display: -webkit-box;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+  }
+}

@@ -1,0 +1,21 @@
+<div [ngClass]="{received: received}" class="message-container mat-body  flexed">
+    <header class="header flexed">
+        <app-avatar [size]="'sm'"></app-avatar>
+        <div class="text flexed col center-y">
+            <h3>User name</h3>
+            <h5>17:54</h5>
+        </div>
+    </header>
+    <section class="content flexed col">
+        <mat-card class="mat-elevation-z0">
+            <p>
+                Sint pariatur magna nostrudt nostrud voluptate est elit nostrud.
+            </p>
+        </mat-card>
+        <div>
+            <span *ngIf="received" class="mat-body-strong">user name</span>
+            <span *ngIf="received" class="text mute thin"> :: </span>
+            <span class="mat-caption text mute thin">17:42</span>
+        </div>
+    </section>
+</div>

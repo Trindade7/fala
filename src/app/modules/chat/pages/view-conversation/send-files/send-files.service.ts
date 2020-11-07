@@ -69,8 +69,11 @@ export class SendFilesService {
   sendFiles(): void {
     this.filesData.forEach(
       fileData => this._conversationSvc.sendFile(fileData, 'file sent').then(
-        () => logger.collapsed('File sent', [fileData])
-      ).catch(err => logger.collapsed('Error sending file', [err]))
+        () => logger.collapsed('[send-files.service] File sent', [fileData])
+      ).catch(err => logger.collapsedT(
+        '[send-files.service] Error sending file',
+        [{ type: 'error', log: err }])
+      )
     );
   }
 

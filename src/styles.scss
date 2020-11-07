@@ -1,7 +1,8 @@
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
-@import "~@angular/material/theming";
+@import '~@angular/material/theming';
 // Plus imports for other components in your app.
+@import './assets/styles/mat-colors.scss';
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -34,6 +35,9 @@ $fala-theme: mat-dark-theme(
 // that you are using.
 @include angular-material-theme($fala-theme);
 
+// APP CUSTOM STYLES
+@include candy-carousel-theme($fala-theme);
+
 /* You can add global styles to this file, and also import other style files */
 
 html,
@@ -42,7 +46,7 @@ body {
 }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 * {
   box-sizing: border-box;
@@ -86,6 +90,94 @@ body {
   }
 }
 
+// *################### TEXT
+.text {
+  &.mute {
+    opacity: 0.7;
+  }
+  &.thin {
+    font-weight: 300;
+  }
+}
+
+.mat-body {
+  opacity: 0.95;
+}
+
+// *################### PADDINGS AND MARGINS
+.padded {
+  padding: 1rem;
+
+  &-y {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  &-x {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  &-05 {
+    padding: 0.5rem;
+    &-y {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+    &-x {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+  }
+
+  &-2 {
+    padding: 2rem;
+    &-y {
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+    }
+    &-x {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+}
+.margined {
+  margin: 1rem;
+
+  &-y {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  &-x {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  &-05 {
+    margin: 0.5rem;
+    &-y {
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    &-x {
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
+    }
+  }
+
+  &-2 {
+    margin: 2rem;
+    &-y {
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+    }
+    &-x {
+      margin-left: 2rem;
+      margin-right: 2rem;
+    }
+  }
+}
+
 // *################### SIMPLE COMPONENTS
 .sized-box {
   width: 1rem;
@@ -120,7 +212,7 @@ body {
 .flexed {
   display: flex;
 
-  &-col {
+  &.col {
     flex-direction: column;
   }
   &.center {
@@ -128,7 +220,9 @@ body {
     align-items: center;
   }
   &.center-y {
-    align-items: center;
+    // align-items: center;
+    // align-content: center;
+    justify-content: center;
   }
   &.center-x {
     justify-content: center;
@@ -151,7 +245,38 @@ body {
   }
 }
 
-// *################################ MATERIAL OVERRIDE
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+// ################################ MATERIAL OVERRIDE
+
+// !Pro-squared theme
+.pro-squared {
+  .mat-button,
+  .mat-icon-button,
+  .mat-stroked-button,
+  .mat-flat-button {
+    min-width: 40px;
+    padding: 0;
+  }
+}
+
+.mat-toolbar {
+  background: transparent;
+}
+
+.app-input {
+  padding: 0.5rem;
+  font-size: inherit;
+  line-height: 1.2rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: none;
+  border-radius: 0.25rem;
+}
+
+// ! End pro-squared theme
 .mat-badge-content {
   box-shadow: 0px 2px 4px -1px rgba(146, 45, 185, 0.2),
     0px 4px 5px 0px rgba(146, 45, 185, 0.14),
@@ -180,7 +305,7 @@ body {
   height: auto;
 
   &.mat-toolbar {
-    font: 400 1rem/1.2rem Roboto, "Helvetica Neue", sans-serif;
+    font: 400 1rem/1.2rem Roboto, 'Helvetica Neue', sans-serif;
   }
   .mat-form-field {
     padding: 0.5rem;

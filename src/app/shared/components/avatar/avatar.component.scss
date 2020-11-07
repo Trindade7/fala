@@ -1,0 +1,57 @@
+.avatar {
+  box-sizing: border-box;
+  width: 80px;
+  height: 80px;
+  border: 0px solid grey;
+  position: relative;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-content: center;
+
+  img {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .status-badge {
+    position: absolute;
+    background: rgb(6, 242, 68);
+    width: 20%;
+    height: 20%;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 50%;
+    top: 2%;
+    right: 8%;
+  }
+
+  &.md,
+  &.md img {
+    width: 67px;
+    height: 67px;
+  }
+
+  &.sm,
+  &.sm img {
+    width: 47px;
+    height: 47px;
+  }
+
+  &.xsm {
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    img {
+      width: 26px;
+      height: 26px;
+    }
+    .status-badge {
+      display: none;
+    }
+  }
+}
