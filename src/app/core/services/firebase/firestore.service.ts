@@ -142,6 +142,8 @@ export class FirestoreService<T> {
     }
   }
 
+
+
   doc$(id: string): Observable<T | undefined> {
     logger.startCollapsed(`[firestore.service] [doc$()]`, ['id:', id]);
     const path = `${this.basePath}/${id}`;
