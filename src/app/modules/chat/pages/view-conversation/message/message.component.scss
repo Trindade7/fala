@@ -1,0 +1,42 @@
+.message-container {
+  flex-direction: row-reverse;
+  gap: 0.5rem;
+
+  .header {
+    opacity: 0.7;
+
+    .text {
+      display: none;
+    }
+
+    h3,
+    h4,
+    h5 {
+      margin: 0;
+    }
+  }
+
+  .content {
+    align-items: flex-end;
+  }
+
+  .mat-card {
+    filter: brightness(0.75);
+  }
+
+  &.received {
+    flex-direction: row;
+
+    .header {
+      opacity: 1;
+    }
+
+    .content {
+      align-items: flex-start;
+    }
+
+    .mat-card {
+      filter: contrast(0.9);
+    }
+  }
+}

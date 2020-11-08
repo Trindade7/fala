@@ -1,9 +1,48 @@
-<div class="conversation-list">
+<!-- <div class="conversation-list">
     <div *ngIf="(conversationSvc.collection$ | async) as conversations">
         <app-conversation-preview *ngFor="let conversation of conversations"
                                   [conversation]="conversation">
         </app-conversation-preview>
     </div>
-    <!-- <app-conversation-preview [conversation]="conversationActive"></app-conversation-preview>
-    <app-conversation-preview *ngFor="let item of conversations"></app-conversation-preview> -->
+</div> -->
+
+<!-- !############## -->
+
+<div class="conversations-container pro-squared">
+    <mat-toolbar>
+        <span>Conversations</span>
+        <span class="spacer"></span>
+        <button mat-icon-button>
+            <svg class="icon" fill="currentColor">
+                <use xlink:href="/assets/icons/bootstrap-icons/bootstrap-icons.svg#search" />
+            </svg>
+        </button>
+    </mat-toolbar>
+    <section class="new-conversation padded flexed mat-elevation-z2">
+        <input type="text" class="app-input" placeholder="New conversation">
+
+        <button mat-flat-button color="primary">
+            <!-- <mat-icon>send</mat-icon> -->
+            <svg class="bi icon" fill="currentColor">
+                <use xlink:href="/assets/icons/bootstrap-icons/bootstrap-icons.svg#plus" />
+            </svg>
+        </button>
+    </section>
+
+    <section class="conversations padded-y">
+        <mat-list *ngIf="(conversationSvc.collection$ | async) as conversations">
+            <mat-list-item class="padded-05-y" [disabled]="false" *ngFor="let conversation of conversations">
+                <div class="conversation-summary">
+                    <mat-divider></mat-divider>
+                    <app-conversation-preview [conversation]="conversation">
+                    </app-conversation-preview>
+                </div>
+            </mat-list-item>
+        </mat-list>
+
+        <div *ngIf="!(conversationSvc.collection$ | async)"
+             class="flexed center padded">
+            <h3>No conversation yet</h3>
+        </div>
+    </section>
 </div>

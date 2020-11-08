@@ -1,4 +1,14 @@
-<mat-sidenav-container class="chat-container">
+<div class="chat-container flexed">
+    <section class="conversation-list">
+        <app-conversation-list></app-conversation-list>
+    </section>
+
+    <section class="conversation-view">
+        <app-view-conversation></app-view-conversation>
+    </section>
+</div>
+
+<!-- <mat-sidenav-container class="chat-container">
 
     <mat-sidenav [position]="readDirection" [opened]="sideNavState" mode="side">
         <app-view-conversation></app-view-conversation>
@@ -52,63 +62,5 @@
             </mat-tab>
         </mat-tab-group>
 
-    </mat-sidenav-content>
-</mat-sidenav-container>
-<!--
-<mat-sidenav-container class="chat-container">
-    <mat-sidenav
-                 [position]="readDirection"
-                 [opened]="sideNavOpen"
-                 mode="side">
-        <app-view-conversation (closeSideNav)="toggleSideNav()"></app-view-conversation>
-    </mat-sidenav>
-
-    <mat-sidenav-content>
-        <button (click)="toggleSideNav()" mat-icon-button>
-            <mat-icon>close</mat-icon>
-        </button>
-        <mat-tab-group class="chat-tabs" headerPosition="below">
-            <mat-tab label="Conversations">
-                <ng-template mat-tab-label>
-                    <button mat-icon-button>
-                        <mat-icon>message</mat-icon>
-                    </button>
-                </ng-template>
-
-                <ng-template matTabContent>
-                    <div class="conversations-tab-container">
-                        <app-conversation-list (readConversation)="readConversation($event)"></app-conversation-list>
-                    </div>
-                </ng-template>
-            </mat-tab>
-            <mat-tab label="TabHeader">
-                <ng-template mat-tab-label>
-                    <button mat-icon-button>
-                        <mat-icon>contacts</mat-icon>
-                    </button>
-                </ng-template>
-                <ng-template matTabContent>
-                    <app-contact-list></app-contact-list>
-                </ng-template>
-            </mat-tab>
-            <mat-tab label="TabHeader">
-                <ng-template mat-tab-label>
-                    <button mat-icon-button>
-                        <mat-icon>settings</mat-icon>
-                    </button>
-                </ng-template>
-                <ng-template matTabContent>
-                    <div class="settings-tab-container">
-                        <mat-card>
-                            <mat-card-header>
-                                <mat-card-title>Settings</mat-card-title>
-                                <mat-card-subtitle>configure the app to your liking</mat-card-subtitle>
-                            </mat-card-header>
-                            <app-settings></app-settings>
-                        </mat-card>
-                    </div>
-                </ng-template>
-            </mat-tab>
-        </mat-tab-group>
     </mat-sidenav-content>
 </mat-sidenav-container> -->

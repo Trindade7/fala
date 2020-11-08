@@ -19,8 +19,7 @@ export class FirestoreService<T> {
   constructor (
     @Inject(AngularFirestore) protected firestore: AngularFirestore,
     @Inject(AngularFireStorage) protected storage: AngularFireStorage,
-  ) {
-  }
+  ) { }
 
   setBasePath(path: string): void {
     this.basePath = path;
@@ -39,6 +38,8 @@ export class FirestoreService<T> {
     return this.firestore.collection(path);
     // return this.firestore.collection(path, ref => ref.orderBy(orderBy, orderDirection));
   }
+
+
 
   createId(): string {
     return this.firestore.createId();
@@ -227,7 +228,6 @@ export class FirestoreService<T> {
   updateArrayFunction(value: any): any {
     return firebase.firestore.FieldValue.arrayUnion(value);
   }
-
 
   // *#################### FIRE STORAGE
 

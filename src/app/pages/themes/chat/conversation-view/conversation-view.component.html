@@ -48,9 +48,54 @@
             hello there
         </mat-toolbar>
     </div>
-    <div class="conversation-details flexed center">
-        <h1>
-            Conversation info
-        </h1>
+    <div class="contact-details flexed col center-y  padded-x padded-2-y">
+        <section class="conversation-summary flexed col center">
+            <app-avatar [size]="'lg'"></app-avatar>
+            <h3>Conversation Name</h3>
+            <span class="mat-caption">status</span>
+            <div class="social-contacts padded-y">
+                <button mat-icon-button>
+                    <mat-icon>g_translate</mat-icon>
+                </button>
+                <button mat-icon-button>
+                    <mat-icon>shop</mat-icon>
+                </button>
+            </div>
+        </section>
+
+        <div class="contact-info">
+            <mat-divider class="padded-y"></mat-divider>
+            <h5 class="mat-caption text thin mute">POSITION</h5>
+            <span>Contact position</span>
+            <div class="sized-box-2"></div>
+        </div>
+
+        <div class="contact-info">
+            <mat-divider class="padded-y"></mat-divider>
+            <h5 class="mat-caption text thin mute">MOBILE</h5>
+            <span>+44 758 745 299</span>
+            <div class="sized-box-2"></div>
+        </div>
+
+        <div class="contact-info">
+            <mat-divider class="padded-y"></mat-divider>
+            <h5 class="mat-caption text thin mute">EMAIL</h5>
+            <span>user.contact@mail.com</span>
+            <div class="sized-box-2"></div>
+        </div>
+
+        <div class="contact-info">
+            <mat-divider class="padded-y"></mat-divider>
+            <h5 class="mat-caption text thin mute">INFO</h5>
+            <p>
+                Enim occaecat enim aute nulla in irure ut irure
+                tempor consequat. Do eiusmod non nisi consequat
+                enim Lorem do fugiat quis voluptate dolore est.
+                Minim consequat nostrud nostrud consequat cupidatat.
+                Do fugiat reprehenderit fugiat officia do dolore
+                Lorem incididunt nostrud Lorem voluptate adipisicing
+                aliqua.
+            </p>
+        </div>
     </div>
 </div>

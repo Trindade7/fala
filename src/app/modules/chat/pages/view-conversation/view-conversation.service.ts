@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Logger as logger } from '@app-core/helpers/logger';
-import { ConversationModel, getFileTypeGroup, MessageModel } from '@app/core/models/conversation.model';
+import { ConversationModel, getFileTypeGroup, getTime, MessageModel } from '@app/core/models/conversation.model';
 import { FileUploader, genBatchData, LocalFileData } from '@app/core/models/upload-task.model';
 import { User } from '@app/core/models/user.model';
 import { AuthService } from '@app/core/services/auth/auth.service';
@@ -117,7 +117,7 @@ export class ViewConversationService {
   private createMessage(messageBody: string, uploadTask?: FileUploader): MessageModel {
     return new MessageModel({
       id: this._messagesDb.createId(),
-      createdAt: new Date(),
+      createdAt: getTime(),
       delivered: false,
       messageBody,
       senderId: this._auth.uid,

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { ConversationModel } from '@app-core/models/conversation.model';
+import { User } from '@app/core/models/user.model';
 import { AuthService } from '@app/core/services/auth/auth.service';
 
 import { ViewConversationService } from '../../pages/view-conversation/view-conversation.service';
@@ -12,7 +13,7 @@ import { ChatService } from '../../services/chat/chat.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConversationPreviewComponent implements OnInit {
-  @Input() conversation: ConversationModel | null = null;
+  @Input() conversation!: ConversationModel;
   // TODO: Move this to conversation map
   readonly avatarPlaceholder = 'https://placehold.it/100x100?text=user%20avatar';
 
@@ -27,5 +28,9 @@ export class ConversationPreviewComponent implements OnInit {
 
   openConversation(conversation: ConversationModel): void {
     this._conversationSvc.setActiveConversation(conversation);
+  }
+
+  getAvatar(users: User[] = []): string | null {
+    return users[0]?.photoUrl ?? null;
   }
 }

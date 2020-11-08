@@ -7,7 +7,8 @@
 </div> -->
 
 <div class="avatar candy-carousel" [ngClass]="size">
-    <img [src]="imageUrl" alt="avatar">
+    <img *ngIf="imageUrl" [src]="imageUrl" alt="avatar">
+    <img *ngIf="!imageUrl" [src]="'assets/images/placeholders/placeholder.png'" alt="avatar">
     <!-- <img [src]="imageUrl" alt="avatar"> -->
     <div class="status-badge candy-carousel">
     </div>

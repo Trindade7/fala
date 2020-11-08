@@ -16,7 +16,10 @@ export class AvatarComponent implements OnInit {
 
   ngOnInit(): void {
     // this.imageUrl = this.imageUrl ?? 'https://placehold.it/100x100?text=user%20avatar';
-    this.imageUrl = this.imageUrl ?? 'assets/images/placeholders/placeholder.png';
+    if (!this.imageUrl) {
+      console.log('NO IMAGE');
+      this.imageUrl = 'assets/images/placeholders/placeholder.png';
+    }
   }
 
 }

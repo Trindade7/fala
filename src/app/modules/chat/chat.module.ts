@@ -19,6 +19,7 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { NewMeesageBarComponent } from './pages/view-conversation/new-meesage-bar/new-meesage-bar.component';
 import { SendFilesComponent } from './pages/view-conversation/send-files/send-files.component';
 import { ViewConversationComponent } from './pages/view-conversation/view-conversation.component';
+import { MessageComponent } from './pages/view-conversation/message/message.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { ViewConversationComponent } from './pages/view-conversation/view-conver
     AvatarsComponent,
     NewMeesageBarComponent,
     SendFilesComponent,
-    FilePreviewComponent
+    FilePreviewComponent,
+    MessageComponent
   ],
   imports: [
     SharedModule,

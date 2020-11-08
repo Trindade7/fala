@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ConversationModel } from '@app/core/models/conversation.model';
 
 @Component({
   selector: 'app-conversation',
@@ -7,6 +8,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConversationComponent implements OnInit {
+  @Input() conversationI!: ConversationModel;
 
   conversation = {
     name: 'coonversation Name',

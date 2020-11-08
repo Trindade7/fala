@@ -1,4 +1,4 @@
-<mat-card *ngIf="conversation"
+<!-- <mat-card *ngIf="conversation"
           class="conversation-container mat-elevation-z"
           [ngClass]="{'shadowed-8 active': !conversation.id}"
           matBadge="10"
@@ -26,4 +26,44 @@
             <span *ngIf="message.messageBody?.length > 100">...</span>
         </p>
     </article>
-</mat-card>
+</mat-card> -->
+
+<!-- ! ############### -->
+
+<div *ngIf="conversation"
+     (click)="openConversation(conversation)"
+     class="conversation-container">
+
+    <header class="header flexed">
+        <div>
+            <span class="mat-caption text mute thin">CONTENT</span>
+            <h4>{{conversation.name}}</h4>
+            <!-- <div class="mat-body-strong">Some Username</div> -->
+        </div>
+
+        <span class="spacer"></span>
+
+        <span class="mat-caption text mute thin">17:56</span>
+    </header>
+    <section class="content flexed">
+        <div class="avatar">
+            <app-avatar [imageUrl]="getAvatar(conversation.users)"
+                        [size]="'sm'"></app-avatar>
+        </div>
+
+        <p *ngIf="conversation.lastMessage as message"
+           class="message-preview mat-body thin">
+            {{message.messageBody|slice: 0:60}} ...
+        </p>
+    </section>
+    <div class="status flexed">
+        <span *ngFor="let user of conversation.users"
+              class="user-name mat-caption text mute thin">{{user.name}}, </span>
+
+        <span class="spacer"></span>
+
+        <div class="notification">
+            1
+        </div>
+    </div>
+</div>

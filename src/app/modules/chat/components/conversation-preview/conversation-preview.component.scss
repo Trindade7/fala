@@ -1,29 +1,63 @@
+// .conversation-container {
+//   display: flex;
+//   gap: 1rem;
+//   cursor: pointer;
+//   border: 1px solid #ddd;
+//   margin: 1rem; // TODO: USE GAP???
+
+//   &.active {
+//     background-color: rgb(146, 45, 185);
+//     color: white;
+//     border: 0;
+//   }
+
+//   .user-avatar {
+//     width: 48px;
+//     height: 48px;
+//     font-size: 48px;
+//   }
+
+//   article {
+//     overflow: hidden;
+//   }
+
+//   .name {
+//     white-space: nowrap;
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+//   }
+// }
+
 .conversation-container {
-  display: flex;
-  gap: 1rem;
   cursor: pointer;
-  border: 1px solid #ddd;
-  margin: 1rem; // TODO: USE GAP???
 
-  &.active {
-    background-color: rgb(146, 45, 185);
+  .content {
+    gap: 1rem;
+    margin-bottom: 16px;
+  }
+
+  .notification {
+    background-color: #d32e63;
+    border-radius: 0.25rem;
+    padding: 0.1rem 0.45rem;
     color: white;
-    border: 0;
+    max-height: 24px;
   }
 
-  .user-avatar {
-    width: 48px;
-    height: 48px;
-    font-size: 48px;
-  }
+  .message-preview {
+    margin: 0;
+    font-weight: 300;
 
-  article {
-    overflow: hidden;
-  }
-
-  .name {
-    white-space: nowrap;
-    overflow: hidden;
+    max-height: 4rem;
+    -webkit-box-orient: vertical;
+    display: block;
+    display: -webkit-box;
+    overflow: hidden !important;
     text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+  }
+
+  .status .user-name {
+    padding-top: 3px;
   }
 }

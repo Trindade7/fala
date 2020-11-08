@@ -44,6 +44,7 @@ export function getFileTypeGroup(fileType: string, typeGroups: any = _typeGroups
     return 'other';
 }
 
+interface Time { seconds: number; milliseconds: number; }
 
 
 
@@ -82,17 +83,27 @@ export class MessageModel {
     senderId: string | null;
     messageBody: string | null;
     delivered: boolean | null;
-    createdAt: Date | null;
+    createdAt: Time;
     file: MessageFile | null;
     uploadTask?: FileUploader;
 
 
-    constructor (args: RequireOne<MessageModel, 'id'>) {
+    // constructor (args: RequireOne<MessageModel, 'id'>) {
+    //     this.id = args.id;
+    //     this.senderId = args.senderId ?? null;
+    //     this.messageBody = args.messageBody ?? null;
+    //     this.delivered = args.delivered ?? false;
+    //     this.createdAt = args.createdAt ?? null;
+    //     this.file = args.file ?? null;
+    //     // * uploadTask won't be stored on server = can be undefined
+    //     this.uploadTask = args.uploadTask ?? undefined;
+    // }
+    constructor (args: MessageModel) {
         this.id = args.id;
         this.senderId = args.senderId ?? null;
         this.messageBody = args.messageBody ?? null;
         this.delivered = args.delivered ?? false;
-        this.createdAt = args.createdAt ?? null;
+        this.createdAt = args.createdAt;
         this.file = args.file ?? null;
         // * uploadTask won't be stored on server = can be undefined
         this.uploadTask = args.uploadTask ?? undefined;
@@ -104,9 +115,19 @@ export class MessageModel {
             senderId: null,
             messageBody: '',
             delivered: false,
-            createdAt: null,
+            createdAt: getTime(),
             file: null,
             uploadTask: undefined
         };
     }
+}
+
+
+
+export function getTime(): Time {
+    const date = new Date();
+    return {
+        seconds: date.getSeconds(),
+        milliseconds: date.getMilliseconds()
+    };
 }
