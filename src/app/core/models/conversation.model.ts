@@ -55,7 +55,7 @@ export class ConversationModel {
     lastMessage: MessageModel | null;
     createdAt: Date | null;
 
-    constructor (args: ConversationModel) {
+    constructor(args: ConversationModel) {
         this.id = args.id;
         this.name = args.name;
         this.users = args.users;
@@ -98,7 +98,7 @@ export class MessageModel {
     //     // * uploadTask won't be stored on server = can be undefined
     //     this.uploadTask = args.uploadTask ?? undefined;
     // }
-    constructor (args: MessageModel) {
+    constructor(args: MessageModel) {
         this.id = args.id;
         this.senderId = args.senderId ?? null;
         this.messageBody = args.messageBody ?? null;

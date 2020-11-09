@@ -1,3 +1,17 @@
+.app-container {
+  position: relative;
+  height: 100vh;
+  max-height: 100vh;
+
+  .dev-banner {
+    position: fixed;
+    top: 0;
+    right: 0;
+    background: rebeccapurple;
+    color: white;
+  }
+}
+
 .fala-container {
   height: 100vh;
   max-height: 100vh;
@@ -6,8 +20,8 @@
   grid-template-rows: 1fr 64px;
   gap: 0px 0px;
   grid-template-areas:
-    "left-top center-top right-top"
-    "left-bot center-bot right-bot";
+    'left-top center-top right-top'
+    'left-bot center-bot right-bot';
   &.rtl {
     .nav-toolbar {
       grid-area: left-top/left-top/left-bot/left-bot;

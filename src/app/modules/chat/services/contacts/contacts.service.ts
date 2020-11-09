@@ -10,7 +10,7 @@ import { ViewConversationService } from '../../pages/view-conversation/view-conv
 @Injectable({ providedIn: 'root' })
 export class ContactsService {
 
-  constructor (
+  constructor(
     private _db: ContactsServiceDb,
     private _store: ContactsServiceStore,
     private conversationSvc: ViewConversationService
@@ -58,7 +58,7 @@ interface IContactsPage {
 class ContactsServiceStore extends StoreGeneric<IContactsPage>{
   store = 'contats-store';
 
-  constructor () {
+  constructor() {
     super({
       loading: true,
       contacts: [],

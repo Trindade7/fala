@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { Logger as logger } from '@app-core/helpers/logger';
 import { AuthService } from '@app-core/services/auth/auth.service';
 
 import { ChatService } from './services/chat/chat.service';
@@ -26,7 +27,7 @@ export class ChatComponent implements OnInit {
   appSettings: AppSettings;
   readDirection: 'end' | 'start' = 'start';
 
-  constructor (
+  constructor(
     private _conversations: ListConversationsService,
     public chatService: ChatService,
     private _authService: AuthService
@@ -35,10 +36,12 @@ export class ChatComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this._conversations.collection$);
     this.appSettings = this.chatService.appSettings;
     this.readDirection = this.chatService.appSettings.readMode === 'ltr' ? 'end' : 'start';
-    console.log(this.appSettings);
+
+    logger.collapsed(
+      '[chat.component] ',
+      [this.appSettings, this._conversations.collection$]);
 
   }
 

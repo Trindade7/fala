@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 export class AvatarsComponent implements OnInit {
   @Input() imageUrl = '';
 
-  constructor () { }
+  constructor() { }
 
   ngOnInit(): void {
   }

@@ -8,7 +8,7 @@ import { ListConversationsService } from '../../services/list-conversations/list
 })
 export class ConversationsComponent implements OnInit {
 
-  constructor (
+  constructor(
     public conversationSvc: ListConversationsService
   ) { }
 

@@ -23,7 +23,7 @@ export class LoginPageComponent implements OnInit {
   });
   saveLogIn = false;
 
-  constructor (
+  constructor(
     private _fb: FormBuilder,
     private _authService: AuthService,
     private _router: Router,

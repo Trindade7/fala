@@ -12,7 +12,7 @@ export class AvatarComponent implements OnInit {
 
 
 
-  constructor () { }
+  constructor() { }
 
   ngOnInit(): void {
     // this.imageUrl = this.imageUrl ?? 'https://placehold.it/100x100?text=user%20avatar';

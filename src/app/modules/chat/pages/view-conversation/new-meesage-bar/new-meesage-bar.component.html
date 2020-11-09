@@ -6,7 +6,9 @@
         <mat-icon>insert_emoticon</mat-icon>
     </button>
 
-    <form [formGroup]="messageForm" (ngSubmit)="sendMessage()" class="message-form flexed center">
+    <form [formGroup]="messageForm"
+          (ngSubmit)="sendMessage()"
+          class="pro-squared message-form flexed center">
         <mat-form-field appearance="outline">
             <!-- <input matInput value="value"> -->
             <textarea formControlName="messageBody"
@@ -17,7 +19,7 @@
                       cdkAutosizeMaxRows="5"></textarea>
         </mat-form-field>
         <button type="submit"
-                mat-mini-fab
+                mat-flat-button
                 class="mat-elevation-z0"
                 color="primary"
                 aria-label="Send message">

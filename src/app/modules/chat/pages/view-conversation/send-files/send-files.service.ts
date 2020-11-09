@@ -13,7 +13,7 @@ export class SendFilesService {
 
   private _selectedIndex = 0;
 
-  constructor (
+  constructor(
     private _conversationSvc: ViewConversationService
   ) { }
 

@@ -25,7 +25,7 @@ export class NewMeesageBarComponent implements OnInit {
     ],
   });
 
-  constructor (
+  constructor(
     public auth: AuthService,
     public conversationSvc: ViewConversationService,
     private _fb: FormBuilder,

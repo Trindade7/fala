@@ -22,7 +22,7 @@ export class FilePreviewComponent implements OnInit {
     other: false
   };
 
-  constructor () { }
+  constructor() { }
 
   ngOnInit(): void {
     if (this.fileUrl) {

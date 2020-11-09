@@ -21,7 +21,7 @@ import { ConversationDb } from '../../services/conversation.db';
 export class ViewConversationService {
   private _messagesSubscription: Subscription = Subscription.EMPTY;
 
-  constructor (
+  constructor(
     private _auth: AuthService,
     private _chatSvc: ChatService,
     private _messagesDb: MessagesDb,
@@ -166,16 +166,22 @@ export class ViewConversationService {
   }
 
   openContactConversation(contact: User): Promise<void> {
+    logger.startCollapsed('[view-conversation.service] openContactConversation()', []);
+
     const conversationId = this.genConversationId(contact.uid);
 
     return this._conversationDb.doc$(conversationId)
       .pipe(take(1))
       .toPromise()
-      .then(conversation => conversation ?
-        this.setActiveConversation(conversation)
-        : this.createNewConversation(contact, conversationId)
+      .then(conversation => {
+        logger.endCollapsed(['got conversation']);
+
+        return conversation ?
+          this.setActiveConversation(conversation)
+          : this.createNewConversation(contact, conversationId);
+      }
       ).catch(err => {
-        logger.collapsed('Error getting contact conversation document', [err]);
+        logger.endCollapsed(['Error getting contact conversation document']);
         return Promise.reject(err);
       });
   }
@@ -312,7 +318,7 @@ interface IViewConversationPage {
 class ViewConversationStore extends StoreGeneric<IViewConversationPage>{
   protected store = 'conversations-store';
 
-  constructor () {
+  constructor() {
     super({
       loading: true,
       messages: [],

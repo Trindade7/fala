@@ -16,6 +16,11 @@
       position: absolute;
       right: -16px;
       background: #282626; // ! REMOVE
+      transition: transform 0.3s ease-out;
+
+      &.right {
+        transform: rotate(180deg);
+      }
     }
 
     .description {
@@ -42,18 +47,18 @@
 .conversation-details {
   max-width: 500px;
   flex: 1;
-
-  &.hide {
-    min-width: 0;
-    width: 0;
-    transition: width 0.2s;
-  }
 }
 
 .contact-details {
   overflow-y: hidden;
   height: 100%;
   max-width: 320px;
+  transition: padding 0.4s;
+
+  &.hide {
+    width: 0;
+    padding: 0;
+  }
 
   &:hover {
     overflow-y: auto;

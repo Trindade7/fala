@@ -19,7 +19,7 @@ export class ConversationComponent implements OnInit {
     Nisi consectetur elit nostrud adipisicing qui Lorem nostrud. `
   };
 
-  constructor () { }
+  constructor() { }
 
   ngOnInit(): void {
   }

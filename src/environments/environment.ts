@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+
   firebaseConfig: {
     apiKey: 'AIzaSyAc4KP-yqq30vxUfkPXV0kjPgitc1Kijeo',
     authDomain: 'chat-fala.firebaseapp.com',
@@ -14,6 +15,21 @@ export const environment = {
     appId: '1:950365545073:web:ce0468e62a40a542e271d0',
     measurementId: 'G-WLPVW4RZFW'
   },
+
+  // !####
+
+  // firebaseConfig: {
+  //   host: 'localhost:8081',
+  //   ssl: false,
+  //   apiKey: 'AIzaSyAc4KP-yqq30vxUfkPXV0kjPgitc1Kijeo',
+  //   authDomain: 'chat-fala.firebaseapp.com',
+  //   databaseURL: 'http://localhost:9000?ns=chat-fala',
+  //   projectId: 'chat-fala',
+  //   appId: '1:950365545073:web:ce0468e62a40a542e271d0',
+  //   measurementId: 'G-WLPVW4RZFW'
+  // },
+
+  // !####
 };
 
 /*

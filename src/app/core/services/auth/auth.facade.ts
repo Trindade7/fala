@@ -7,7 +7,7 @@ import { FireauthService } from '../firebase/fireauth.service';
 
 export abstract class AuthFacade {
     // TODO: FIX INJECTION
-    constructor (
+    constructor(
         @Inject(FireauthService) private _authService: FireauthService,
         @Inject(Router) private _router: Router
     ) { }

@@ -10,7 +10,7 @@ import { SendFilesService } from './send-files.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SendFilesComponent implements OnDestroy {
-  constructor (
+  constructor(
     private _bottomSheetRef: MatBottomSheetRef<SendFilesComponent>,
     public filesService: SendFilesService
   ) { }

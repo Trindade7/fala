@@ -11,7 +11,7 @@ interface IUserStore {
 export class UserStore extends StoreGeneric<IUserStore> {
     protected store = 'user';
 
-    constructor () {
+    constructor() {
         super(
             {
                 loading: true,

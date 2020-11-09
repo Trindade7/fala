@@ -10,7 +10,7 @@ export class FileDropzoneComponent implements OnInit {
   isHovering = false;
   @Output() filesEmitter: EventEmitter<FileList> = new EventEmitter();
 
-  constructor (
+  constructor(
   ) { }
 
   ngOnInit(): void {

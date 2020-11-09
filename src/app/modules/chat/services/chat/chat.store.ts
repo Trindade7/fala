@@ -21,7 +21,7 @@ export class ChatStore extends StoreGeneric<IChatPage>{
     // tslint:disable-next-line: variable-name
     appSettings = new AppSettings();
 
-    constructor () {
+    constructor() {
         super({
             loading: true,
             messages: [],

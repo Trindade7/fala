@@ -10,7 +10,7 @@ import { UserStore } from './user.store';
   providedIn: 'root'
 })
 export class UserService {
-  constructor (
+  constructor(
     private _authService: AuthFacade,
     private _store: UserStore,
   ) {

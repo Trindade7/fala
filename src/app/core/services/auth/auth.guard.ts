@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class UserLoggedInGuard implements CanActivate {
-  constructor (
+  constructor(
     private _authService: AuthService,
     private _router: Router,
     private _snackBar: MatSnackBar
@@ -38,7 +38,7 @@ export class UserLoggedInGuard implements CanActivate {
   providedIn: 'root'
 })
 export class UserNotLoggedInGuard implements CanActivate {
-  constructor (
+  constructor(
     private _authService: AuthService,
     private _router: Router,
   ) { }

@@ -11,7 +11,7 @@ import { ChatService } from '../../services/chat/chat.service';
 })
 export class SettingsComponent implements OnInit {
 
-  constructor (
+  constructor(
     private _authService: AuthService,
     private _router: Router,
     public chatService: ChatService,

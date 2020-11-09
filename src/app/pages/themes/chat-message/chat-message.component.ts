@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 export class ChatMessageComponent implements OnInit {
   @Input() received = false;
 
-  constructor () { }
+  constructor() { }
 
   ngOnInit(): void {
   }

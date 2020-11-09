@@ -116,6 +116,7 @@
 
                 <button (click)="toggleContactDetails()"
                         class="close-details"
+                        [ngClass]="{'right': hideContactDetails}"
                         mat-icon-button>
                     <mat-icon>keyboard_arrow_right</mat-icon>
                 </button>

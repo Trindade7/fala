@@ -30,7 +30,7 @@ export class ViewConversationComponent implements OnInit {
     ],
   });
 
-  constructor (
+  constructor(
     private _chatService: ChatService,
     private _fb: FormBuilder,
     public auth: AuthService,

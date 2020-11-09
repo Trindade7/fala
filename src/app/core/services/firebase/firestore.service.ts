@@ -8,12 +8,31 @@ import { map, tap } from 'rxjs/operators';
 
 import { BatchData, FileUploadTask } from '../../models/upload-task.model';
 
+interface QueryOptions {
+  limitToLast: number;
+  orderBy: 'createdAt' | 'updatedAt';
+  orderDirection: 'asc' | 'desc';
+  limitTo: number;
+  arrayContains?: {
+    arrayName: string;
+    value: any;
+  };
+  path: string | null;
+  startAt?: any;
+}
+
 @Injectable({
   providedIn: 'root'
 })
-
-
 export class FirestoreService<T> {
+  private _defaultQuery: QueryOptions = {
+    orderBy: 'createdAt',
+    orderDirection: 'asc',
+    limitTo: 20,
+    limitToLast: 20,
+    path: null,
+  };
+
   protected basePath = '';
 
   constructor (
@@ -45,75 +64,54 @@ export class FirestoreService<T> {
     return this.firestore.createId();
   }
 
-  collection$(
-    options: {
-      limitToLast?: number, orderBy?: 'createdAt' | 'updatedAt',
-      orderDirection?: 'asc' | 'desc',
-      limitTo?: number;
-      path?: string,
-      arrayContains?: { arrayName: string, value: string | null; };
-    } = {}
-  ): Observable<T[]> {
-    logger.collapsed('[firestore.service] collection$', [options]);
+
+  /**
+   *
+   *
+   * Returns an Observable of a collection of items.
+   *
+   * Default options are:
+   *
+   * #orderBy: 'createdAt',
+   *
+   * #orderDirection: 'asc',
+   *
+   * #limitTo: 20,
+   *
+   * #path: null,
+   *
+   */
+  collection$(queryOptions: Partial<QueryOptions> = this._defaultQuery): Observable<T[]> {
+    logger.collapsed('[firestore.service] collection$', [queryOptions]);
+
+    const opts: QueryOptions = Object.assign(this._defaultQuery, queryOptions);
 
     return this.firestore.collection<T>(
-      options.path ?? this.basePath,
+      opts.path ?? this.basePath,
       ref => {
-        if (options.arrayContains) {
-          console.log('filering', options.arrayContains.arrayName, options.arrayContains.value);
 
-          return ref.where('participantIds', 'array-contains', '154NsEOViCQxtZWJVOhGlnttfrE3');
-          // return ref.where(options.arrayContains.arrayName, 'array-contains', options.arrayContains.value);
-        }
-        return ref;
-        // return options.orderBy ? ref.orderBy('createdAt', 'asc').limitToLast(1) : ref;
-        // // if (options === {}) {
-        // //   return ref;
-        // //
-        // ref.where(options.arrayContains.arrayName, 'array-contains', options.arrayContains.value);
-        // const order = options.orderBy ? ref.orderBy(options.orderBy, options.orderDirection ?? 'asc') : ref;
-        // const limitToLast = options.limitToLast ? order.limitToLast(options.limitToLast) : ref;
-        // return limitToLast;
+        // if (opts.arrayContains) {
+        //   return ref.where(
+        //     opts.arrayContains.arrayName,
+        //     'array-contains',
+        //     opts.arrayContains.value
+        //   );
+        // }
+
+        let query = ref.orderBy(opts.orderBy, opts.orderDirection).limit(opts.limitTo);
+        query = opts.startAt ? query.startAt(opts.startAt) : query;
+
+        return query;
       }
     ).valueChanges().pipe(
       tap( // LOGGING DATA
         val => {
           logger.collapsed(
             `>firestore.servicce streaming [${this.basePath}] [collection$]`,
-            [val, 'Options', options]);
+            [val, 'Options', queryOptions]);
         }
       )
     );
-
-    // if (orderBy) {
-    //   return this.firestore.collection<T>(
-    //     this.basePath,
-    //     ref => ref.orderBy(orderBy, orderDirection ?? 'asc')
-    //   ).valueChanges().pipe(
-    //     tap( // LOGGING DATA
-    //       val => {
-    //         console.groupCollapsed(
-    //           `Firestore streaming [${this.basePath}]
-    //           [collection$] with [query] ${orderBy}`);
-    //         console.log(val);
-    //         console.groupEnd();
-    //       }
-    //     )
-    //   );
-    // } else {
-    //   return this.firestore.collection<T>(this.basePath)
-    //     .valueChanges().pipe(
-    //       tap( // LOGGING DATA
-    //         val => {
-    //           console.groupCollapsed(
-    //             `Firestore streaming [${this.basePath}]
-    //           [collection$] with [query]`);
-    //           console.log(val);
-    //           console.groupEnd();
-    //         }
-    //       )
-    //     );
-    // }
   }
 
   collectionFromPath$(
@@ -142,18 +140,19 @@ export class FirestoreService<T> {
     }
   }
 
-
-
   doc$(id: string): Observable<T | undefined> {
-    logger.startCollapsed(`[firestore.service] [doc$()]`, ['id:', id]);
+    logger.startCollapsed(
+      `[firestore.service] [doc$()]`,
+      [{ log: ['id:', id], type: 'warn' }]
+    );
+
     const path = `${this.basePath}/${id}`;
-    return this.firestore.doc<T>(path)
-      .valueChanges().pipe(
-        tap( // LOGGING DATA
-          val => logger.endCollapsed([`RESPONSE streaming from [${path}]`, val]),
-          err => logger.endCollapsed([`ERROR streaming from [${path}] `, err]),
-        ),
-      );
+
+    return this.firestore.doc<T>(path).valueChanges()
+      .pipe(tap( // LOGGING DATA
+        val => logger.endCollapsed([`RESPONSE streaming from [${path}]`, val]),
+        err => logger.endCollapsed([`ERROR streaming from [${path}] `, err]),
+      ));
   }
 
   docFromPath$(path: string): Observable<any> {

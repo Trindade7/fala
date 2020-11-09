@@ -10,7 +10,7 @@ import { ListConversationsService } from '../../services/list-conversations/list
 export class ConversationListComponent implements OnInit {
   @Output() readConversation = new EventEmitter<string>();
 
-  constructor (
+  constructor(
     public conversationSvc: ListConversationsService,
   ) { }
 

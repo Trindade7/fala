@@ -63,7 +63,7 @@ export class Logger {
         }
     }
 
-    static printLog(logObject: LogType[]) {
+    static printLog(logObject: LogType[]): void {
         for (const log of logObject) {
             switch (log.type) {
                 case 'log':

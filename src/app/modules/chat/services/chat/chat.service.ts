@@ -13,7 +13,7 @@ import { AppSettings, ChatStore } from './chat.store';
 export class ChatService {
   Logger = new Logger();
 
-  constructor (
+  constructor(
     private _store: ChatStore,
     private _auth: AuthService,
   ) {

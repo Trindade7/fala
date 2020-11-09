@@ -15,7 +15,7 @@ export abstract class FireauthService {
   basePath = 'users';
   private _uid = '';
 
-  constructor (
+  constructor(
     private _afAuth: AngularFireAuth,
     private _db: FirestoreService<User>
   ) {
@@ -25,7 +25,7 @@ export abstract class FireauthService {
     ).subscribe();
   }
 
-  get uid(): string | null {
+  get uid(): string {
     return this._uid;
   }
 
