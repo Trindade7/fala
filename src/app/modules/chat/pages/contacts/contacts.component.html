@@ -1,0 +1,41 @@
+<div class="contacts-conainer flexed">
+    <nav class="letters-nav flexed col padded-x padded-2-y">
+        <button *ngFor="let letter of letters" mat-icon-button>{{letter}}</button>
+    </nav>
+
+    <div class="contacts">
+        <header>
+            <mat-toolbar>
+                <span>Search zone</span>
+            </mat-toolbar>
+        </header>
+
+        <section class="contact-list">
+            <mat-table class="" [dataSource]="dataSource">
+                <!-- Contact columns -->
+                <ng-container *ngFor="let column of displayedColumns; let i = index"
+                              [matColumnDef]="column">
+                    <mat-header-cell *matHeaderCellDef> {{columnNames[i] | titlecase}} </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <ng-container *ngIf="column === 'photoUrl'; else elseTemplate">
+                            <div class="padded-y">
+                                <app-avatar [size]="'sm'"></app-avatar>
+                            </div>
+                        </ng-container>
+                        <ng-template #elseTemplate>
+                            <span *ngIf="column !== 'photoUrl'">{{element[column]}}</span>
+                        </ng-template>
+
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </section>
+    </div>
+
+    <div class="contact-details">
+
+    </div>
+</div>

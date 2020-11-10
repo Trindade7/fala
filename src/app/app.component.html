@@ -1,0 +1,29 @@
+<!-- <div class="fala-container" [ngClass]="readMode">
+    <div class="nav-toolbar">
+        <app-nav-toolbar></app-nav-toolbar>
+    </div>
+    <div class="fala-content">
+
+    </div>
+</div> -->
+<div class="app-container pro-squared flexed">
+    <nav class="app-nav flexed col padded">
+        <span class="dev-banner padded-x">Dev</span>
+        <button [routerLink]="['']" routerLinkActive="router-link-active" mat-icon-button>
+            <mat-icon>home_outline</mat-icon>
+        </button>
+        <button [routerLink]="['/chat/contacts']" mat-icon-button>
+            <mat-icon>contacts_outline</mat-icon>
+        </button>
+        <button [routerLink]="['/chat']" mat-icon-button>
+            <mat-icon>chat_outline</mat-icon>
+        </button>
+        <button [routerLink]="['/settings']" mat-icon-button>
+            <mat-icon>settings_outline</mat-icon>
+        </button>
+    </nav>
+
+    <div class="app-content">
+        <router-outlet></router-outlet>
+    </div>
+</div>

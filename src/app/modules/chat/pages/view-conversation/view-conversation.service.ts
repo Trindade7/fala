@@ -21,7 +21,7 @@ import { ConversationDb } from '../../services/conversation.db';
 export class ViewConversationService {
   private _messagesSubscription: Subscription = Subscription.EMPTY;
 
-  constructor(
+  constructor (
     private _auth: AuthService,
     private _chatSvc: ChatService,
     private _messagesDb: MessagesDb,
@@ -149,6 +149,13 @@ export class ViewConversationService {
       )
     );
   }
+
+  get loading$(): Observable<boolean> {
+    return this._store.state$.pipe(
+      map(state => state.loading)
+    );
+  }
+
 
 
   setActiveConversation(conversation: ConversationModel): void {
@@ -318,9 +325,9 @@ interface IViewConversationPage {
 class ViewConversationStore extends StoreGeneric<IViewConversationPage>{
   protected store = 'conversations-store';
 
-  constructor() {
+  constructor () {
     super({
-      loading: true,
+      loading: false,
       messages: [],
       error: null,
       conversation: null,

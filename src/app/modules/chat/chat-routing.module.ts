@@ -1,18 +1,20 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { ChatComponent } from './chat.component';
+import { ContactsComponent } from './pages/contacts/contacts.component';
 import { ConversationsComponent } from './pages/conversations/conversations.component';
 
 const routes: Routes = [
+  { path: 'contacts', component: ContactsComponent },
   {
     path: '',
-    component: ChatComponent,
+    component: ConversationsComponent,
+    pathMatch: 'full',
     children: [
       { path: ':id', component: ConversationsComponent },
       { path: '', component: ConversationsComponent },
     ]
-  }
+  },
 ];
 
 @NgModule({

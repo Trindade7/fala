@@ -1,0 +1,58 @@
+[debug] [2020-11-09T18:28:40.283Z] ----------------------------------------------------------------------
+[debug] [2020-11-09T18:28:40.288Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\joset\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init emulators
+[debug] [2020-11-09T18:28:40.289Z] CLI Version:   8.15.1
+[debug] [2020-11-09T18:28:40.289Z] Platform:      win32
+[debug] [2020-11-09T18:28:40.289Z] Node Version:  v14.4.0
+[debug] [2020-11-09T18:28:40.292Z] Time:          Mon Nov 09 2020 18:28:40 GMT+0000 (Greenwich Mean Time)
+[debug] [2020-11-09T18:28:40.292Z] ----------------------------------------------------------------------
+[debug] [2020-11-09T18:28:40.292Z] 
+[debug] [2020-11-09T18:28:40.309Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-11-09T18:28:40.310Z] > authorizing via signed-in user
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\joset\Documents\work\web_dev\fala\fala
+
+Before we get started, keep in mind:
+
+  * You are initializing in an existing Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[info] i  .firebaserc already has a default project, using chat-fala. 
+[debug] [2020-11-09T18:28:52.158Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2020-11-09T18:28:52.160Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2020-11-09T18:28:53.946Z] <<< HTTP RESPONSE 200 {"expires":"Mon, 01 Jan 1990 00:00:00 GMT","pragma":"no-cache","cache-control":"no-cache, no-store, max-age=0, must-revalidate","date":"Mon, 09 Nov 2020 18:28:54 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-Q050=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-11-09T18:28:53.965Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/chat-fala  
+ 
+[debug] [2020-11-09T18:28:55.714Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 09 Nov 2020 18:28:55 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-Q050=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] 
+=== Emulators Setup
+[debug] [2020-11-09T18:29:11.739Z] ----------------------------------------------------------------------
+[debug] [2020-11-09T18:29:11.744Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\joset\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start
+[debug] [2020-11-09T18:29:11.745Z] CLI Version:   8.15.1
+[debug] [2020-11-09T18:29:11.745Z] Platform:      win32
+[debug] [2020-11-09T18:29:11.745Z] Node Version:  v14.4.0
+[debug] [2020-11-09T18:29:11.748Z] Time:          Mon Nov 09 2020 18:29:11 GMT+0000 (Greenwich Mean Time)
+[debug] [2020-11-09T18:29:11.748Z] ----------------------------------------------------------------------
+[debug] [2020-11-09T18:29:11.749Z] 
+[debug] [2020-11-09T18:29:11.763Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-11-09T18:29:11.764Z] > authorizing via signed-in user
+[info] i  emulators: Starting emulators: auth, functions, firestore, hosting {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, functions, firestore, hosting"}}
+[debug] [2020-11-09T18:29:13.867Z] [hub] writing locator at C:\Users\joset\AppData\Local\Temp\hub-chat-fala.json
+[warn] !  functions: The functions emulator is configured but there is no functions source directory. Have you run firebase init functions? {"metadata":{"emulator":{"name":"functions"},"message":"The functions emulator is configured but there is no functions source directory. Have you run \u001b[1mfirebase init functions\u001b[22m?"}}
+[warn] !  firestore: Did not find a Cloud Firestore rules file specified in a firebase.json config file. {"metadata":{"emulator":{"name":"firestore"},"message":"Did not find a Cloud Firestore rules file specified in a firebase.json config file."}}
+[warn] !  firestore: The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration. {"metadata":{"emulator":{"name":"firestore"},"message":"The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration."}}
+[info] i  firestore: downloading cloud-firestore-emulator-v1.11.9.jar... {"metadata":{"emulator":{"name":"firestore"},"message":"downloading cloud-firestore-emulator-v1.11.9.jar..."}}

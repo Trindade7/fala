@@ -3,6 +3,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 
 import { SharedModule } from '../../shared/shared.module';
@@ -14,12 +15,13 @@ import { ConversationListComponent } from './components/conversation-list/conver
 import { ConversationPreviewComponent } from './components/conversation-preview/conversation-preview.component';
 import { FilePreviewComponent } from './components/file-preview/file-preview.component';
 import { UserContactComponent } from './components/user-contact/user-contact.component';
+import { ContactsComponent } from './pages/contacts/contacts.component';
 import { ConversationsComponent } from './pages/conversations/conversations.component';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { MessageComponent } from './pages/view-conversation/message/message.component';
 import { NewMeesageBarComponent } from './pages/view-conversation/new-meesage-bar/new-meesage-bar.component';
 import { SendFilesComponent } from './pages/view-conversation/send-files/send-files.component';
 import { ViewConversationComponent } from './pages/view-conversation/view-conversation.component';
-import { MessageComponent } from './pages/view-conversation/message/message.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import { MessageComponent } from './pages/view-conversation/message/message.comp
     NewMeesageBarComponent,
     SendFilesComponent,
     FilePreviewComponent,
-    MessageComponent
+    MessageComponent,
+    ContactsComponent,
   ],
   imports: [
     SharedModule,
@@ -44,7 +47,8 @@ import { MessageComponent } from './pages/view-conversation/message/message.comp
     MatListModule,
     MatSidenavModule,
     MatSlideToggleModule,
-    MatDividerModule
+    MatDividerModule,
+    MatTableModule
   ],
   entryComponents: [SendFilesComponent]
 })

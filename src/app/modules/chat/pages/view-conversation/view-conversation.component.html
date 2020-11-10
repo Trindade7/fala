@@ -1,208 +1,126 @@
-<!-- <div *ngIf="(conversationSvc.conversation$ |async) as conversation" class="conversation-container">
+<ng-container *ngIf="(conversationSvc.conversation$ |async) as conversation; else noConversationTemplate">
+    <div class="conversation-container flexed">
+        <div class="conversation flexed col">
+            <mat-toolbar class="header">
+                <mat-toolbar-row>
+                    <span>{{conversation.name}}</span>
 
-    <mat-toolbar class="conversation-toolbar mat-elevation-z2"
-                 color="primary">
-        <button (click)="closeConversation()" mat-icon-button>
-            <mat-icon>arrow_back</mat-icon>
-        </button>
+                    <span class="spacer"></span>
 
-        <app-avatars [imageUrl]="conversationAvatar(conversation)"></app-avatars>
-
-        <span>{{conversation.name}}</span>
-        <span class="spacer"></span>
-        <button
-                mat-icon-button
-                [matMenuTriggerFor]="menu"
-                aria-label="More conversation options">
-            <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item>
-                <mat-icon>dialpad</mat-icon>
-                <span>Redial</span>
-            </button>
-            <button mat-menu-item disabled>
-                <mat-icon>voicemail</mat-icon>
-                <span>Check voice mail</span>
-            </button>
-            <button mat-menu-item>
-                <mat-icon>notifications_off</mat-icon>
-                <span>Disable alerts</span>
-            </button>
-        </mat-menu>
-    </mat-toolbar>
-
-    <section *ngIf="(conversationSvc.messages$ | async) as messages" class="messages">
-        <div *ngFor="let message of messages; let i = index"
-             [ngClass]="{'sent': message.senderId === auth.uid, 'not-delivered': !message.delivered}"
-             class="message">
-
-            <app-avatars [imageUrl]="messageAvatar(message.senderId)">
-            </app-avatars>
-            <mat-card class="">
-                <app-file-preview *ngIf="message.file?.url" mat-card-image [fileUrl]="message.file">
-                </app-file-preview>
-                <app-file-preview *ngIf="message.uploadTask?.data" mat-card-image
-                                  [fileData]="message.uploadTask.data">
-                </app-file-preview>
-                <img *ngIf="message.file?.url" mat-card-image [src]="message.file.url" alt="">
-                <mat-card-content>
-                    <p>
-                        {{message.messageBody}}
-                    </p>
-                </mat-card-content>
-            </mat-card>
-        </div>
-        <div>
-            <div *ngFor="let message of conversationSvc.undeliveredMessages$ | async; let i = index"
-                 [ngClass]="{'sent': message.senderId === auth.uid, 'not-delivered': !message.delivered}"
-                 class="message">
-
-                <app-avatars [imageUrl]="messageAvatar(message.senderId)">
-                </app-avatars>
-                 <mat-card class="">
-                    <mat-card-content>
-                        <p>
-                            {{message.messageBody}}
-                        </p>
-                    </mat-card-content>
-                </mat-card>
-            </div>
-        </div>
-    </section>
-    <section *ngIf="!(conversationSvc.messages$ | async).length as messages" class="messages">
-        <div class="flexed center">
-            <h1>NO Messages yet, start by sending one</h1>
-        </div>
-    </section>
-
-    <app-new-meesage-bar></app-new-meesage-bar>
-</div>
-
-
-
-<div *ngIf="!(conversationSvc.conversation$ |async)" class="conversation-container">
-    <h1>Please select or start a conversation</h1>
-</div> -->
-
-<!-- !########################## -->
-
-<div *ngIf="(conversationSvc.conversation$ |async) as conversation" class="conversation-container flexed">
-    <div class="conversation flexed col">
-        <mat-toolbar class="header">
-            <mat-toolbar-row>
-                <span>{{conversation.name}}</span>
-
-                <span class="spacer"></span>
-
-                <div class="avatars flexed">
-                    <div *ngFor="let user of conversation.users" class="overlap-left">
-                        <app-avatar [imageUrl]="user.photoUrl"
-                                    [size]="'xsm'"></app-avatar>
+                    <div class="avatars flexed">
+                        <div *ngFor="let user of conversation.users" class="overlap-left">
+                            <app-avatar [imageUrl]="user.photoUrl"
+                                        [size]="'xsm'"></app-avatar>
+                        </div>
                     </div>
+
+                    <div class="sized-box-05"></div>
+
+                    <button mat-icon-button>
+                        <mat-icon>group_add</mat-icon>
+                    </button>
+
+                    <button mat-icon-button>
+                        <mat-icon>more_horiz</mat-icon>
+                    </button>
+
+                    <div class="sized-box-2"></div>
+
+                    <button (click)="toggleContactDetails()"
+                            class="close-details"
+                            [ngClass]="{'right': hideContactDetails}"
+                            mat-icon-button>
+                        <mat-icon>keyboard_arrow_right</mat-icon>
+                    </button>
+                </mat-toolbar-row>
+
+                <!-- <mat-toolbar-row class="description">
+                    <mat-card-subtitle>Conversation description (groups only?)</mat-card-subtitle>
+                </mat-toolbar-row> -->
+            </mat-toolbar>
+
+            <ng-container *ngIf="(conversationSvc.messages$ | async) as messages; else noMessagesTemplate">
+                <section class="messages padded-x padded-2-y">
+                    <div class="padded-y" *ngFor="let message of messages; let i = index">
+                        <!-- <app-chat-message [received]="(i%2)===0"></app-chat-message> -->
+                        <app-message [received]="message.senderId !== auth.uid"
+                                     [message]="message"
+                                     [sender]="sender(message.senderId, conversation.users)">
+                        </app-message>
+                    </div>
+                </section>
+            </ng-container>
+            <ng-template #noMessagesTemplate>
+                <section class="messages">
+                    <div class="flexed center">
+                        <h1>NO Messages yet, start by sending one</h1>
+                    </div>
+                </section>
+            </ng-template>
+
+            <app-new-meesage-bar></app-new-meesage-bar>
+        </div>
+        <div [ngClass]="{'hide': hideContactDetails}"
+             class="contact-details flexed col center-y  padded-x padded-2-y">
+            <section class="conversation-summary flexed col center">
+                <app-avatar [imageUrl]="conversationAvatar(conversation)"
+                            [size]="'lg'"></app-avatar>
+                <h3>Conversation Name</h3>
+                <span class="mat-caption">status</span>
+                <div class="social-contacts padded-y">
+                    <button mat-icon-button>
+                        <mat-icon>g_translate</mat-icon>
+                    </button>
+                    <button mat-icon-button>
+                        <mat-icon>shop</mat-icon>
+                    </button>
                 </div>
+            </section>
 
-                <div class="sized-box-05"></div>
-
-                <button mat-icon-button>
-                    <mat-icon>group_add</mat-icon>
-                </button>
-
-                <button mat-icon-button>
-                    <mat-icon>more_horiz</mat-icon>
-                </button>
-
+            <div class="contact-info">
+                <mat-divider class="padded-y"></mat-divider>
+                <h5 class="mat-caption text thin mute">POSITION</h5>
+                <span>Contact position</span>
                 <div class="sized-box-2"></div>
-
-                <button (click)="toggleContactDetails()"
-                        class="close-details"
-                        [ngClass]="{'right': hideContactDetails}"
-                        mat-icon-button>
-                    <mat-icon>keyboard_arrow_right</mat-icon>
-                </button>
-            </mat-toolbar-row>
-
-            <!-- <mat-toolbar-row class="description">
-                <mat-card-subtitle>Conversation description (groups only?)</mat-card-subtitle>
-            </mat-toolbar-row> -->
-        </mat-toolbar>
-
-        <section *ngIf="(conversationSvc.messages$ | async) as messages"
-                 class="messages padded-x padded-2-y">
-            <div class="padded-y" *ngFor="let message of messages; let i = index">
-                <!-- <app-chat-message [received]="(i%2)===0"></app-chat-message> -->
-                <app-message [received]="message.senderId !== auth.uid"
-                             [message]="message"
-                             [sender]="sender(message.senderId, conversation.users)"></app-message>
             </div>
-        </section>
 
-        <section *ngIf="!(conversationSvc.messages$ | async).length as messages" class="messages">
-            <div class="flexed center">
-                <h1>NO Messages yet, start by sending one</h1>
+            <div class="contact-info">
+                <mat-divider class="padded-y"></mat-divider>
+                <h5 class="mat-caption text thin mute">MOBILE</h5>
+                <span>+44 758 745 299</span>
+                <div class="sized-box-2"></div>
             </div>
-        </section>
 
-        <app-new-meesage-bar></app-new-meesage-bar>
-        <!-- <mat-toolbar>
-            hello there
-        </mat-toolbar> -->
-    </div>
-    <div [ngClass]="{'hide': hideContactDetails}"
-         class="contact-details flexed col center-y  padded-x padded-2-y">
-        <section class="conversation-summary flexed col center">
-            <app-avatar [imageUrl]="conversationAvatar(conversation)"
-                        [size]="'lg'"></app-avatar>
-            <h3>Conversation Name</h3>
-            <span class="mat-caption">status</span>
-            <div class="social-contacts padded-y">
-                <button mat-icon-button>
-                    <mat-icon>g_translate</mat-icon>
-                </button>
-                <button mat-icon-button>
-                    <mat-icon>shop</mat-icon>
-                </button>
+            <div class="contact-info">
+                <mat-divider class="padded-y"></mat-divider>
+                <h5 class="mat-caption text thin mute">EMAIL</h5>
+                <span>user.contact@mail.com</span>
+                <div class="sized-box-2"></div>
             </div>
-        </section>
 
-        <div class="contact-info">
-            <mat-divider class="padded-y"></mat-divider>
-            <h5 class="mat-caption text thin mute">POSITION</h5>
-            <span>Contact position</span>
-            <div class="sized-box-2"></div>
-        </div>
-
-        <div class="contact-info">
-            <mat-divider class="padded-y"></mat-divider>
-            <h5 class="mat-caption text thin mute">MOBILE</h5>
-            <span>+44 758 745 299</span>
-            <div class="sized-box-2"></div>
-        </div>
-
-        <div class="contact-info">
-            <mat-divider class="padded-y"></mat-divider>
-            <h5 class="mat-caption text thin mute">EMAIL</h5>
-            <span>user.contact@mail.com</span>
-            <div class="sized-box-2"></div>
-        </div>
-
-        <div class="contact-info">
-            <mat-divider class="padded-y"></mat-divider>
-            <h5 class="mat-caption text thin mute">INFO</h5>
-            <p>
-                Enim occaecat enim aute nulla in irure ut irure
-                tempor consequat. Do eiusmod non nisi consequat
-                enim Lorem do fugiat quis voluptate dolore est.
-                Minim consequat nostrud nostrud consequat cupidatat.
-                Do fugiat reprehenderit fugiat officia do dolore
-                Lorem incididunt nostrud Lorem voluptate adipisicing
-                aliqua.
-            </p>
+            <div class="contact-info">
+                <mat-divider class="padded-y"></mat-divider>
+                <h5 class="mat-caption text thin mute">INFO</h5>
+                <p>
+                    Enim occaecat enim aute nulla in irure ut irure
+                    tempor consequat. Do eiusmod non nisi consequat
+                    enim Lorem do fugiat quis voluptate dolore est.
+                    Minim consequat nostrud nostrud consequat cupidatat.
+                    Do fugiat reprehenderit fugiat officia do dolore
+                    Lorem incididunt nostrud Lorem voluptate adipisicing
+                    aliqua.
+                </p>
+            </div>
         </div>
     </div>
-</div>
+</ng-container>
 
+<ng-template #noConversationTemplate>
 
-<div *ngIf="!(conversationSvc.conversation$ |async)" class="conversation-container">
-    <h1>Please select or start a conversation</h1>
-</div>
+    <div class="no-conversation-container flexed center">
+        <h1 *ngIf="!(conversationSvc.loading$ |async)">
+            Please select or start a conversation
+        </h1>
+        <mat-spinner *ngIf="conversationSvc.loading$ |async"> </mat-spinner>
+    </div>
+</ng-template>

@@ -1,0 +1,14 @@
+.contacts-conainer {
+  width: 100%;
+
+  .letters-nav {
+    background: rgba($color: rgb(133, 133, 133), $alpha: 0.1);
+  }
+
+  .contacts {
+    flex: auto;
+  }
+  .contact-list .mat-table {
+    background: transparent;
+  }
+}

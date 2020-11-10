@@ -16,6 +16,7 @@ import { ThemesComponent } from './pages/themes/themes.component';
 import { UserComponent } from './pages/user/user.component';
 import { SharedModule } from './shared/shared.module';
 import { ConversationViewComponent } from './pages/themes/chat/conversation-view/conversation-view.component';
+import { HomeComponent } from './pages/home/home.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { ConversationViewComponent } from './pages/themes/chat/conversation-view
     ChatComponent,
     ConversationListComponent,
     ConversationComponent,
-    ConversationViewComponent
+    ConversationViewComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

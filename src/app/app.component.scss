@@ -1,7 +1,6 @@
 .app-container {
   position: relative;
   height: 100vh;
-  max-height: 100vh;
 
   .dev-banner {
     position: fixed;
@@ -10,43 +9,14 @@
     background: rebeccapurple;
     color: white;
   }
-}
 
-.fala-container {
-  height: 100vh;
-  max-height: 100vh;
-  display: grid;
-  grid-template-columns: 64px 1fr 64px;
-  grid-template-rows: 1fr 64px;
-  gap: 0px 0px;
-  grid-template-areas:
-    'left-top center-top right-top'
-    'left-bot center-bot right-bot';
-  &.rtl {
-    .nav-toolbar {
-      grid-area: left-top/left-top/left-bot/left-bot;
-    }
-
-    .fala-content {
-      grid-area: center-top/center-top/right-bot/right-bot;
-    }
+  .app-nav {
+    gap: 1rem;
+    padding-top: 9.5rem;
+    border-right: 1px solid rebeccapurple;
   }
-  &.ltr {
-    .nav-toolbar {
-      grid-area: right-top/right-top/right-bot/right-bot;
-    }
 
-    .fala-content {
-      grid-area: left-top/left-top/center-bot/center-bot;
-    }
-  }
-  &.btt {
-    .nav-toolbar {
-      grid-area: left-bot/left-bot/right-bot/right-bot;
-    }
-
-    .fala-content {
-      grid-area: left-top/left-top/right-top/right-top;
-    }
+  .app-content {
+    width: 100%;
   }
 }

@@ -1,0 +1,47 @@
+<div class="home-container pro-squared flexed">
+    <mat-toolbar>
+        <span>FirstRow</span>
+    </mat-toolbar>
+
+    <div class="content flexed col padded">
+        <div class="sized-box-4"></div>
+        <div class="date-time flexed col">
+            <div class="time">
+                <span class="mat-display-4">{{time.h}} : {{time.m}} </span>
+                <span class="mat-display-2"> : {{time.s}}</span>
+            </div>
+            <div class="date">{{date | date}}</div>
+        </div>
+
+        <div class="content-items flexed col">
+            <div class="sized-box-4"></div>
+
+            <div class="apps-container">
+                <h3>Applications</h3>
+                <div class="apps flexed">
+                    <button mat-flat-button color="accent">
+                        <mat-icon>calculate</mat-icon>
+                    </button>
+                    <button mat-flat-button color="primary">
+                        <mat-icon>task</mat-icon>
+                    </button>
+                    <button mat-flat-button color="primary">
+                        <mat-icon>list</mat-icon>
+                    </button>
+                    <button mat-flat-button color="primary">
+                        <mat-icon>timer</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div class="tasks-summary">
+                <div class="sized-box-2"></div>
+                <h4>Hello José</h4>
+                <p class="mat-body">
+                    You dont have any tasks today
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -88,6 +88,11 @@ body {
     border-radius: 4px;
     background-color: #fa4bb477;
   }
+
+  * {
+    scrollbar-color: #fa4bb477 rgba(0, 0, 0, 0.2);
+    scrollbar-width: thin;
+  }
 }
 
 // *################### TEXT

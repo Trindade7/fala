@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { UserLoggedInGuard, UserNotLoggedInGuard } from './core/services/auth/auth.guard';
+import { HomeComponent } from './pages/home/home.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { ChatComponent } from './pages/themes/chat/chat.component';
-import { ThemesComponent } from './pages/themes/themes.component';
 
 const routes: Routes = [
 
@@ -39,7 +39,7 @@ const routes: Routes = [
   {
     path: '',
     // redirectTo: 'chat',
-    component: ThemesComponent,
+    component: HomeComponent,
     pathMatch: 'full',
   },
 ];
