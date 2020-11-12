@@ -1,4 +1,4 @@
-<div class="home-container pro-squared flexed">
+<div class="home-container pro-squared flexed col">
     <mat-toolbar>
         <span>FirstRow</span>
     </mat-toolbar>
@@ -7,8 +7,12 @@
         <div class="sized-box-4"></div>
         <div class="date-time flexed col">
             <div class="time">
-                <span class="mat-display-4">{{time.h}} : {{time.m}} </span>
-                <span class="mat-display-2"> : {{time.s}}</span>
+
+                <span class="mat-display-4">
+                    {{time.h}} : <span *ngIf="time.m <10">0</span>{{time.m}}
+                </span>
+                <span class="mat-display-2"> : <span *ngIf="time.s <10">0</span>{{time.s}}
+                </span>
             </div>
             <div class="date">{{date | date}}</div>
         </div>
@@ -17,19 +21,19 @@
             <div class="sized-box-4"></div>
 
             <div class="apps-container">
-                <h3>Applications</h3>
+                <h3>Quick actions</h3>
                 <div class="apps flexed">
                     <button mat-flat-button color="accent">
-                        <mat-icon>calculate</mat-icon>
+                        <mat-icon>add</mat-icon>
+                    </button>
+                    <button mat-flat-button color="primary">
+                        <mat-icon>message</mat-icon>
                     </button>
                     <button mat-flat-button color="primary">
                         <mat-icon>task</mat-icon>
                     </button>
-                    <button mat-flat-button color="primary">
-                        <mat-icon>list</mat-icon>
-                    </button>
-                    <button mat-flat-button color="primary">
-                        <mat-icon>timer</mat-icon>
+                    <button (click)="authSvc.logout()" mat-flat-button color="warn">
+                        <mat-icon>power_settings_new</mat-icon>
                     </button>
                 </div>
             </div>

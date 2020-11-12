@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '@app/core/services/auth/auth.service';
 
 interface HMSTime { h: number; m: number; s: number; }
 
@@ -14,7 +15,9 @@ export class HomeComponent implements OnInit {
     s: this.date.getSeconds()
   };
 
-  constructor () { }
+  constructor (
+    public authSvc: AuthService
+  ) { }
 
   ngOnInit(): void {
     this.startClock(this.time);

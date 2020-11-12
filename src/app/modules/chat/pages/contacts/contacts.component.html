@@ -1,16 +1,22 @@
-<div class="contacts-conainer flexed">
+<div class="contacts-conainer pro-squared flexed">
     <nav class="letters-nav flexed col padded-x padded-2-y">
         <button *ngFor="let letter of letters" mat-icon-button>{{letter}}</button>
     </nav>
 
     <div class="contacts">
-        <header>
-            <mat-toolbar>
-                <mat-form-field>
-                    <input matInput placeholder="Contact name...">
-                </mat-form-field>
-            </mat-toolbar>
-        </header>
+        <mat-toolbar class="header">
+            <input class="app-input" placeholder="Contact name...">
+
+            <span class="spacer"></span>
+            <div class="sized-box-2"></div>
+
+            <button *ngIf="selectedContact.uid" (click)="toggleContactDetails()"
+                    class="close-details"
+                    [ngClass]="{'right': hideContactDetails}"
+                    mat-icon-button>
+                <mat-icon>keyboard_arrow_right</mat-icon>
+            </button>
+        </mat-toolbar>
 
         <section class="contact-list">
             <mat-table class="" [dataSource]="dataSource">
@@ -18,28 +24,47 @@
                 <div>
                     <ng-container *ngFor="let column of displayedColumns; let i = index"
                                   [matColumnDef]="column">
+
                         <mat-header-cell *matHeaderCellDef> {{columnNames[i] | titlecase}} </mat-header-cell>
+
                         <mat-cell *matCellDef="let element">
                             <ng-container *ngIf="column === 'photoUrl'; else elseTemplate">
-                                <div class="padded-y">
-                                    <app-avatar [size]="'sm'"></app-avatar>
+                                <div class="contact-icon padded-y">
+                                    <button (click)="contactsSvc.openContactConversation(element)"
+                                            mat-fab
+                                            color="primary"
+                                            class="btn-message-user">
+                                        <mat-icon>message</mat-icon>
+                                    </button>
+
+                                    <app-avatar class="contact-avatar"
+                                                [imageUrl]="element.photoUrl"
+                                                [size]="'sm'"> </app-avatar>
                                 </div>
                             </ng-container>
+
                             <ng-template #elseTemplate>
                                 <span *ngIf="column !== 'photoUrl'">{{element[column]}}</span>
                             </ng-template>
-
                         </mat-cell>
+
                     </ng-container>
                 </div>
 
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"
+                         [ngClass]="{'active': isActive(row.uid)}"
+                         (click)="selectContact = row"></mat-row>
             </mat-table>
         </section>
+
     </div>
 
-    <div class="contact-details">
-
+    <div *ngIf="selectedContact.uid" class="contact-details">
+        <div [ngClass]="{'hide': hideContactDetails}"
+             class="contact-details  padded-x padded-2-y">
+            <app-contact-details [contact]="selectedContact"></app-contact-details>
+            <!-- <app-contact-details [avatarUrl]="conversationAvatar(conversation)"></app-contact-details> -->
+        </div>
     </div>
 </div>

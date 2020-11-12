@@ -10,7 +10,7 @@ import { BatchData, FileUploadTask } from '../../models/upload-task.model';
 
 interface QueryOptions {
   limitToLast: number;
-  orderBy: 'createdAt' | 'updatedAt';
+  orderBy: 'createdAt' | 'updatedAt' | 'name' | 'email';
   orderDirection: 'asc' | 'desc';
   limitTo: number;
   arrayContains?: {

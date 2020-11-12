@@ -22,6 +22,7 @@ import { MessageComponent } from './pages/view-conversation/message/message.comp
 import { NewMeesageBarComponent } from './pages/view-conversation/new-meesage-bar/new-meesage-bar.component';
 import { SendFilesComponent } from './pages/view-conversation/send-files/send-files.component';
 import { ViewConversationComponent } from './pages/view-conversation/view-conversation.component';
+import { ContactDetailsComponent } from './components/contact-details/contact-details.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ViewConversationComponent } from './pages/view-conversation/view-conver
     FilePreviewComponent,
     MessageComponent,
     ContactsComponent,
+    ContactDetailsComponent,
   ],
   imports: [
     SharedModule,

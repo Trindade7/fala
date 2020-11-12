@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Logger as logger } from '@app-core/helpers/logger';
+import { emptyUser, User } from '@app/core/models/user.model';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+import { ContactsService } from '../../services/contacts/contacts.service';
 
 export interface PeriodicElement {
   name: string;
@@ -44,24 +50,46 @@ export class ContactsComponent implements OnInit {
   displayedColumns: string[] = [
     'photoUrl',
     'name',
-    'phone',
+    'phoneNumber',
     'email',
-    'position',
   ];
   columnNames: string[] = [
-    'Photo Url',
-    'Name',
-    'phone',
+    'Image',
+    'name',
+    'Phone',
     'email',
-    'position',
   ];
-  dataSource = USER_DATA;
+  // dataSource = USER_DATA;
+  dataSource: User[] = [];
 
+  hideContactDetails = false;
 
+  selectedContact: User = emptyUser();
 
-  constructor () { }
+  constructor (
+    public contactsSvc: ContactsService
+  ) { }
 
   ngOnInit(): void {
+    this.contactsSvc.collection$.pipe(
+      catchError(
+        err => {
+          logger.collapsed('[contacts.component] Error subscribing', [err]);
+          return of([]);
+        }
+      )
+    ).subscribe(users => this.dataSource = users);
   }
 
+  toggleContactDetails(): void {
+    this.hideContactDetails = !this.hideContactDetails;
+  }
+
+  isActive(id: string): boolean {
+    return this.selectedContact.uid === id ? true : false;
+  }
+
+  set selectContact(contact: User) {
+    this.selectedContact = contact;
+  }
 }

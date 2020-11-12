@@ -1,0 +1,66 @@
+<div class="contact-details flexed col   padded-x padded-2-y">
+    <section class="conversation-summary flexed col center">
+        <app-avatar [imageUrl]="contact.photoUrl" [size]="'lg'"></app-avatar>
+        <h3>{{contact.name}}</h3>
+        <span class="mat-caption">status</span>
+        <div class="social-contacts padded-y">
+            <button mat-icon-button color="primary">
+                <mat-icon>message</mat-icon>
+            </button>
+            <button mat-icon-button color="accent">
+                <mat-icon>task</mat-icon>
+            </button>
+        </div>
+    </section>
+
+    <div class="contact-info">
+        <mat-divider class="padded-y"></mat-divider>
+        <h5 class="mat-caption text thin mute">POSITION</h5>
+        <span>Contact position</span>
+        <div class="sized-box-2"></div>
+    </div>
+
+    <div class="contact-info">
+        <mat-divider class="padded-y"></mat-divider>
+        <h5 class="mat-caption text thin mute">MOBILE</h5>
+
+        <ng-container *ngIf="contact.phoneNumber; else phoneElseTemplate">
+            {{contact.phoneNumber}}
+        </ng-container>
+
+        <ng-template #phoneElseTemplate>
+            <span>No phone number</span>
+        </ng-template>
+
+        <div class="sized-box-2"></div>
+    </div>
+
+    <div class="contact-info">
+        <mat-divider class="padded-y"></mat-divider>
+        <h5 class="mat-caption text thin mute">EMAIL</h5>
+
+        <ng-container *ngIf="contact.email; else emailElseTemplate">
+            {{contact.email}}
+        </ng-container>
+
+        <ng-template #emailElseTemplate>
+            <span>No Email</span>
+        </ng-template>
+
+        <div class="sized-box-2"></div>
+    </div>
+
+    <div class="contact-info">
+        <mat-divider class="padded-y"></mat-divider>
+        <h5 class="mat-caption text thin mute">INFO</h5>
+        <p>
+            Enim occaecat enim aute nulla in irure ut irure
+            tempor consequat. Do eiusmod non nisi consequat
+            enim Lorem do fugiat quis voluptate dolore est.
+            Minim consequat nostrud nostrud consequat cupidatat.
+            Do fugiat reprehenderit fugiat officia do dolore
+            Lorem incididunt nostrud Lorem voluptate adipisicing
+            aliqua.
+        </p>
+    </div>
+</div>

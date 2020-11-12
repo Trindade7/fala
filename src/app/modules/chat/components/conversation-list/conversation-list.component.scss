@@ -1,5 +1,5 @@
 .conversations-container {
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
   min-width: 320px;
   max-width: 420px;
@@ -19,12 +19,11 @@
   }
 
   .conversations {
-    overflow-y: hidden;
+    flex: auto;
     height: 100%;
-    padding-bottom: 10rem;
 
-    &:hover {
-      overflow-y: auto;
+    .mat-list-base {
+      padding-bottom: 4rem;
     }
 
     .mat-list-item {
@@ -34,7 +33,17 @@
     .conversation-summary {
       width: 100%;
       position: relative;
-      padding: 1.5rem 1rem;
+      padding: 1.5rem 0.5rem;
+    }
+  }
+}
+
+@media screen and (min-device-width: 1200px) and (max-device-width: 1600px) and (-webkit-min-device-pixel-ratio: 1) {
+  .conversations {
+    overflow-y: hidden;
+
+    &:hover {
+      overflow-y: auto;
     }
   }
 }

@@ -56,14 +56,27 @@ export class ViewConversationService {
    *
    */
   private genConversationId(contactId: string): string {
-    // ? Todo: check if conversation id exists?
-    const uid = this._auth.uid as string;
+    const uid = this._auth.uid;
+    if (!uid) {
+      throw new Error('No auth Id');
+    }
+
     const conversationId = (contactId[0] > uid[0]) ? contactId + uid : uid + contactId;
+
+    logger.collapsed(
+      '[view-conversation.service] genConversationId()',
+      ['Passed id:', contactId, '\n\nGened id:', conversationId]
+    );
+
     return conversationId;
   }
 
-  private async createNewConversation(contact: User, conversationId: string): Promise<void> {
-    logger.collapsed('No conversation for this contact', [contact, 'creating one']);
+  private async _createNewConversation(contact: User, conversationId: string): Promise<void> {
+    logger.collapsed(
+      '[view-conversation.service] _createNewConversation()',
+      ['No conversation for this contact', contact, 'creating one']
+    );
+
     const currentUser: User = await this._auth.user$
       .pipe(take(1))
       .toPromise() as User;
@@ -181,11 +194,15 @@ export class ViewConversationService {
       .pipe(take(1))
       .toPromise()
       .then(conversation => {
-        logger.endCollapsed(['got conversation']);
+        logger.endCollapsed([
+          'got conversation res\n\n',
+          `id: ${conversationId}\n Res:\n`,
+          conversation
+        ]);
 
         return conversation ?
           this.setActiveConversation(conversation)
-          : this.createNewConversation(contact, conversationId);
+          : this._createNewConversation(contact, conversationId);
       }
       ).catch(err => {
         logger.endCollapsed(['Error getting contact conversation document']);

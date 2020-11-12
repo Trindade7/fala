@@ -1,5 +1,6 @@
 .contacts-conainer {
   width: 100%;
+  height: 100%;
 
   .letters-nav {
     background: rgba($color: rgb(133, 133, 133), $alpha: 0.1);
@@ -7,8 +8,75 @@
 
   .contacts {
     flex: auto;
+    .header {
+      position: relative;
+      .close-details {
+        position: absolute;
+        right: -16px;
+        background: #282626; // ! REMOVE
+        transition: transform 0.3s ease-out;
+
+        &.right {
+          transform: rotate(180deg);
+        }
+      }
+    }
   }
-  .contact-list .mat-table {
-    background: transparent;
+
+  .contact-list {
+    overflow: auto;
+    height: 100%;
+
+    .mat-table {
+      background: transparent;
+    }
+
+    .mat-table-sticky {
+      background: #3a313d;
+      opacity: 1;
+    }
+
+    .mat-row {
+      transition: background-color 0.2s;
+      cursor: pointer;
+
+      .btn-message-user {
+        display: none;
+      }
+
+      &:hover,
+      &.active {
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      &:hover {
+        .contact-avatar {
+          display: none;
+        }
+        .btn-message-user {
+          display: block;
+        }
+      }
+    }
+  }
+
+  .contact-details {
+    overflow-y: hidden;
+    height: 100%;
+    max-width: 320px;
+    transition: padding 0.4s;
+    background-color: rgba($color: #000000, $alpha: 0.1);
+
+    &.hide {
+      width: 0;
+      padding: 0;
+    }
+
+    &:hover {
+      overflow-y: auto;
+    }
+    .contact-info {
+      width: 100%;
+    }
   }
 }

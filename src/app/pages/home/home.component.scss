@@ -1,12 +1,12 @@
 .home-container {
-  height: 100vh;
+  height: 100%;
   .content {
     height: 100%;
     .apps {
       gap: 1rem;
       button {
-        min-width: 70px;
-        min-height: 70px;
+        min-width: 50px;
+        min-height: 50px;
       }
     }
   }
