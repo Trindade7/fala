@@ -4,7 +4,7 @@ import { ConversationModel, MessageModel } from '@app-core/models/conversation.m
 import { environment } from '@app-envs/environment';
 import { User } from '@app/core/models/user.model';
 import { AuthService } from '@app/core/services/auth/auth.service';
-import { DbFacade } from '@app/core/services/db.facade';
+import { DbGenericService } from '@app/core/services/db.genric.service';
 import { StoreGeneric } from '@app/core/services/store.generic';
 import { combineLatest, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -93,7 +93,7 @@ export class ListConversationsService {
 @Injectable({
   providedIn: 'root'
 })
-export class ConversationsDb extends DbFacade<ConversationModel | MessageModel>{
+export class ConversationsDb extends DbGenericService<ConversationModel | MessageModel>{
   basePath = 'conversations';
 }
 

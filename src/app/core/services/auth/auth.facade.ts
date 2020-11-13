@@ -1,47 +1,19 @@
-import { Inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { User } from '../../models/user.model';
-import { FireauthService } from '../firebase/fireauth.service';
 
 export abstract class AuthFacade {
-    // TODO: FIX INJECTION
-    constructor(
-        @Inject(FireauthService) private _authService: FireauthService,
-        @Inject(Router) private _router: Router
-    ) { }
+    abstract get user$(): Observable<User | null>;
+    abstract get uid(): string;
 
-    get user$(): Observable<User | null> {
-        return this._authService.user$;
-    }
-    get uid(): string | null {
-        return this._authService.uid;
-    }
+    abstract googleSignIn(): Promise<void>;
 
-    googleSignIn(): Promise<void> {
-        console.log('fireauth LOGGING IN WITH GOOGLE');
-        return this._authService.googleSignIn();
-    }
+    abstract facebookSignIn(): Promise<void>;
 
-    facebookSignIn(): Promise<void> {
-        return this._authService.facebookSignIn();
-    }
+    abstract emailAndPasswordSignIn(email: string, password: string): Promise<void>;
 
-    emailAndPasswordSignIn(email: string, password: string): Promise<void> {
-        return this._authService.emailAndPasswordSignIn(email, password);
-    }
+    abstract emailAndPasswordSignUp(email: string, password: string): Promise<void>;
 
-    emailAndPasswordSignUp(email: string, password: string): Promise<void> {
-        return this._authService.emailAndPasswordSignUp(email, password);
-    }
-
-    logout(): Promise<void> {
-        return this._authService.logout().then(
-            () => {
-                this._router.navigate(['/login']);
-            }
-        );
-    }
+    abstract logout(): Promise<void>;
 
 }

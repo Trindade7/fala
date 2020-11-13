@@ -155,6 +155,24 @@ export class FirestoreService<T> {
       ));
   }
 
+  docOrNull$(id: string): Observable<T | null> {
+    logger.startCollapsed(
+      `[firestore.service] [doc$()]`,
+      [{ log: ['id:', id], type: 'warn' }]
+    );
+
+    const path = `${this.basePath}/${id}`;
+
+    return this.firestore.doc<T>(path).valueChanges()
+      .pipe(
+        tap( // LOGGING DATA
+          val => logger.endCollapsed([`RESPONSE streaming from [${path}]`, val]),
+          err => logger.endCollapsed([`ERROR streaming from [${path}] `, err]),
+        ),
+        map(doc => doc ? doc : null)
+      );
+  }
+
   docFromPath$(path: string): Observable<any> {
     logger.startCollapsed(`[firestore.service] [docdocFromPath$()]`, [`path: ${path}`]);
     return this.firestore.doc<any>(path)

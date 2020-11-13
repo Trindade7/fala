@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Logger as logger } from '@app-core/helpers/logger';
-import { AuthService } from '@app-core/services/auth/auth.service';
+import { UserService } from '@app/core/services/auth/user.service';
 
 import { ChatService } from './services/chat/chat.service';
 import { AppSettings } from './services/chat/chat.store';
@@ -27,10 +27,10 @@ export class ChatComponent implements OnInit {
   appSettings: AppSettings;
   readDirection: 'end' | 'start' = 'start';
 
-  constructor(
+  constructor (
     private _conversations: ListConversationsService,
     public chatService: ChatService,
-    private _authService: AuthService
+    private _userService: UserService
   ) {
     this.appSettings = chatService.appSettings;
   }
@@ -56,7 +56,7 @@ export class ChatComponent implements OnInit {
 
 
   get uid(): string | null {
-    return this._authService.uid;
+    return this._userService.uid;
   }
 
   getDate(dateStr: { seconds: number, milliseconds: number; }): number {

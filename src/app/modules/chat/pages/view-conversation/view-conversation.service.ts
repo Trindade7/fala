@@ -4,8 +4,8 @@ import { ConversationModel, getFileTypeGroup, getTime, MessageModel } from '@app
 import { FileUploader, genBatchData, LocalFileData } from '@app/core/models/upload-task.model';
 import { User } from '@app/core/models/user.model';
 import { AuthService } from '@app/core/services/auth/auth.service';
-import { DbFacade } from '@app/core/services/db.facade';
-import { StorageFacade } from '@app/core/services/storage.facade';
+import { DbGenericService } from '@app/core/services/db.genric.service';
+import { StorageGenericService } from '@app/core/services/storage.generic.service';
 import { StoreGeneric } from '@app/core/services/store.generic';
 import { Observable, Subscription } from 'rxjs';
 import { watch } from 'rxjs-watcher';
@@ -139,37 +139,56 @@ export class ViewConversationService {
     });
   }
 
-  get conversation$(): Observable<ConversationModel | null> {
-    return this._store.state$.pipe(
-      map(
-        state => state.loading ? null : state.conversation
-      )
+  private deliverMessage(message: MessageModel): Promise<void> {
+    message.delivered = true; // *Easiest way to tell if delivered
+    delete message.uploadTask; // * only for local use
+
+    if (!this._store.state.conversationStored) {
+      return this.storeConversation().then(
+        () => this._messagesDb.create(message, message.id).then(
+          () => { this.deleteUndelivered(message.id); }
+        )
+      );
+    }
+    return this._messagesDb.create(message, message.id).then(
+      () => { this.deleteUndelivered(message.id); }
     );
   }
 
-  get messages$(): Observable<MessageModel[]> {
-    return this._store.state$.pipe(
-      map(
-        state => state.loading ? [] : state.messages
-      )
+  private deliverBatchMessage(message: MessageModel): Promise<void> {
+    logger.collapsed('[view-conversation.service] deliverBatchMessage()', [message]);
+
+    message.delivered = true; // *Easiest way to tell if delivered
+    delete message.uploadTask; // * only for local use
+
+    const convId = this._store.state.conversation?.id as string;
+    const fileGroup = message.file ? getFileTypeGroup(message.file?.type) : 'other';
+    const convFilesPath = `conversations/${convId}/files`;
+
+    const fileData = genBatchData(
+      convFilesPath,
+      `${fileGroup}s`,
+      { items: this._messagesDb.updateArrayFunction(message.file) },
+      true
+    );
+    const messageData = genBatchData(this._messagesDb.basePath, message.id, message);
+
+    logger.collapsed('batch data', [fileData, messageData]);
+
+    if (!this._store.state.conversationStored) {
+      return this.storeConversation().then(
+        () => this._messagesDb.batchWriteDoc([fileData, messageData])
+          .then(() => this.deleteUndelivered(message.id))
+      );
+    }
+    return this._messagesDb.batchWriteDoc([fileData, messageData]).then(
+      () => { this.deleteUndelivered(message.id); }
     );
   }
 
-  get undeliveredMessages$(): Observable<MessageModel[]> {
-    return this._store.state$.pipe(
-      map(
-        state => [...state.undeliveredMessages.values()]
-      )
-    );
+  get state() {
+    return this._store.publicGetters;
   }
-
-  get loading$(): Observable<boolean> {
-    return this._store.state$.pipe(
-      map(state => state.loading)
-    );
-  }
-
-
 
   setActiveConversation(conversation: ConversationModel): void {
     this._chatSvc.appSettings.toggleSideNav(true);
@@ -218,53 +237,6 @@ export class ViewConversationService {
 
     this.addUndelivered(message);
     return this.deliverMessage(message);
-  }
-
-  private deliverMessage(message: MessageModel): Promise<void> {
-    message.delivered = true; // *Easiest way to tell if delivered
-    delete message.uploadTask; // * only for local use
-
-    if (!this._store.state.conversationStored) {
-      return this.storeConversation().then(
-        () => this._messagesDb.create(message, message.id).then(
-          () => { this.deleteUndelivered(message.id); }
-        )
-      );
-    }
-    return this._messagesDb.create(message, message.id).then(
-      () => { this.deleteUndelivered(message.id); }
-    );
-  }
-
-  private deliverBatchMessage(message: MessageModel): Promise<void> {
-    logger.collapsed('[view-conversation.service] deliverBatchMessage()', [message]);
-
-    message.delivered = true; // *Easiest way to tell if delivered
-    delete message.uploadTask; // * only for local use
-
-    const convId = this._store.state.conversation?.id as string;
-    const fileGroup = message.file ? getFileTypeGroup(message.file?.type) : 'other';
-    const convFilesPath = `conversations/${convId}/files`;
-
-    const fileData = genBatchData(
-      convFilesPath,
-      `${fileGroup}s`,
-      { items: this._messagesDb.updateArrayFunction(message.file) },
-      true
-    );
-    const messageData = genBatchData(this._messagesDb.basePath, message.id, message);
-
-    logger.collapsed('batch data', [fileData, messageData]);
-
-    if (!this._store.state.conversationStored) {
-      return this.storeConversation().then(
-        () => this._messagesDb.batchWriteDoc([fileData, messageData])
-          .then(() => this.deleteUndelivered(message.id))
-      );
-    }
-    return this._messagesDb.batchWriteDoc([fileData, messageData]).then(
-      () => { this.deleteUndelivered(message.id); }
-    );
   }
 
   /**
@@ -321,19 +293,16 @@ export class ViewConversationService {
 @Injectable({
   providedIn: 'root'
 })
-class MessagesDb extends DbFacade<MessageModel>{
+class MessagesDb extends DbGenericService<MessageModel>{
   basePath = 'conversations';
 }
 
 // *################ STORE #####################
-interface IViewConversationPage {
+interface IViewConversationPage extends Store {
   messages: MessageModel[];
   undeliveredMessages: Map<string, MessageModel>;
   conversation: ConversationModel | null;
   conversationStored: boolean;
-  loading: boolean;
-  status: string;
-  error: Error | null;
 }
 
 @Injectable({
@@ -341,6 +310,15 @@ interface IViewConversationPage {
 })
 class ViewConversationStore extends StoreGeneric<IViewConversationPage>{
   protected store = 'conversations-store';
+
+  publicGetters = {
+    loading$: this.loading$,
+    status$: this.status$,
+    error$: this.error$,
+    undeliveredMessages$: this.undeliveredMessages$,
+    messages$: this.messages$,
+    conversation$: this.conversation$
+  };
 
   constructor () {
     super({
@@ -352,6 +330,42 @@ class ViewConversationStore extends StoreGeneric<IViewConversationPage>{
       undeliveredMessages: new Map()
     });
   }
+
+  get loading$(): Observable<boolean> {
+    return this.loading$;
+  }
+
+  get status$(): Observable<string> {
+    return this.status$;
+  }
+
+  get error$(): Observable<Error | null> {
+    return this.error$;
+  }
+
+  get conversation$(): Observable<ConversationModel | null> {
+    return this.state$.pipe(
+      map(
+        state => state.loading ? null : state.conversation
+      )
+    );
+  }
+
+  get messages$(): Observable<MessageModel[]> {
+    return this.state$.pipe(
+      map(
+        state => state.loading ? [] : state.messages
+      )
+    );
+  }
+
+  get undeliveredMessages$(): Observable<MessageModel[]> {
+    return this.state$.pipe(
+      map(
+        state => [...state.undeliveredMessages.values()]
+      )
+    );
+  }
 }
 
 
@@ -360,6 +374,6 @@ class ViewConversationStore extends StoreGeneric<IViewConversationPage>{
 @Injectable({
   providedIn: 'root'
 })
-export class ViewConversationStorage extends StorageFacade<MessageModel>{
+export class ViewConversationStorage extends StorageGenericService<MessageModel>{
   basePath = 'conversations';
 }

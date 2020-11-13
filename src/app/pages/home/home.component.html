@@ -40,7 +40,14 @@
 
             <div class="tasks-summary">
                 <div class="sized-box-2"></div>
-                <h4>Hello José</h4>
+                <ng-container *ngIf="(authSvc.user$ |async)?.name as name; else emailElseTemplate">
+                    <h4>Hello {{ name }}</h4>
+                </ng-container>
+                <ng-template #emailElseTemplate>
+                    <h4>Hello {{ (authSvc.user$ |async)?.email }}</h4>
+                </ng-template>
+
+
                 <p class="mat-body">
                     You dont have any tasks today
                 </p>

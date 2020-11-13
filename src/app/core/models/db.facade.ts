@@ -1,6 +1,4 @@
-import { FirestoreService } from './firebase/firestore.service';
-
-export abstract class DbFacade<T> extends FirestoreService<T>  {
+export abstract class DbFacade<T> {
     protected abstract basePath: string;
     // private dbService: FirestoreService<T>;
 

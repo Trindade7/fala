@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ConversationModel } from '@app-core/models/conversation.model';
-import { DbFacade } from '@app-core/services/db.facade';
+import { DbGenericService } from '@app/core/services/db.genric.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class ConversationDb extends DbFacade<ConversationModel>{
+export class ConversationDb extends DbGenericService<ConversationModel>{
     basePath = 'conversations';
 }

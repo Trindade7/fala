@@ -17,7 +17,7 @@ export class ConversationPreviewComponent implements OnInit {
   // TODO: Move this to conversation map
   readonly avatarPlaceholder = 'https://placehold.it/100x100?text=user%20avatar';
 
-  constructor(
+  constructor (
     public chatService: ChatService,
     public auth: AuthService,
     private _conversationSvc: ViewConversationService

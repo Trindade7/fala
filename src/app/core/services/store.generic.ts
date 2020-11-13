@@ -1,7 +1,8 @@
 import { Logger as logger } from '@app-core/helpers/logger';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-export abstract class StoreGeneric<T> {
+export abstract class StoreGeneric<T extends Store> {
     protected bs: BehaviorSubject<T>;
     state$: Observable<T>;
     state: T;
@@ -9,7 +10,7 @@ export abstract class StoreGeneric<T> {
 
     protected abstract store: string;
 
-    constructor(
+    constructor (
         initialValue: Partial<T>,
     ) {
         this.bs = new BehaviorSubject(initialValue as T);
@@ -46,5 +47,22 @@ export abstract class StoreGeneric<T> {
         );
 
         this.bs.next(newState);
+    }
+
+    get loading$(): Observable<boolean> {
+        return this.state$.pipe(
+            map(state => state.loading)
+        );
+    }
+
+    get status$(): Observable<string> {
+        return this.state$.pipe(
+            map(state => state.status)
+        );
+    }
+    get error$(): Observable<Error | null> {
+        return this.state$.pipe(
+            map(state => state.error)
+        );
     }
 }

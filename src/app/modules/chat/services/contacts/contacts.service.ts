@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '@app/core/models/user.model';
-import { DbFacade } from '@app/core/services/db.facade';
+import { DbGenericService } from '@app/core/services/db.genric.service';
 import { StoreGeneric } from '@app/core/services/store.generic';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -40,7 +40,7 @@ export class ContactsService {
 
 // *################## DB SERVICE ###################
 @Injectable({ providedIn: 'root' })
-class ContactsServiceDb extends DbFacade<User>{
+class ContactsServiceDb extends DbGenericService<User>{
   basePath = 'users';
 }
 

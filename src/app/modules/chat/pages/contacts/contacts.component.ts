@@ -91,5 +91,6 @@ export class ContactsComponent implements OnInit {
 
   set selectContact(contact: User) {
     this.selectedContact = contact;
+    this.hideContactDetails = false;
   }
 }

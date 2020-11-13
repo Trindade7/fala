@@ -14,10 +14,11 @@ import { ViewConversationService } from './view-conversation.service';
   styleUrls: ['./view-conversation.component.scss']
 })
 export class ViewConversationComponent implements OnInit {
+  @Output() closeConversationEmitter = new EventEmitter<boolean>();
+
   Logger = new Logger();
   hideContactDetails = false;
-
-  @Output() closeConversationEmitter = new EventEmitter<boolean>();
+  state = this.conversationSvc.state;
 
   messageForm = this._fb.group({
     messageBody: [
@@ -30,7 +31,7 @@ export class ViewConversationComponent implements OnInit {
     ],
   });
 
-  constructor(
+  constructor (
     private _chatService: ChatService,
     private _fb: FormBuilder,
     public auth: AuthService,

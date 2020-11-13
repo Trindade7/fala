@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { FirestorageService } from './firestorage.service';
 
 describe('FirestorageService', () => {
-  let service: FirestorageService;
+  let service: FirestorageService<any>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});

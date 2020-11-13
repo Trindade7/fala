@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DbFacade } from './db.facade';
+import { FireauthService } from './fireauth.service';
 
-describe('DbFacade', () => {
-  let service: DbFacade;
+describe('FireauthService', () => {
+  let service: FireauthService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(DbFacade);
+    service = TestBed.inject(FireauthService);
   });
 
   it('should be created', () => {

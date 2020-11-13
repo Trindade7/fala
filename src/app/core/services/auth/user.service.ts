@@ -2,60 +2,68 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { User } from '../../models/user.model';
+import { emptyUser, User } from '../../models/user.model';
+import { StoreGeneric } from '../store.generic';
 import { AuthFacade } from './auth.facade';
-import { UserStore } from './user.store';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class UserService {
-  constructor(
-    private _authService: AuthFacade,
-    private _store: UserStore,
-  ) {
-  }
+    constructor (
+        private _authService: AuthFacade,
+        private _store: UserStore,
+    ) {
+        this._authService.user$.subscribe(
+            user => user ? this._store.patch({
+                loading: false,
+                status: `User ${user.email} logged in!`,
+                error: null,
+                user,
+            }) : this._store.patch({
+                loading: false,
+                error: Error('Error loading user')
+            })
+        );
+    }
 
-  googleSignIn(): Promise<void> {
-    return this._authService.googleSignIn();
-  }
+    get state() {
+        return this._store.publicGetters;
+    }
+}
 
-  facebookSignIn(): Promise<void> {
-    return this._authService.facebookSignIn();
-  }
 
-  emailAndPasswordSignIn(email: string, password: string): Promise<void> {
-    return this._authService.emailAndPasswordSignIn(email, password);
-  }
+// *################## Store ###################
 
-  emailAndPasswordSignUp(email: string, password: string): Promise<void> {
-    return this._authService.emailAndPasswordSignUp(email, password);
-  }
+interface IUserStore extends Store {
+    user: User;
+}
 
-  logout(): Promise<void> {
-    return;
-  }
+export class UserStore extends StoreGeneric<IUserStore> {
+    protected store = 'users';
 
-  get loading$(): Observable<boolean> {
-    return this._store.state$.pipe(
-      map(state => state.loading)
-    );
-  }
+    publicGetters = {
+        loading$: this.loading$,
+        status$: this.status$,
+        error$: this.error$,
+        user$: this.user$,
+        uid: this.uid,
+    };
 
-  get status$(): Observable<string> {
-    return this._store.state$.pipe(
-      map(state => state.status)
-    );
-  }
-  get status(): string {
-    return this._store.state.status;
-  }
+    constructor () {
+        super({
+            loading: true,
+            status: '',
+        });
+    }
 
-  get user$(): Observable<User> {
-    return this._store.state$.pipe(
-      map(
-        state => state.loading ? newUserempty : state.user
-      )
-    );
-  }
+    get user$(): Observable<User> {
+        return this.state$.pipe(
+            map(state => state.loading ? emptyUser() : state.user)
+        );
+    }
+
+    get uid(): string {
+        return this.state.user.uid;
+    }
 }
