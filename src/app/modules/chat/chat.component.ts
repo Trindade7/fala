@@ -56,7 +56,7 @@ export class ChatComponent implements OnInit {
 
 
   get uid(): string | null {
-    return this._userService.uid;
+    return this._userService.state.uid;
   }
 
   getDate(dateStr: { seconds: number, milliseconds: number; }): number {

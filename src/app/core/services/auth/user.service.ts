@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Store } from '@app-core/models/interfaces';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -47,6 +48,7 @@ export class UserStore extends StoreGeneric<IUserStore> {
         status$: this.status$,
         error$: this.error$,
         user$: this.user$,
+        user: this.user, // TODO: REMOVE USER??
         uid: this.uid,
     };
 
@@ -65,5 +67,9 @@ export class UserStore extends StoreGeneric<IUserStore> {
 
     get uid(): string {
         return this.state.user.uid;
+    }
+
+    get user(): User { // TODO: REMOVE USER??
+        return this.state.user;
     }
 }

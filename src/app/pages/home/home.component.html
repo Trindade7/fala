@@ -32,7 +32,7 @@
                     <button mat-flat-button color="primary">
                         <mat-icon>task</mat-icon>
                     </button>
-                    <button (click)="authSvc.logout()" mat-flat-button color="warn">
+                    <button (click)="signOut()" mat-flat-button color="warn">
                         <mat-icon>power_settings_new</mat-icon>
                     </button>
                 </div>
@@ -40,11 +40,11 @@
 
             <div class="tasks-summary">
                 <div class="sized-box-2"></div>
-                <ng-container *ngIf="(authSvc.user$ |async)?.name as name; else emailElseTemplate">
+                <ng-container *ngIf="(userSvc.state.user$ |async)?.name as name; else emailElseTemplate">
                     <h4>Hello {{ name }}</h4>
                 </ng-container>
                 <ng-template #emailElseTemplate>
-                    <h4>Hello {{ (authSvc.user$ |async)?.email }}</h4>
+                    <h4>Hello {{ (userSvc.state.user$ |async)?.email }}</h4>
                 </ng-template>
 
 

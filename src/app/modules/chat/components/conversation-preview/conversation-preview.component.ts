@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { ConversationModel } from '@app-core/models/conversation.model';
 import { User } from '@app/core/models/user.model';
-import { AuthService } from '@app/core/services/auth/auth.service';
 
 import { ViewConversationService } from '../../pages/view-conversation/view-conversation.service';
 import { ChatService } from '../../services/chat/chat.service';
@@ -19,7 +18,6 @@ export class ConversationPreviewComponent implements OnInit {
 
   constructor (
     public chatService: ChatService,
-    public auth: AuthService,
     private _conversationSvc: ViewConversationService
   ) { }
 

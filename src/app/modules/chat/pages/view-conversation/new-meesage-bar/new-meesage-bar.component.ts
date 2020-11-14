@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { Logger as logger } from '@app-core/helpers/logger';
-import { AuthService } from '@app/core/services/auth/auth.service';
+import { UserService } from '@app/core/services/auth/user.service';
 
 import { SendFilesComponent } from '../send-files/send-files.component';
 import { ViewConversationService } from '../view-conversation.service';
@@ -25,8 +25,8 @@ export class NewMeesageBarComponent implements OnInit {
     ],
   });
 
-  constructor(
-    public auth: AuthService,
+  constructor (
+    public userSvc: UserService,
     public conversationSvc: ViewConversationService,
     private _fb: FormBuilder,
     private _bottomSheet: MatBottomSheet,

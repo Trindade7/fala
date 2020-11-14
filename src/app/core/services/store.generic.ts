@@ -2,6 +2,8 @@ import { Logger as logger } from '@app-core/helpers/logger';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { Store } from '../models/interfaces';
+
 export abstract class StoreGeneric<T extends Store> {
     protected bs: BehaviorSubject<T>;
     state$: Observable<T>;

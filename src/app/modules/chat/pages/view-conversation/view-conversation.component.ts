@@ -4,7 +4,7 @@ import { ChatService } from '@app-modules/chat/services/chat/chat.service';
 import { Logger } from '@app/core/helpers/logger';
 import { ConversationModel } from '@app/core/models/conversation.model';
 import { User } from '@app/core/models/user.model';
-import { AuthService } from '@app/core/services/auth/auth.service';
+import { UserService } from '@app/core/services/auth/user.service';
 
 import { ViewConversationService } from './view-conversation.service';
 
@@ -34,16 +34,11 @@ export class ViewConversationComponent implements OnInit {
   constructor (
     private _chatService: ChatService,
     private _fb: FormBuilder,
-    public auth: AuthService,
+    public user: UserService,
     public conversationSvc: ViewConversationService,
   ) { }
-  ngOnInit(): void { }
 
-  // messageAvatar(senderId: string, conversation: ConversationModel): string {
-  //   let url;
-  //   conversation?.users?.map(user => user.uid === senderId ? url = user.photoUrl : undefined);
-  //   return url ?? 'https://placehold.it/100x100?text=user%20avatar';
-  // }
+  ngOnInit(): void { }
 
   toggleContactDetails(): void {
     this.hideContactDetails = !this.hideContactDetails;
@@ -57,14 +52,13 @@ export class ViewConversationComponent implements OnInit {
     }
 
     return users[0];
-
-    // console.log('USERS###############', users, 'senderId', senderId);
-    // throw new Error('CONVERSATION SENDER IS INVALI');
   }
 
   conversationAvatar(conversation: ConversationModel): string {
     let url;
-    conversation?.users?.map(user => user.uid !== this.auth.uid ? url = user.photoUrl : undefined);
+    conversation?.users?.map(
+      user => user.uid !== this.user.state.uid ? url = user.photoUrl : undefined
+    );
     return url ?? 'https://placehold.it/100x100?text=user%20avatar';
   }
 

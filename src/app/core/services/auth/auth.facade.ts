@@ -4,7 +4,6 @@ import { User } from '../../models/user.model';
 
 export abstract class AuthFacade {
     abstract get user$(): Observable<User | null>;
-    abstract get uid(): string;
 
     abstract googleSignIn(): Promise<void>;
 

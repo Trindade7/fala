@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Logger as logger } from '@app-core/helpers/logger';
 import { ConversationModel, getFileTypeGroup, getTime, MessageModel } from '@app/core/models/conversation.model';
+import { Store } from '@app/core/models/interfaces';
 import { FileUploader, genBatchData, LocalFileData } from '@app/core/models/upload-task.model';
 import { User } from '@app/core/models/user.model';
-import { AuthService } from '@app/core/services/auth/auth.service';
+import { UserService } from '@app/core/services/auth/user.service';
 import { DbGenericService } from '@app/core/services/db.genric.service';
 import { StorageGenericService } from '@app/core/services/storage.generic.service';
 import { StoreGeneric } from '@app/core/services/store.generic';
@@ -22,7 +23,7 @@ export class ViewConversationService {
   private _messagesSubscription: Subscription = Subscription.EMPTY;
 
   constructor (
-    private _auth: AuthService,
+    private _userSvc: UserService,
     private _chatSvc: ChatService,
     private _messagesDb: MessagesDb,
     private _conversationDb: ConversationDb,
@@ -35,7 +36,7 @@ export class ViewConversationService {
    * subscribes to conversation messages
    *
    */
-  private subscibeToMessages(conversationId: string): void {
+  private _subscibeToMessages(conversationId: string): void {
     this._messagesDb.setBasePath(`conversations/${conversationId}/messages`);
     if (this._messagesSubscription) {
       this._messagesSubscription.unsubscribe();
@@ -55,11 +56,8 @@ export class ViewConversationService {
    * Creates a conversation Id by combining the id of both users
    *
    */
-  private genConversationId(contactId: string): string {
-    const uid = this._auth.uid;
-    if (!uid) {
-      throw new Error('No auth Id');
-    }
+  private _genConversationId(contactId: string): string {
+    const uid = this._userSvc.state.uid;
 
     const conversationId = (contactId[0] > uid[0]) ? contactId + uid : uid + contactId;
 
@@ -77,9 +75,7 @@ export class ViewConversationService {
       ['No conversation for this contact', contact, 'creating one']
     );
 
-    const currentUser: User = await this._auth.user$
-      .pipe(take(1))
-      .toPromise() as User;
+    const currentUser: User = this._userSvc.state.user;
 
     const newConversation = new ConversationModel({
       id: conversationId,
@@ -98,7 +94,7 @@ export class ViewConversationService {
     });
   }
 
-  private storeConversation(): Promise<void> {
+  private _storeConversation(): Promise<void> {
     const conversation = this._store.state.conversation as ConversationModel;
 
     return this._conversationDb.create(conversation, conversation.id as string).then(
@@ -111,7 +107,7 @@ export class ViewConversationService {
     );
   }
 
-  private addUndelivered(message: MessageModel): void {
+  private _addUndelivered(message: MessageModel): void {
     const undeliveredMessages = this._store.state.undeliveredMessages;
     undeliveredMessages.set(message.id, message);
     this._store.patch({
@@ -127,24 +123,24 @@ export class ViewConversationService {
     });
   }
 
-  private createMessage(messageBody: string, uploadTask?: FileUploader): MessageModel {
+  private _createMessage(messageBody: string, uploadTask?: FileUploader): MessageModel {
     return new MessageModel({
       id: this._messagesDb.createId(),
       createdAt: getTime(),
       delivered: false,
       messageBody,
-      senderId: this._auth.uid,
+      senderId: this._userSvc.state.uid,
       file: null,
       uploadTask
     });
   }
 
-  private deliverMessage(message: MessageModel): Promise<void> {
+  private _deliverMessage(message: MessageModel): Promise<void> {
     message.delivered = true; // *Easiest way to tell if delivered
     delete message.uploadTask; // * only for local use
 
     if (!this._store.state.conversationStored) {
-      return this.storeConversation().then(
+      return this._storeConversation().then(
         () => this._messagesDb.create(message, message.id).then(
           () => { this.deleteUndelivered(message.id); }
         )
@@ -155,7 +151,7 @@ export class ViewConversationService {
     );
   }
 
-  private deliverBatchMessage(message: MessageModel): Promise<void> {
+  private _deliverBatchMessage(message: MessageModel): Promise<void> {
     logger.collapsed('[view-conversation.service] deliverBatchMessage()', [message]);
 
     message.delivered = true; // *Easiest way to tell if delivered
@@ -176,7 +172,7 @@ export class ViewConversationService {
     logger.collapsed('batch data', [fileData, messageData]);
 
     if (!this._store.state.conversationStored) {
-      return this.storeConversation().then(
+      return this._storeConversation().then(
         () => this._messagesDb.batchWriteDoc([fileData, messageData])
           .then(() => this.deleteUndelivered(message.id))
       );
@@ -201,13 +197,13 @@ export class ViewConversationService {
       loading: true
     }, 'view-conversation.service setActiveConversation()');
 
-    this.subscibeToMessages(conversation.id as string);
+    this._subscibeToMessages(conversation.id as string);
   }
 
   openContactConversation(contact: User): Promise<void> {
     logger.startCollapsed('[view-conversation.service] openContactConversation()', []);
 
-    const conversationId = this.genConversationId(contact.uid);
+    const conversationId = this._genConversationId(contact.uid);
 
     return this._conversationDb.doc$(conversationId)
       .pipe(take(1))
@@ -233,10 +229,10 @@ export class ViewConversationService {
     if (!this._store.state.conversation) {
       return Promise.reject({ code: 'No conversation selected' });
     }
-    const message = this.createMessage(messageBody);
+    const message = this._createMessage(messageBody);
 
-    this.addUndelivered(message);
-    return this.deliverMessage(message);
+    this._addUndelivered(message);
+    return this._deliverMessage(message);
   }
 
   /**
@@ -266,9 +262,9 @@ export class ViewConversationService {
     const fileTypeGroup = getFileTypeGroup(fileData.type);
     const path = `conversations/${this._store.state.conversation?.id}/${fileTypeGroup}s`;
     const task = this._messagesDb.addFile(fileData.file, path);
-    const message = this.createMessage(messageBody, { data: fileData, task });
+    const message = this._createMessage(messageBody, { data: fileData, task });
 
-    this.addUndelivered(message);
+    this._addUndelivered(message);
 
     return task.onComplete.then(
       url => {
@@ -278,7 +274,7 @@ export class ViewConversationService {
         };
 
         logger.endCollapsed(['File saved at', url, '\nDelivering message...\n\n']);
-        return this.deliverBatchMessage(message);
+        return this._deliverBatchMessage(message);
       },
       err => {
         logger.endCollapsed(['Error saving File', err]);

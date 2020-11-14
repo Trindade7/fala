@@ -1,16 +1,26 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AuthGuard } from './auth.guard';
+import { MockAuthService } from '../tests/moc-auth-service';
+import { UserLoggedInGuard } from './auth.guard';
+import { AuthService } from './auth.service';
 
-describe('AuthGuard', () => {
-  let guard: AuthGuard;
+describe('UserLoggedInGuard with mock auth', () => {
+  let guard: UserLoggedInGuard;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    guard = TestBed.inject(AuthGuard);
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: AuthService,
+          useValue: new MockAuthService()
+        }
+      ]
+    });
+    guard = TestBed.inject(UserLoggedInGuard);
   });
 
-  it('should be created', () => {
+  it('Should be created', () => {
     expect(guard).toBeTruthy();
   });
+
 });

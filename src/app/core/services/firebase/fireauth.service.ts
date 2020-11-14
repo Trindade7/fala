@@ -5,7 +5,7 @@ import { auth, User as FireUser } from 'firebase/app';
 import { Observable, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
-import { createUser, emptyUser, User } from '../../models/user.model';
+import { createUser, User } from '../../models/user.model';
 import { AuthFacade } from '../auth/auth.facade';
 import { FirestoreService } from './firestore.service';
 
@@ -14,7 +14,6 @@ import { FirestoreService } from './firestore.service';
 })
 export class FireauthService implements AuthFacade {
   basePath = 'users';
-  private _uid = '';
 
   constructor (
     private _afAuth: AngularFireAuth,
@@ -22,7 +21,6 @@ export class FireauthService implements AuthFacade {
   ) {
     this._db.setBasePath(this.basePath);
     this.user$.pipe(
-      tap(user => this._uid = user.uid),
       tap(user => logger.collapsed('[fireauth.service] user$ sub', [user]))
     ).subscribe();
   }
@@ -53,17 +51,13 @@ export class FireauthService implements AuthFacade {
     return Promise.resolve();
   }
 
-  get uid(): string {
-    return this._uid;
-  }
-
-  get user$(): Observable<User> {
+  get user$(): Observable<User | null> {
     return this._afAuth.authState.pipe(
       switchMap(user => {
         if (user) {
           return this._db.doc$(user.uid) as Observable<User>;
         } else {
-          return of(emptyUser());
+          return of(null);
         }
       })
     );
@@ -92,7 +86,6 @@ export class FireauthService implements AuthFacade {
   }
 
   logout(): Promise<void> {
-    this._uid = '';
     return this._afAuth.signOut();
   }
 }

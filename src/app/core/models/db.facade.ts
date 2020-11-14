@@ -1,51 +1,28 @@
+import { Observable } from 'rxjs';
+
+import { QueryOptions } from './interfaces';
+
 export abstract class DbFacade<T> {
-    protected abstract basePath: string;
-    // private dbService: FirestoreService<T>;
+    // protected abstract basePath: string;
 
-    // private injector = Injector.create({
-    //     providers: [
-    //         { provide: FirestoreService, deps: [] },
-    //     ]
-    // });
+    abstract setBasePath(path: string): void;
 
-    // setBasePath(path: string) {
-    //     this.basePath = path;
-    // }
+    abstract createId(): string;
 
-    // createId(): string {
-    //     return this.createId();
-    // }
+    abstract collection$(queryOptions: Partial<QueryOptions>): Observable<T[]>;
 
-    // collection$(queryFn?): Observable<T[]> {
-    //     return this.dbService.collection$(queryFn);
-    // }
+    abstract doc$(id: string): Observable<T>;
 
-    // doc$(id: string): Observable<T> {
-    //     return this.dbService.doc$(id);
-    // }
+    abstract getDoc(id: string): Promise<T>;
 
-    // getDoc(id: string): Promise<T> {
-    //     return this.dbService.getDoc(id);
-    // }
+    abstract create(document: T, id: string): Promise<void>;
 
-    // create(document: T, id: string): Promise<void> {
-    //     return this.dbService.create(document, id);
-    // }
+    abstract update(document: T, id: string): Promise<void>;
 
-    // update(document: T, id: string): Promise<void> {
-    //     return this.dbService.update(document, id);
-    // }
+    abstract delete(id: string): Promise<void>;
 
-    // delete(id: string): Promise<void> {
-    //     return this.dbService.delete(id);
-    // }
+    // * ########### FILES ####################################
+    // abstract addFile(inputFile: File, filePath: string): FileUploadTask;
 
-    // // * ########### FILES ####################################
-    // addFile(inputFile: File, filePath: string): FileUploadTask {
-    //     return this.dbService.addFile(inputFile, filePath);
-    // }
-
-    // deleteFile(filePath: string): Observable<any> {
-    //     return this.dbService.deleteFile(filePath);
-    // }
+    // abstract deleteFile(filePath: string): Observable<any>;
 }

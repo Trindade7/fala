@@ -3,7 +3,7 @@ import { Logger as logger } from '@app-core/helpers/logger';
 import { ConversationModel, MessageModel } from '@app-core/models/conversation.model';
 import { environment } from '@app-envs/environment';
 import { User } from '@app/core/models/user.model';
-import { AuthService } from '@app/core/services/auth/auth.service';
+import { UserService } from '@app/core/services/auth/user.service';
 import { DbGenericService } from '@app/core/services/db.genric.service';
 import { StoreGeneric } from '@app/core/services/store.generic';
 import { combineLatest, Observable } from 'rxjs';
@@ -17,9 +17,9 @@ export class ListConversationsService {
   constructor (
     private _db: ConversationsDb,
     private store: ConversationsStore,
-    private auth: AuthService
+    private _userSvc: UserService
   ) {
-    this.auth.user$.subscribe(
+    this._userSvc.state.user$.subscribe(
       user => this._subConversation(user)
     );
     // this._subConversation();
@@ -34,7 +34,7 @@ export class ListConversationsService {
         orderDirection: 'desc',
         arrayContains: {
           arrayName: 'users',
-          value: user ?? { id: this.auth.uid }
+          value: user ?? { id: this._userSvc.state.uid }
         }
       }
     ).pipe(

@@ -43,7 +43,7 @@ const routes: Routes = [
 
   {
     path: '',
-    // redirectTo: 'chat',
+    canActivate: [UserLoggedInGuard],
     component: HomeComponent,
     pathMatch: 'full',
   },

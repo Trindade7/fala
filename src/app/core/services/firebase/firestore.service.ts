@@ -140,7 +140,7 @@ export class FirestoreService<T> {
     }
   }
 
-  doc$(id: string): Observable<T | undefined> {
+  doc$(id: string): Observable<T | null> {
     logger.startCollapsed(
       `[firestore.service] [doc$()]`,
       [{ log: ['id:', id], type: 'warn' }]
@@ -152,7 +152,9 @@ export class FirestoreService<T> {
       .pipe(tap( // LOGGING DATA
         val => logger.endCollapsed([`RESPONSE streaming from [${path}]`, val]),
         err => logger.endCollapsed([`ERROR streaming from [${path}] `, err]),
-      ));
+      ),
+        map(docOrUndefined => docOrUndefined ?? null)
+      );
   }
 
   docOrNull$(id: string): Observable<T | null> {

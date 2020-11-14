@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@app/core/services/auth/auth.service';
+import { UserService } from '@app/core/services/auth/user.service';
 
 interface HMSTime { h: number; m: number; s: number; }
 
@@ -16,7 +17,8 @@ export class HomeComponent implements OnInit {
   };
 
   constructor (
-    public authSvc: AuthService
+    public userSvc: UserService,
+    private _authSvc: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -32,8 +34,7 @@ export class HomeComponent implements OnInit {
     }, 1000);
   }
 
-  // checkTime(i: number): number {
-  //   if (i < 10) { i = '0' + i; }  // add zero in front of numbers < 10
-  //   return i;
-  // }
+  signOut(): void {
+    this._authSvc.logout();
+  }
 }
