@@ -43,7 +43,8 @@
                 <section class="messages padded-x padded-2-y">
                     <div class="padded-y" *ngFor="let message of messages; let i = index">
                         <!-- <app-chat-message [received]="(i%2)===0"></app-chat-message> -->
-                        <app-message [received]="message.senderId !== auth.uid"
+                        <app-message (senderIdEmitter)="selectedAndShowContact($event, conversation.users)"
+                                     [received]="message.senderId !== userSvc.state.uid"
                                      [message]="message"
                                      [sender]="sender(message.senderId, conversation.users)">
                         </app-message>
@@ -62,7 +63,14 @@
         </div>
         <div [ngClass]="{'hide': hideContactDetails}"
              class="contact-details flexed col center-y  padded-x padded-2-y">
-            <app-contact-details [avatarUrl]="conversationAvatar(conversation)"></app-contact-details>
+            <ng-container *ngIf="selectedContact; else noContactTemplate">
+                <app-contact-details [contact]="selectedContact"></app-contact-details>
+            </ng-container>
+            <ng-template #noContactTemplate>
+                <div class="flexed center">
+                    <h1>No contact selected</h1>
+                </div>
+            </ng-template>
         </div>
     </div>
 </ng-container>

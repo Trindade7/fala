@@ -30,7 +30,7 @@
     </section>
 
     <section class="conversations padded-y">
-        <mat-list *ngIf="(conversationSvc.collection$ | async) as conversations">
+        <mat-list *ngIf="(conversationSvc.state.collection$ | async) as conversations">
             <mat-list-item class="padded-05-y" [disabled]="false" *ngFor="let conversation of conversations">
                 <div class="conversation-summary">
                     <mat-divider></mat-divider>
@@ -40,7 +40,7 @@
             </mat-list-item>
         </mat-list>
 
-        <div *ngIf="!(conversationSvc.collection$ | async)"
+        <div *ngIf="!(conversationSvc.state.collection$ | async)"
              class="flexed center padded">
             <h3>No conversation yet</h3>
         </div>

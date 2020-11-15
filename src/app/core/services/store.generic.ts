@@ -9,7 +9,6 @@ export abstract class StoreGeneric<T extends Store> {
     state$: Observable<T>;
     state: T;
     previous: T | undefined;
-
     protected abstract store: string;
 
     constructor (
@@ -25,11 +24,11 @@ export abstract class StoreGeneric<T extends Store> {
     patch(newValue: Partial<T>, event: string = 'not specified'): void {
         this.previous = this.state;
         const newState = Object.assign({}, this.state, newValue);
-        logger.collapsed(`[${this.store}] [patch] [event: ${event}]`,
+        logger.collapsed(`[${this.store}] patch [event: ${event}]`,
             [
-                ...['change', newValue],
-                ...['previous', this.previous],
-                ...['next', newState]
+                ...['change', newValue, '\n'],
+                ...['previous', this.previous, '\n'],
+                ...['next', newState, '\n']
             ],
         );
 

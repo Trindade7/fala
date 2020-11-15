@@ -41,7 +41,7 @@ export class ChatComponent implements OnInit {
 
     logger.collapsed(
       '[chat.component] ',
-      [this.appSettings, this._conversations.collection$]);
+      [this.appSettings, this._conversations.state.collection$]);
 
   }
 

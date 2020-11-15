@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MessageModel } from '@app/core/models/conversation.model';
 import { User } from '@app/core/models/user.model';
 
@@ -13,14 +13,23 @@ export class MessageComponent implements OnInit {
   @Input() message!: MessageModel;
   @Input() sender!: User;
 
-  constructor() { }
+  @Output() senderIdEmitter: EventEmitter<string> = new EventEmitter();
+
+  constructor () { }
 
   ngOnInit(): void {
   }
 
   getDate(dateStr: { seconds: number, milliseconds: number; }): number {
     // tslint:disable-next-line: no-string-literal
+    if (!dateStr?.seconds) {
+      return new Date(0).setUTCSeconds(-938649360);
+    }
     return new Date(0).setUTCSeconds(dateStr.seconds);
+  }
+
+  emitSenderId() {
+    this.senderIdEmitter.emit(this.sender.uid);
   }
 
 }

@@ -24,13 +24,13 @@ export class UserLoggedInGuard implements CanActivate {
       tap(loggedIn => {
         if (!loggedIn) {
           logger.collapsed('[auth.guard] canActivate', [loggedIn]);
+
           this._snackBar.open('You have to sign In', 'close', {
             duration: 2000,
           });
+
           this._router.navigate(['/login']);
         }
-
-        logger.collapsed('[auth.guard] canActivate Error', [loggedIn]);
       })
     );
   }

@@ -20,6 +20,8 @@ export class ViewConversationComponent implements OnInit {
   hideContactDetails = false;
   state = this.conversationSvc.state;
 
+  selectedContact: User | null = null;
+
   messageForm = this._fb.group({
     messageBody: [
       '',
@@ -34,7 +36,7 @@ export class ViewConversationComponent implements OnInit {
   constructor (
     private _chatService: ChatService,
     private _fb: FormBuilder,
-    public user: UserService,
+    public userSvc: UserService,
     public conversationSvc: ViewConversationService,
   ) { }
 
@@ -57,12 +59,17 @@ export class ViewConversationComponent implements OnInit {
   conversationAvatar(conversation: ConversationModel): string {
     let url;
     conversation?.users?.map(
-      user => user.uid !== this.user.state.uid ? url = user.photoUrl : undefined
+      user => user.uid !== this.userSvc.state.uid ? url = user.photoUrl : undefined
     );
     return url ?? 'https://placehold.it/100x100?text=user%20avatar';
   }
 
   closeConversation(): void {
     this._chatService.appSettings.toggleSideNav(false);
+  }
+
+  selectedAndShowContact(contactId: string, contactList: User[]) {
+    this.selectedContact = this.sender(contactId, contactList);
+    this.hideContactDetails = false;
   }
 }

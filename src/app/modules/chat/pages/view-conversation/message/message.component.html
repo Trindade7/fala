@@ -1,6 +1,8 @@
 <div [ngClass]="{received: received}" class="message-container mat-body  flexed">
     <header class="header flexed">
-        <app-avatar [imageUrl]="sender.photoUrl"
+        <app-avatar class="user-url"
+                    (click)="emitSenderId()"
+                    [imageUrl]="sender.photoUrl"
                     [size]="'sm'"></app-avatar>
         <div class="text flexed col center-y">
             <h3>User name</h3>

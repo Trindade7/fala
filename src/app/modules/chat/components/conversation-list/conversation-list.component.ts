@@ -14,7 +14,6 @@ export class ConversationListComponent implements OnInit {
     public conversationSvc: ListConversationsService,
   ) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
 }

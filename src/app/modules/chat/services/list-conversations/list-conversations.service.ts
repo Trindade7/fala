@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Logger as logger } from '@app-core/helpers/logger';
 import { ConversationModel, MessageModel } from '@app-core/models/conversation.model';
-import { environment } from '@app-envs/environment';
-import { User } from '@app/core/models/user.model';
+import { Store } from '@app/core/models/interfaces';
 import { UserService } from '@app/core/services/auth/user.service';
 import { DbGenericService } from '@app/core/services/db.genric.service';
 import { StoreGeneric } from '@app/core/services/store.generic';
-import { combineLatest, Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -16,59 +15,52 @@ export class ListConversationsService {
 
   constructor (
     private _db: ConversationsDb,
-    private store: ConversationsStore,
+    private _store: ConversationsStore,
     private _userSvc: UserService
   ) {
-    this._userSvc.state.user$.subscribe(
-      user => this._subConversation(user)
-    );
-    // this._subConversation();
+    this._subConversation(this._userSvc.state.uid);
   }
 
-  private _subConversation(user?: User): void {
-    logger.startCollapsed('[list-conversations.service] _subConversation()', [user]);
+  private _subConversation(userId: string): void {
+    logger.startCollapsed('[list-conversations.service] _subConversation()', [userId]);
 
     this._db.collection$(
       {
         limitTo: 20,
         orderDirection: 'desc',
-        arrayContains: {
-          arrayName: 'users',
-          value: user ?? { id: this._userSvc.state.uid }
-        }
+        // arrayContains: {
+        //   arrayName: 'users',
+        //   value: user ?? { id: this._userSvc.state.uid }
+        // }
       }
     ).pipe(
-      switchMap((conversations) => {
-        logger.startCollapsed(
-          '[list-conversations.service] this._db.collection$().subscribe()'
-        );
+      // switchMap((conversations) => {
+      //   logger.startCollapsed(
+      //     '[list-conversations.service] this._db.collection$().subscribe()'
+      //   );
 
-        const convs = conversations.map(conversation => this._db.collection$(
-          {
-            path: `conversations/${conversation.id}/messages`,
-            limitTo: 1,
-            orderDirection: 'desc',
-          }
-        ).pipe(
-          map((messages) =>
-            Object.assign(conversation as ConversationModel, { lastMessage: messages[0] ?? null })
-          )
-        )
-        );
+      //   const convs = conversations.map(conversation => this._db.collection$(
+      //     {
+      //       path: `conversations/${conversation.id}/messages`,
+      //       limitTo: 1,
+      //       orderDirection: 'desc',
+      //       orderBy: 'createdAt'
+      //     }
+      //   ).pipe(
+      //     map(messages => Object.assign(
+      //       conversation, { lastMessage: messages[0] ?? null }
+      //     ) as ConversationModel)
+      //   )
+      //   );
 
-        if (environment.production === false) {
-          console.groupCollapsed('CONVERSATIONS LIST W M');
-          console.log(convs);
-          console.groupEnd();
-        }
-
-        return combineLatest(convs);
-      })
+      //   return combineLatest(convs);
+      // }
+      // ),
+      // map(conversaions => this._sortByLastMessage(conversaions))
+      map(conversaions => conversaions as ConversationModel[])
     ).subscribe(
       conversations => {
-        logger.endCollapsed([conversations]);
-
-        this.store.patch({
+        this._store.patch({
           loading: false,
           conversations
         });
@@ -77,12 +69,17 @@ export class ListConversationsService {
     );
   }
 
-  get collection$(): Observable<ConversationModel[]> {
-    return this.store.state$.pipe(
-      map(
-        state => state.loading ? [] : state.conversations
-      )
+  private _sortByLastMessage(conversations: ConversationModel[]): ConversationModel[] {
+    return conversations.sort((a, b) => {
+      const aTime = a.lastMessage?.createdAt.seconds ?? 0;
+      const bTime = b.lastMessage?.createdAt.seconds ?? 0;
+      return aTime - bTime;
+    }
     );
+  }
+
+  get state() {
+    return this._store.publicGetters;
   }
 }
 
@@ -96,16 +93,19 @@ export class ListConversationsService {
 export class ConversationsDb extends DbGenericService<ConversationModel | MessageModel>{
   basePath = 'conversations';
 }
+@Injectable({
+  providedIn: 'root'
+})
+export class LastMessageDb extends DbGenericService<MessageModel>{
+  basePath = 'conversations';
+}
 
 
 
 // *################## STORE ZONE ###################
 
-interface IConversationsPage {
+interface IConversationsPage extends Store {
   conversations: ConversationModel[];
-  loading: boolean;
-  status: string;
-  error: Error;
 }
 
 
@@ -114,12 +114,47 @@ interface IConversationsPage {
 })
 export class ConversationsStore extends StoreGeneric<IConversationsPage>{
   protected store = 'conversations-store';
+  readonly publicGetters = {
+    loading$: this.loading$,
+    status$: this.status$,
+    error$: this.error$,
+    collection$: this.collection$,
+  };
 
-  constructor () {
+  constructor (
+    private _lastMessageDb: LastMessageDb
+  ) {
     super({
       loading: true,
       conversations: [],
     });
   }
 
+  get collection$(): Observable<ConversationModel[]> {
+    return this.state$.pipe(
+      map(state => {
+        const conversations = state.conversations.map(conversation => {
+          const path = `conversations/${conversation.id}/messages`;
+
+          this._lastMessageDb.collection$({
+            path,
+            limitToLast: 1,
+          }).subscribe(messages => conversation.lastMessage = messages[0]);
+
+          return conversation;
+        });
+
+        return this._sortByLastMessage(conversations);
+      })
+    );
+  }
+
+  private _sortByLastMessage(conversations: ConversationModel[]): ConversationModel[] {
+    return conversations.sort((a, b) => {
+      const aTime = a.lastMessage?.createdAt.seconds ?? 0;
+      const bTime = b.lastMessage?.createdAt.seconds ?? 0;
+      return aTime - bTime;
+    }
+    );
+  }
 }

@@ -5,26 +5,26 @@ import { map } from 'rxjs/operators';
 
 import { emptyUser, User } from '../../models/user.model';
 import { StoreGeneric } from '../store.generic';
-import { AuthFacade } from './auth.facade';
+import { AuthService } from './auth.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserService {
     constructor (
-        private _authService: AuthFacade,
+        private _authSvc: AuthService,
         private _store: UserStore,
     ) {
-        this._authService.user$.subscribe(
+        this._authSvc.user$.subscribe(
             user => user ? this._store.patch({
                 loading: false,
                 status: `User ${user.email} logged in!`,
                 error: null,
                 user,
-            }) : this._store.patch({
+            }, 'user doc') : this._store.patch({
                 loading: false,
                 error: Error('Error loading user')
-            })
+            }, 'Error retrieving user')
         );
     }
 
@@ -40,6 +40,7 @@ interface IUserStore extends Store {
     user: User;
 }
 
+@Injectable({ providedIn: 'root' })
 export class UserStore extends StoreGeneric<IUserStore> {
     protected store = 'users';
 
@@ -56,6 +57,7 @@ export class UserStore extends StoreGeneric<IUserStore> {
         super({
             loading: true,
             status: '',
+            user: emptyUser() // * To avoid error with empty uid value getter
         });
     }
 

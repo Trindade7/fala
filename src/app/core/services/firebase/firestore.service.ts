@@ -98,7 +98,8 @@ export class FirestoreService<T> {
         //   );
         // }
 
-        let query = ref.orderBy(opts.orderBy, opts.orderDirection).limit(opts.limitTo);
+        let query = ref.orderBy(opts.orderBy, opts.orderDirection);
+        query = opts.limitToLast ? query.limitToLast(opts.limitToLast) : query.limit(opts.limitTo);
         query = opts.startAt ? query.startAt(opts.startAt) : query;
 
         return query;

@@ -29,8 +29,7 @@ export class ViewConversationService {
     private _conversationDb: ConversationDb,
     private _store: ViewConversationStore,
     private _storage: ViewConversationStorage,
-  ) {
-  }
+  ) { }
 
   /**
    * subscribes to conversation messages
@@ -94,7 +93,7 @@ export class ViewConversationService {
     });
   }
 
-  private _storeConversation(): Promise<void> {
+  private _addConversationToDb(): Promise<void> {
     const conversation = this._store.state.conversation as ConversationModel;
 
     return this._conversationDb.create(conversation, conversation.id as string).then(
@@ -140,7 +139,7 @@ export class ViewConversationService {
     delete message.uploadTask; // * only for local use
 
     if (!this._store.state.conversationStored) {
-      return this._storeConversation().then(
+      return this._addConversationToDb().then(
         () => this._messagesDb.create(message, message.id).then(
           () => { this.deleteUndelivered(message.id); }
         )
@@ -172,7 +171,7 @@ export class ViewConversationService {
     logger.collapsed('batch data', [fileData, messageData]);
 
     if (!this._store.state.conversationStored) {
-      return this._storeConversation().then(
+      return this._addConversationToDb().then(
         () => this._messagesDb.batchWriteDoc([fileData, messageData])
           .then(() => this.deleteUndelivered(message.id))
       );
@@ -327,39 +326,21 @@ class ViewConversationStore extends StoreGeneric<IViewConversationPage>{
     });
   }
 
-  get loading$(): Observable<boolean> {
-    return this.loading$;
-  }
-
-  get status$(): Observable<string> {
-    return this.status$;
-  }
-
-  get error$(): Observable<Error | null> {
-    return this.error$;
-  }
-
   get conversation$(): Observable<ConversationModel | null> {
     return this.state$.pipe(
-      map(
-        state => state.loading ? null : state.conversation
-      )
+      map(state => state.loading ? null : state.conversation)
     );
   }
 
   get messages$(): Observable<MessageModel[]> {
     return this.state$.pipe(
-      map(
-        state => state.loading ? [] : state.messages
-      )
+      map(state => state.loading ? [] : state.messages)
     );
   }
 
   get undeliveredMessages$(): Observable<MessageModel[]> {
     return this.state$.pipe(
-      map(
-        state => [...state.undeliveredMessages.values()]
-      )
+      map(state => [...state.undeliveredMessages.values()])
     );
   }
 }
