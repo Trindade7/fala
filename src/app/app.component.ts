@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import { AppService } from './app.service';
+
 
 @Component({
   selector: 'app-root',
@@ -10,7 +12,8 @@ export class AppComponent {
   title = 'fala';
   readMode: 'rtl' | 'ltr' | 'btt' = 'rtl'; // {btt = bottom to top}
 
-  constructor () {
-
+  constructor (
+    public appSvc: AppService
+  ) {
   }
 }
