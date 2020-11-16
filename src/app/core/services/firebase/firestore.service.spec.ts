@@ -1,16 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { createUser, User } from '@app/core/models/user.model';
+import { createUser, UserModel } from '@app/core/models/user.model';
 
 import { FirestoreService } from './firestore.service';
 import { mockAngularFireStorage, mockAngularFirestore } from './mock-firebase';
 
 describe('FirestoreService tests with user as doc example', () => {
-  let service: FirestoreService<User>;
+  let service: FirestoreService<UserModel>;
 
   beforeEach(() => {
-    const user: User = createUser({
+    const user: UserModel = createUser({
       uid: 'test',
       email: 'email',
       name: 'test'

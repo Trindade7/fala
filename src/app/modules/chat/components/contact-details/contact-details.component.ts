@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { User } from '@app/core/models/user.model';
+import { UserModel } from '@app/core/models/user.model';
 
 @Component({
   selector: 'app-contact-details',
@@ -9,7 +9,7 @@ import { User } from '@app/core/models/user.model';
 })
 export class ContactDetailsComponent implements OnInit {
   @Input() avatarUrl!: string;
-  @Input() contact!: User;
+  @Input() contact!: UserModel;
 
 
   constructor () { }

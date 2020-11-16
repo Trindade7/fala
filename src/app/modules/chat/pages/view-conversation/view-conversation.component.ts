@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ChatService } from '@app-modules/chat/services/chat/chat.service';
 import { Logger } from '@app/core/helpers/logger';
 import { ConversationModel } from '@app/core/models/conversation.model';
-import { User } from '@app/core/models/user.model';
+import { UserModel } from '@app/core/models/user.model';
 import { UserService } from '@app/core/services/auth/user.service';
 
 import { ViewConversationService } from './view-conversation.service';
@@ -20,7 +20,7 @@ export class ViewConversationComponent implements OnInit {
   hideContactDetails = false;
   state = this.conversationSvc.state;
 
-  selectedContact: User | null = null;
+  selectedContact: UserModel | null = null;
 
   messageForm = this._fb.group({
     messageBody: [
@@ -46,10 +46,10 @@ export class ViewConversationComponent implements OnInit {
     this.hideContactDetails = !this.hideContactDetails;
   }
 
-  sender(senderId: string, users: User[]): User {
+  sender(senderId: string, users: UserModel[]): UserModel {
     for (const user of (users)) {
       if (user.uid === senderId) {
-        return user as User;
+        return user as UserModel;
       }
     }
 
@@ -68,7 +68,7 @@ export class ViewConversationComponent implements OnInit {
     this._chatService.appSettings.toggleSideNav(false);
   }
 
-  selectedAndShowContact(contactId: string, contactList: User[]) {
+  selectedAndShowContact(contactId: string, contactList: UserModel[]) {
     this.selectedContact = this.sender(contactId, contactList);
     this.hideContactDetails = false;
   }

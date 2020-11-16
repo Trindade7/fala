@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MessageModel } from '@app/core/models/conversation.model';
-import { User } from '@app/core/models/user.model';
+import { UserModel } from '@app/core/models/user.model';
 
 @Component({
   selector: 'app-message',
@@ -11,7 +11,7 @@ import { User } from '@app/core/models/user.model';
 export class MessageComponent implements OnInit {
   @Input() received = false;
   @Input() message!: MessageModel;
-  @Input() sender!: User;
+  @Input() sender!: UserModel;
 
   @Output() senderIdEmitter: EventEmitter<string> = new EventEmitter();
 

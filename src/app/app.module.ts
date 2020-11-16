@@ -9,6 +9,8 @@ import { CoreModule } from './core/core.module';
 import { AboutPageComponent } from './pages/about-page/about-page.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
+import { SignInComponent } from './pages/login-page/sign-in/sign-in.component';
+import { SignUpComponent } from './pages/login-page/sign-up/sign-up.component';
 import { ChatMessageComponent } from './pages/themes/chat-message/chat-message.component';
 import { ChatComponent } from './pages/themes/chat/chat.component';
 import { ConversationListComponent } from './pages/themes/chat/conversation-list/conversation-list.component';
@@ -30,7 +32,9 @@ import { SharedModule } from './shared/shared.module';
     ConversationListComponent,
     ConversationComponent,
     ConversationViewComponent,
-    HomeComponent
+    HomeComponent,
+    SignInComponent,
+    SignUpComponent
   ],
   imports: [
     BrowserModule,

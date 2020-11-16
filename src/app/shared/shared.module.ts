@@ -18,14 +18,16 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { AvatarComponent } from './components/avatar/avatar.component';
+import { PageIsLoadingComponent } from './components/page-is-loading/page-is-loading.component';
 import { DropZoneDirective } from './directives/drop-zone.directive';
 import { FileDropzoneComponent } from './file-dropzone/file-dropzone.component';
 
 @NgModule({
-  declarations: [DropZoneDirective, FileDropzoneComponent, AvatarComponent],
+  declarations: [DropZoneDirective, FileDropzoneComponent, AvatarComponent, PageIsLoadingComponent],
   imports: [
     CommonModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule
   ],
   exports: [
     CommonModule,
@@ -49,7 +51,8 @@ import { FileDropzoneComponent } from './file-dropzone/file-dropzone.component';
     MatGridListModule,
 
     FileDropzoneComponent,
-    AvatarComponent
+    AvatarComponent,
+    PageIsLoadingComponent
 
   ]
 })

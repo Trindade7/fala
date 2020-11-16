@@ -265,6 +265,10 @@ body {
   .mat-flat-button {
     min-width: 40px;
     padding: 0;
+
+    &.long {
+      padding: 0 1rem;
+    }
   }
 }
 

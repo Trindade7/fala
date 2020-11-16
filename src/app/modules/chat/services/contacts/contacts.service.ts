@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from '@app/core/models/user.model';
+import { UserModel } from '@app/core/models/user.model';
 import { DbGenericService } from '@app/core/services/db.genric.service';
 import { StoreGeneric } from '@app/core/services/store.generic';
 import { Observable } from 'rxjs';
@@ -23,7 +23,7 @@ export class ContactsService {
     );
   }
 
-  get collection$(): Observable<User[]> {
+  get collection$(): Observable<UserModel[]> {
     return this._store.state$.pipe(
       map(
         state => state.loading ? [] : state.contacts
@@ -31,7 +31,7 @@ export class ContactsService {
     );
   }
 
-  openContactConversation(contact: User): void {
+  openContactConversation(contact: UserModel): void {
     this.conversationSvc.openContactConversation(contact);
   }
 }
@@ -40,7 +40,7 @@ export class ContactsService {
 
 // *################## DB SERVICE ###################
 @Injectable({ providedIn: 'root' })
-class ContactsServiceDb extends DbGenericService<User>{
+class ContactsServiceDb extends DbGenericService<UserModel>{
   basePath = 'users';
 }
 
@@ -48,7 +48,7 @@ class ContactsServiceDb extends DbGenericService<User>{
 
 // *################## STORE ###################
 interface IContactsPage {
-  contacts: User[];
+  contacts: UserModel[];
   loading: boolean;
   status: string;
   error: Error;

@@ -1,0 +1,27 @@
+<form class="auth-form" [formGroup]="signInForm" (ngSubmit)="signIn()">
+    <p>
+        <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input formControlName="email" matInput type="email" placeholder="your email...">
+            <mat-icon matSuffix>mail</mat-icon>
+        </mat-form-field>
+    </p>
+    <p>
+        <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input formControlName="password" matInput type="password" placeholder="password...">
+            <mat-icon matSuffix>lock</mat-icon>
+        </mat-form-field>
+    </p>
+    <p>
+        <mat-checkbox formControlName="saveSession">
+            Save Log in session
+        </mat-checkbox>
+    </p>
+    <div class="sized-box-3"></div>
+    <div class="flexed">
+        <button type="submit" mat-flat-button color="primary" class="long">Log In</button>
+        <span class="spacer"></span>
+        <button type="button" (click)="googleSignIn()" mat-flat-button color="primary">G</button>
+    </div>
+</form>

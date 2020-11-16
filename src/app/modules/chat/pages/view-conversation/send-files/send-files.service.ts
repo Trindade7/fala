@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Logger as logger } from '@app-core/helpers/logger';
 import { extractFileType } from '@app/core/models/conversation.model';
-import { LocalFileData } from '@app/core/models/upload-task.model';
+import { LocalFileDataModel } from '@app/core/models/upload-task.model';
 
 import { ViewConversationService } from '../view-conversation.service';
 
@@ -9,11 +9,11 @@ import { ViewConversationService } from '../view-conversation.service';
   providedIn: 'root'
 })
 export class SendFilesService {
-  filesData: LocalFileData[] = [];
+  filesData: LocalFileDataModel[] = [];
 
   private _selectedIndex = 0;
 
-  constructor(
+  constructor (
     private _conversationSvc: ViewConversationService
   ) { }
 

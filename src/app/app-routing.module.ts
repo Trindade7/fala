@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { UserLoggedInGuard } from './core/services/auth/auth.guard';
+import { UserLoggedInGuard, UserNotLoggedInGuard } from './core/services/auth/auth.guard';
 import { SettingsComponent } from './modules/chat/pages/settings/settings.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
@@ -11,7 +11,7 @@ const routes: Routes = [
 
   {
     path: 'login',
-    // canActivate: [UserNotLoggedInGuard],
+    canActivate: [UserNotLoggedInGuard],
     component: LoginPageComponent,
   },
   {
@@ -46,6 +46,9 @@ const routes: Routes = [
     canActivate: [UserLoggedInGuard],
     component: HomeComponent,
     pathMatch: 'full',
+    children: [
+
+    ]
   },
 ];
 

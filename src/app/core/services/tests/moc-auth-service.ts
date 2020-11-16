@@ -1,10 +1,10 @@
-import { emptyUser, User } from '@app/core/models/user.model';
+import { emptyUser, UserModel } from '@app/core/models/user.model';
 import { Observable, of } from 'rxjs';
 
 import { AuthFacade } from '../auth/auth.facade';
 
 export class MockAuthService implements AuthFacade {
-    get user$(): Observable<User | null> {
+    get user$(): Observable<UserModel | null> {
         return of(emptyUser());
     }
 

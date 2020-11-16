@@ -1,7 +1,30 @@
 .home-container {
   height: 100%;
-  .content {
+
+  .actions {
     height: 100%;
+    width: 100%;
+
+    .time {
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+
+      .mins,
+      .seconds {
+        margin: 0;
+      }
+
+      .seconds {
+        margin-bottom: 1rem;
+        align-self: flex-end;
+      }
+    }
+
+    .date {
+      justify-content: flex-end;
+    }
+
     .apps {
       gap: 1rem;
       button {
@@ -9,5 +32,15 @@
         min-height: 50px;
       }
     }
+  }
+
+  .tasks {
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 700px) {
+  .content {
+    flex-direction: row;
   }
 }

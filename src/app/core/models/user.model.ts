@@ -1,5 +1,5 @@
 
-export interface User {
+export interface UserModel {
     uid: string;
     name: string;
     email: string;
@@ -16,7 +16,7 @@ export function createUser({
     isVerified,
     phoneNumber,
     photoUrl
-}: User): User {
+}: UserModel): UserModel {
     return {
         uid,
         name,
@@ -26,7 +26,7 @@ export function createUser({
         photoUrl: photoUrl ?? '',
     };
 }
-export function emptyUser(): User {
+export function emptyUser(): UserModel {
     return {
         uid: '',
         name: '',

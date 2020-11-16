@@ -1,10 +1,10 @@
-export interface Store {
+export interface StoreModel {
     loading: boolean;
     status: string;
     error: Error | null;
 }
 
-export interface QueryOptions {
+export interface QueryOptionsModel {
     limitToLast: number;
     orderBy: 'createdAt' | 'updatedAt' | 'name' | 'email';
     orderDirection: 'asc' | 'desc';

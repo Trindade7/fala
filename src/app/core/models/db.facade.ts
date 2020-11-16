@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { QueryOptions } from './interfaces';
+import { QueryOptionsModel } from './interfaces';
 
 export abstract class DbFacade<T> {
     // protected abstract basePath: string;
@@ -9,7 +9,7 @@ export abstract class DbFacade<T> {
 
     abstract createId(): string;
 
-    abstract collection$(queryOptions: Partial<QueryOptions>): Observable<T[]>;
+    abstract collection$(queryOptions: Partial<QueryOptionsModel>): Observable<T[]>;
 
     abstract doc$(id: string): Observable<T>;
 

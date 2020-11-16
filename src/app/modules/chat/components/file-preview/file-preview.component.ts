@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { extractFileType, FileGroup, getFileTypeGroup, MessageFile } from '@app/core/models/conversation.model';
-import { LocalFileData } from '@app/core/models/upload-task.model';
+import { extractFileType, FileGroup, getFileTypeGroup, MessageFileModel } from '@app/core/models/conversation.model';
+import { LocalFileDataModel } from '@app/core/models/upload-task.model';
 
 
 @Component({
@@ -10,8 +10,8 @@ import { LocalFileData } from '@app/core/models/upload-task.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilePreviewComponent implements OnInit {
-  @Input() fileData!: LocalFileData;
-  @Input() fileUrl!: MessageFile;
+  @Input() fileData!: LocalFileDataModel;
+  @Input() fileUrl!: MessageFileModel;
   @Input() isThumbnail = true;
 
   filePreview: string | ArrayBuffer | null = null;
@@ -22,7 +22,7 @@ export class FilePreviewComponent implements OnInit {
     other: false
   };
 
-  constructor() { }
+  constructor () { }
 
   ngOnInit(): void {
     if (this.fileUrl) {
@@ -38,7 +38,7 @@ export class FilePreviewComponent implements OnInit {
     return extractFileType(fileType);
   }
 
-  createPreviewFromData(fileData: LocalFileData): FileGroup {
+  createPreviewFromData(fileData: LocalFileDataModel): FileGroup {
     const typeGroup = getFileTypeGroup(fileData.type);
     if ((typeGroup === 'image') || (typeGroup === 'video')) {
       this.renderFile(fileData.file);

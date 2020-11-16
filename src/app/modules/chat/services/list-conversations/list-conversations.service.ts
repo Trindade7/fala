@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Logger as logger } from '@app-core/helpers/logger';
 import { ConversationModel, MessageModel } from '@app-core/models/conversation.model';
-import { Store } from '@app/core/models/interfaces';
+import { StoreModel } from '@app/core/models/interfaces';
 import { UserService } from '@app/core/services/auth/user.service';
 import { DbGenericService } from '@app/core/services/db.genric.service';
 import { StoreGeneric } from '@app/core/services/store.generic';
@@ -104,7 +104,7 @@ export class LastMessageDb extends DbGenericService<MessageModel>{
 
 // *################## STORE ZONE ###################
 
-interface IConversationsPage extends Store {
+interface IConversationsPage extends StoreModel {
   conversations: ConversationModel[];
 }
 

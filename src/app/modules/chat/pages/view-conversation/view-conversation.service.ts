@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Logger as logger } from '@app-core/helpers/logger';
 import { ConversationModel, getFileTypeGroup, getTime, MessageModel } from '@app/core/models/conversation.model';
-import { Store } from '@app/core/models/interfaces';
-import { FileUploader, genBatchData, LocalFileData } from '@app/core/models/upload-task.model';
-import { User } from '@app/core/models/user.model';
+import { StoreModel } from '@app/core/models/interfaces';
+import { FileUploaderModel, genBatchData, LocalFileDataModel } from '@app/core/models/upload-task.model';
+import { UserModel } from '@app/core/models/user.model';
 import { UserService } from '@app/core/services/auth/user.service';
 import { DbGenericService } from '@app/core/services/db.genric.service';
 import { StorageGenericService } from '@app/core/services/storage.generic.service';
@@ -68,13 +68,13 @@ export class ViewConversationService {
     return conversationId;
   }
 
-  private async _createNewConversation(contact: User, conversationId: string): Promise<void> {
+  private async _createNewConversation(contact: UserModel, conversationId: string): Promise<void> {
     logger.collapsed(
       '[view-conversation.service] _createNewConversation()',
       ['No conversation for this contact', contact, 'creating one']
     );
 
-    const currentUser: User = this._userSvc.state.user;
+    const currentUser: UserModel = this._userSvc.state.user;
 
     const newConversation = new ConversationModel({
       id: conversationId,
@@ -122,7 +122,7 @@ export class ViewConversationService {
     });
   }
 
-  private _createMessage(messageBody: string, uploadTask?: FileUploader): MessageModel {
+  private _createMessage(messageBody: string, uploadTask?: FileUploaderModel): MessageModel {
     return new MessageModel({
       id: this._messagesDb.createId(),
       createdAt: getTime(),
@@ -199,7 +199,7 @@ export class ViewConversationService {
     this._subscibeToMessages(conversation.id as string);
   }
 
-  openContactConversation(contact: User): Promise<void> {
+  openContactConversation(contact: UserModel): Promise<void> {
     logger.startCollapsed('[view-conversation.service] openContactConversation()', []);
 
     const conversationId = this._genConversationId(contact.uid);
@@ -252,7 +252,7 @@ export class ViewConversationService {
     logger.endCollapsed(['temporary message stored', this._store.state.messages]);
   }
 
-  sendFile(fileData: LocalFileData, messageBody: string = ''): Promise<void> {
+  sendFile(fileData: LocalFileDataModel, messageBody: string = ''): Promise<void> {
     logger.startCollapsed(
       '[view-conversation.service] sendFile()',
       ['fileData\n', fileData, 'messageBody\n', messageBody]
@@ -293,7 +293,7 @@ class MessagesDb extends DbGenericService<MessageModel>{
 }
 
 // *################ STORE #####################
-interface IViewConversationPage extends Store {
+interface IViewConversationPage extends StoreModel {
   messages: MessageModel[];
   undeliveredMessages: Map<string, MessageModel>;
   conversation: ConversationModel | null;

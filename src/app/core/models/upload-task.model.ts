@@ -1,12 +1,12 @@
 import { Observable } from 'rxjs';
 
-export interface LocalFileData {
+export interface LocalFileDataModel {
     type: string;
     file: File;
 }
 
-export interface FileUploader {
-    data: LocalFileData;
+export interface FileUploaderModel {
+    data: LocalFileDataModel;
     task: FileUploadTask;
 }
 export interface FileUploadTask {
@@ -17,14 +17,14 @@ export interface FileUploadTask {
     resume(): boolean;
 }
 
-export interface BatchData {
+export interface BatchDataModel {
     path: string;
     doc: any;
     docId: string;
     update: boolean;
 }
 
-export function genBatchData(path: string, docId: string, doc: any, update = false): BatchData {
+export function genBatchData(path: string, docId: string, doc: any, update = false): BatchDataModel {
     return {
         path,
         doc,

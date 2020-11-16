@@ -1,5 +1,5 @@
 import { DbFacade } from '@app/core/models/db.facade';
-import { QueryOptions } from '@app/core/models/interfaces';
+import { QueryOptionsModel } from '@app/core/models/interfaces';
 import { Observable, of } from 'rxjs';
 
 /**
@@ -24,7 +24,7 @@ export class MockDbGeneric<T> implements DbFacade<T>{
         return 'testId';
     }
 
-    collection$(queryOptions: Partial<QueryOptions>): Observable<T[]> {
+    collection$(queryOptions: Partial<QueryOptionsModel>): Observable<T[]> {
         return of(this.docs);
     }
 

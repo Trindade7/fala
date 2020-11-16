@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { ConversationModel } from '@app-core/models/conversation.model';
-import { User } from '@app/core/models/user.model';
+import { UserModel } from '@app/core/models/user.model';
 
 import { ViewConversationService } from '../../pages/view-conversation/view-conversation.service';
 import { ChatService } from '../../services/chat/chat.service';
@@ -28,7 +28,7 @@ export class ConversationPreviewComponent implements OnInit {
     this._conversationSvc.setActiveConversation(conversation);
   }
 
-  getAvatar(users: User[] = []): string | null {
+  getAvatar(users: UserModel[] = []): string | null {
     return users[0]?.photoUrl ?? null;
   }
 }

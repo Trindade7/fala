@@ -34,22 +34,6 @@ export class UserLoggedInGuard implements CanActivate {
       })
     );
   }
-  // canActivate(): Observable<boolean> {
-  //   return this._authService.user$.pipe(
-  //     take(1),
-  //     map(user => !!user.uid),
-  //     tap(loggedIn => {
-  //       if (!loggedIn) {
-  //         logger.collapsed('[auth.guard] canActivate', [loggedIn]);
-  //         this._snackBar.open('You have to sign In', 'close', {
-  //           duration: 2000,
-  //         });
-  //         this._router.navigate(['/login']);
-  //       }
-  //     })
-  //   );
-  // }
-
 }
 
 @Injectable({
@@ -59,18 +43,25 @@ export class UserNotLoggedInGuard implements CanActivate {
   constructor (
     private _authService: AuthService,
     private _router: Router,
+    private _snackBar: MatSnackBar
   ) { }
 
   canActivate(): Observable<boolean> {
     return this._authService.user$.pipe(
       take(1),
-      map(user => !!user),
+      map(user => user ? false : true),
       tap(loggedIn => {
-        if (loggedIn) {
+        if (!loggedIn) {
+          logger.collapsed('[auth.guard] UserNotLoggedInGuard alreeady logged in', [loggedIn]);
+
+          this._snackBar.open('You are already signed In', 'close', {
+            duration: 2000,
+          });
+
           this._router.navigate(['']);
         }
-      })
+      }),
+      // map(loggedIn => !loggedIn)
     );
   }
-
 }

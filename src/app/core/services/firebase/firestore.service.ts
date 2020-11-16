@@ -6,7 +6,7 @@ import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-import { BatchData, FileUploadTask } from '../../models/upload-task.model';
+import { BatchDataModel, FileUploadTask } from '../../models/upload-task.model';
 
 interface QueryOptions {
   limitToLast: number;
@@ -225,7 +225,7 @@ export class FirestoreService<T> {
     return this._collection().doc(id).delete().then(() => logger.endCollapsed());
   }
 
-  batchWriteDoc(batches: BatchData[]): Promise<void> {
+  batchWriteDoc(batches: BatchDataModel[]): Promise<void> {
     logger.startCollapsed('[firestore.service] [batchWriteDoc]', [batches]);
 
     const batch = this.firestore.firestore.batch();

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@app-core/models/interfaces';
+import { StoreModel } from '@app-core/models/interfaces';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { emptyUser, User } from '../../models/user.model';
+import { emptyUser, UserModel } from '../../models/user.model';
 import { StoreGeneric } from '../store.generic';
 import { AuthService } from './auth.service';
 
@@ -36,8 +36,8 @@ export class UserService {
 
 // *################## Store ###################
 
-interface IUserStore extends Store {
-    user: User;
+interface IUserStore extends StoreModel {
+    user: UserModel;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -61,7 +61,7 @@ export class UserStore extends StoreGeneric<IUserStore> {
         });
     }
 
-    get user$(): Observable<User> {
+    get user$(): Observable<UserModel> {
         return this.state$.pipe(
             map(state => state.loading ? emptyUser() : state.user)
         );
@@ -71,7 +71,7 @@ export class UserStore extends StoreGeneric<IUserStore> {
         return this.state.user.uid;
     }
 
-    get user(): User { // TODO: REMOVE USER??
+    get user(): UserModel { // TODO: REMOVE USER??
         return this.state.user;
     }
 }

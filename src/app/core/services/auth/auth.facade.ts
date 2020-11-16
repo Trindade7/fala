@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs';
 
-import { User } from '../../models/user.model';
+import { UserModel } from '../../models/user.model';
 
 export abstract class AuthFacade {
-    abstract get user$(): Observable<User | null>;
+    abstract get user$(): Observable<UserModel | null>;
 
     abstract googleSignIn(): Promise<void>;
 

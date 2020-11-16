@@ -1,5 +1,5 @@
-import { FileUploader } from './upload-task.model';
-import { User } from './user.model';
+import { FileUploaderModel } from './upload-task.model';
+import { UserModel } from './user.model';
 
 export type RequireOne<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] }
     & { [P in K]-?: T[P] };
@@ -44,18 +44,18 @@ export function getFileTypeGroup(fileType: string, typeGroups: any = _typeGroups
     return 'other';
 }
 
-interface Time { seconds: number; milliseconds: number; }
+interface TimeModel { seconds: number; milliseconds: number; }
 
 
 
 export class ConversationModel {
     id: string | null;
     name: string | null;
-    users: Partial<User>[] | null;
+    users: Partial<UserModel>[] | null;
     lastMessage: MessageModel | null;
     createdAt: Date | null;
 
-    constructor(args: ConversationModel) {
+    constructor (args: ConversationModel) {
         this.id = args.id;
         this.name = args.name;
         this.users = args.users;
@@ -74,7 +74,7 @@ export class ConversationModel {
     }
 }
 
-export interface MessageFile {
+export interface MessageFileModel {
     url: string;
     type: string;
 }
@@ -83,9 +83,9 @@ export class MessageModel {
     senderId: string | null;
     messageBody: string | null;
     delivered: boolean | null;
-    createdAt: Time;
-    file: MessageFile | null;
-    uploadTask?: FileUploader;
+    createdAt: TimeModel;
+    file: MessageFileModel | null;
+    uploadTask?: FileUploaderModel;
 
 
     // constructor (args: RequireOne<MessageModel, 'id'>) {
@@ -98,7 +98,7 @@ export class MessageModel {
     //     // * uploadTask won't be stored on server = can be undefined
     //     this.uploadTask = args.uploadTask ?? undefined;
     // }
-    constructor(args: MessageModel) {
+    constructor (args: MessageModel) {
         this.id = args.id;
         this.senderId = args.senderId ?? null;
         this.messageBody = args.messageBody ?? null;
@@ -124,7 +124,7 @@ export class MessageModel {
 
 
 
-export function getTime(): Time {
+export function getTime(): TimeModel {
     const date = new Date();
     return {
         seconds: date.getSeconds(),
